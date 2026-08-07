@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Pagina di lavoro, non e' contenuto pubblico.
+Disallow: /styleguide.html
+
+# File sorgente (PDF originali, ritagli di prova): non vanno indicizzati.
+Disallow: /sponsor/_sorgenti/
+
+# La conferma e' personale e raggiungibile solo con il proprio codice.
+Disallow: /conferma.html
+
+Sitemap: https://passeggiatainrosa.it/sitemap.xml

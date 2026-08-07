@@ -1,4 +1,4 @@
-colori brand: #F24DAE (rosa), #646262 (grigio) e bianco
+colori brand: #ed6ea7 (rosa), #706f6f (grigio) e bianco  -- presi dal logo vettoriale; vedi CLAUDE.md per le varianti accessibili
 dominio: passeggiatainrosa.it
 Google App script url: https://script.google.com/macros/s/AKfycbzxtzaSxcJweIyyUX5i1MyU0hc0X3chlmxlWbgi4iJV1cTBHnSTnD6jdfEu__waES8/exec
 Username Github: damyzogia

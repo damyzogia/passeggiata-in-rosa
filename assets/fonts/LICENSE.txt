@@ -1,0 +1,36 @@
+FONT SELF-HOSTATI — LICENZE
+===========================
+
+Entrambe le famiglie sono distribuite con SIL Open Font License 1.1, che
+consente uso commerciale, incorporamento in pagine web e ridistribuzione,
+a condizione che i font non vengano venduti da soli e che questa nota
+resti insieme ai file.
+
+1. Fraunces  (titoli)
+   Autori: Phaedra Charles, Flavia Zimbardi, Undercase Type
+   Licenza: SIL Open Font License 1.1
+   https://github.com/undercasetype/Fraunces
+
+2. Inter  (testo)
+   Autore: Rasmus Andersson
+   Licenza: SIL Open Font License 1.1
+   https://github.com/rsms/inter
+
+Testo completo della licenza: https://openfontlicense.org/
+
+
+NOTE TECNICHE
+-------------
+- I file sono variable font in formato woff2, sottoinsieme "latin"
+  (copre italiano, accenti inclusi). Un solo file per famiglia copre
+  tutti i pesi da 100 a 900.
+- fraunces-latin-variable.woff2 (118 KB) include gli assi opsz, wght,
+  SOFT e WONK: serve la versione completa perche' i titoli usano opsz
+  e SOFT.
+- inter-latin-variable.woff2 (47 KB) include il solo asse wght, che e'
+  tutto cio' che serve al testo corrente.
+- Non e' incluso il corsivo: il browser lo sintetizza. Se in futuro
+  servira' corsivo vero, aggiungere i file *-italic.woff2 dagli stessi
+  pacchetti (@fontsource-variable/fraunces e @fontsource-variable/inter).
+- Nessuna CDN: i font sono serviti dallo stesso dominio, quindi niente
+  richieste a terzi e nessun problema di privacy o di blocco esterno.

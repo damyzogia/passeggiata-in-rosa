@@ -73,7 +73,8 @@ Relazione: una **Squadra** raccoglie più **Prenotazioni**; una **Prenotazione**
 - **Patrocini:** IOV Padova · Comune di Borgo Veneto · Provincia di Padova
 
 ## Brand
-- **Colori:** rosa `#F24DAE` · grigio `#646262`.
+- **Colori:** rosa `#ed6ea7` · grigio `#706f6f`. Sono i valori presi dal logo vettoriale, che è la fonte autorevole.
+  - Il rosa del brand su bianco dà 2,8:1 di contrasto: è **solo decorativo**. Per testo, link e bottoni pieni si usa `#bf2268` (5,8:1, AA) e `#a51d5a` per gli hover. Tutti i valori vivono in `assets/css/base.css`.
 - **Motivo:** nel logo "la strada grigia incornicia il cuore rosa" — riproporlo come elemento grafico (percorso/strada grigia che accompagna il rosa).
 - **Logo:** `loghi/logo-passeggiata-rosa.pdf` (vettoriale).
 - **Tono:** caldo, femminile ma non stucchevole, pulito, mobile-first.

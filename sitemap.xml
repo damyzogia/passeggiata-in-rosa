@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Elenca SOLO le pagine che esistono davvero: una sitemap che punta a URL
+  inesistenti fa perdere fiducia al crawler. Aggiungere iscrizione.html,
+  regolamento.html e privacy.html man mano che vengono pubblicate.
+  conferma.html e styleguide.html restano fuori per scelta.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://passeggiatainrosa.it/</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pagina non trovata — Passeggiata in Rosa</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon-passeggiata-rosa.png">
+<link rel="stylesheet" href="/assets/css/base.css">
+<style>
+  body {
+    display: grid;
+    place-items: center;
+    min-height: 100svh;
+    background: var(--rosa-velo);
+    padding: var(--sp-6) var(--margine-pagina);
+  }
+  .blocco {
+    max-width: 34rem;
+    text-align: center;
+    display: grid;
+    gap: var(--sp-5);
+    justify-items: center;
+  }
+  .logo { width: min(180px, 45vw); }
+  .codice {
+    font-family: var(--font-titoli);
+    font-size: var(--t-4xl);
+    font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
+    line-height: 1;
+    color: var(--rosa);
+  }
+  .strada-persa { width: 100%; max-width: 22rem; }
+  .azioni { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+</style>
+</head>
+<body>
+  <main class="blocco">
+    <img class="logo" src="/assets/img/logo-passeggiata-rosa.svg" alt="Passeggiata in Rosa">
+
+    <p class="codice">404</p>
+
+    <!-- La strada del logo che si interrompe: il motivo grafico racconta l'errore. -->
+    <svg class="strada-persa" viewBox="0 0 400 60" fill="none" aria-hidden="true">
+      <path class="strada-curva__asfalto" d="M8 46 C 90 46, 110 14, 180 14" />
+      <path class="strada-curva__linea" d="M8 46 C 90 46, 110 14, 180 14" />
+      <path class="strada-curva__asfalto" style="opacity:.28" d="M250 14 C 310 14, 330 46, 392 46"
+        stroke-dasharray="6 26" />
+    </svg>
+
+    <h1>Questa strada non porta da nessuna parte</h1>
+
+    <p class="sommario">
+      La pagina che cercavi non esiste o e' stata spostata.
+      Torniamo sul percorso giusto?
+    </p>
+
+    <div class="azioni">
+      <a class="btn btn--primario" href="/">Vai alla home</a>
+      <!-- TODO: aggiungere qui il bottone "Pre-iscriviti" verso
+           /iscrizione.html quando la pagina esistera'. Metterlo ora
+           significherebbe mandare da un 404 a un altro 404. -->
+    </div>
+
+    <p class="piccolo tenue">
+      Se pensi che sia un errore nostro, scrivi a
+      <a href="mailto:info@passeggiatainrosa.it">info@passeggiatainrosa.it</a>.
+    </p>
+  </main>
+</body>
+</html>

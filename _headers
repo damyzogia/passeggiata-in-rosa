@@ -1,0 +1,47 @@
+# Cloudflare Pages — intestazioni HTTP.
+# Le regole si applicano dalla piu' generica alla piu' specifica: quelle sotto
+# vincono su quelle sopra per lo stesso header.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+
+# --- HTML: mai in cache. Il contenuto cambia e non ha un nome versionato,
+#     quindi il browser deve rivalidare a ogni visita (l'ETag rende il
+#     controllo quasi gratuito: risponde 304 se nulla e' cambiato).
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# --- CSS e JS: stessa logica dell'HTML. Non essendoci build step non c'e'
+#     hash nel nome del file, quindi una cache lunga qui servirebbe CSS
+#     vecchio per giorni dopo una modifica.
+/assets/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# --- Font: non cambiano mai. Cache lunga e immutabile.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# --- Immagini del sito: cache lunga. Se ne sostituisci una, cambia il nome
+#     del file (es. og-image-2026.jpg) invece di sovrascriverla.
+/assets/img/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# --- Loghi, sponsor e foto: cambiano di rado, 30 giorni.
+/loghi/*
+  Cache-Control: public, max-age=2592000
+
+/sponsor/*
+  Cache-Control: public, max-age=2592000
+
+/foto/*
+  Cache-Control: public, max-age=2592000

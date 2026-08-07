@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Styleguide — Passeggiata in Rosa</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Pagina di lavoro: direzione visiva del sito Passeggiata in Rosa.">
+<link rel="icon" href="/assets/img/favicon-passeggiata-rosa.png">
+<link rel="stylesheet" href="/assets/css/base.css">
+<style>
+  /* Stili validi solo per questa pagina di lavoro: non finiscono in base.css. */
+  body { background: var(--sfondo-alt); }
+
+  .sg-intestazione {
+    background: #fff;
+    border-bottom: 1px solid var(--bordo);
+    padding-block: var(--sp-6);
+  }
+  .sg-intestazione .contenitore {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
+    flex-wrap: wrap;
+  }
+  .sg-intestazione img { width: min(150px, 34vw); }
+
+  .sg-blocco { padding-block: var(--sp-7); }
+  .sg-blocco > .contenitore > h2 { margin-bottom: var(--sp-2); }
+  .sg-blocco > .contenitore > .sommario { margin-bottom: var(--sp-6); }
+
+  .sg-griglia {
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  }
+
+  /* --- Palette --- */
+  .sg-colore {
+    border: 1px solid var(--bordo);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--ombra-1);
+  }
+  .sg-campione { height: 92px; }
+  .sg-colore dl { padding: var(--sp-3) var(--sp-4) var(--sp-4); margin: 0; }
+  .sg-colore dt { font-weight: 650; font-size: var(--t-sm); }
+  .sg-colore dd {
+    margin: 0;
+    font-size: var(--t-xs);
+    color: var(--testo-tenue);
+    line-height: 1.45;
+  }
+  .sg-hex {
+    font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--testo);
+  }
+  .sg-tag {
+    display: inline-block;
+    margin-top: var(--sp-2);
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: .02em;
+  }
+  .sg-tag--ok { background: #e2f3ea; color: #14603d; }
+  .sg-tag--no { background: #fde9e7; color: #8f1d16; }
+
+  /* --- Tipografia --- */
+  .sg-riga-tipo {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-1);
+    padding-block: var(--sp-4);
+    border-bottom: 1px dashed var(--bordo);
+  }
+  .sg-riga-tipo:last-child { border-bottom: 0; }
+  .sg-etichetta {
+    font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--testo-tenue);
+  }
+
+  .sg-fila { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+
+  /* --- Logo su due fondi --- */
+  .sg-logo-prova {
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .sg-logo-prova > div {
+    display: grid;
+    place-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-7) var(--sp-5);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--bordo);
+  }
+  .sg-logo-prova img { width: min(230px, 60vw); }
+  .sg-fondo-chiaro { background: #fff; }
+  .sg-fondo-velo { background: var(--rosa-velo); }
+  .sg-fondo-scuro { background: var(--scuro); border-color: var(--scuro) !important; }
+
+  /* --- Blocco decisione temporaneo --- */
+  .sg-decisione {
+    border: 2px dashed var(--rosa);
+    border-radius: var(--r-lg);
+    background: #fff;
+    padding: var(--sp-5);
+  }
+  .sg-ritagli {
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-top: var(--sp-4);
+  }
+  .sg-ritagli figure { margin: 0; display: grid; gap: var(--sp-2); }
+  .sg-ritagli img {
+    width: 100%;
+    border: 1px solid var(--bordo);
+    border-radius: var(--r-sm);
+    background: #fff;
+  }
+  .sg-ritagli figcaption { font-size: var(--t-xs); color: var(--testo-tenue); }
+
+  .sg-nota {
+    background: var(--rosa-velo);
+    border-left: 4px solid var(--rosa);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    padding: var(--sp-4);
+    font-size: var(--t-sm);
+  }
+
+  .sg-codice {
+    font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+    font-size: var(--t-xs);
+    background: #fff;
+    border: 1px solid var(--bordo);
+    border-radius: var(--r-sm);
+    padding: 2px 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Sprite SVG: definito una volta, riusato con <use> in tutta la pagina.
+     E' il modo di avere "componenti" senza build step. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-cuore" viewBox="0 0 24 24">
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+  </symbol>
+</svg>
+
+<header class="sg-intestazione">
+  <div class="contenitore">
+    <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Passeggiata in Rosa">
+    <div>
+      <p class="occhiello">Pagina di lavoro · non indicizzata</p>
+      <h1 class="t-2xl">Styleguide</h1>
+      <p class="tenue piccolo">Direzione visiva del sito — da approvare prima di costruire la landing.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== PALETTE ===================== -->
+<section class="sg-blocco">
+  <div class="contenitore">
+    <p class="occhiello">01</p>
+    <h2>Palette</h2>
+    <p class="sommario">
+      I due colori del brand vengono dal logo vettoriale. Il rosa del logo e'
+      bellissimo ma chiaro: su bianco arriva a 2,8:1 di contrasto, sotto la
+      soglia di leggibilita'. Per questo il sistema ha <strong>due rosa</strong>:
+      quello del logo per i decori e uno piu' profondo, della stessa famiglia
+      cromatica, per testo e bottoni.
+    </p>
+
+    <div class="sg-griglia">
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#ed6ea7"></div>
+        <dl>
+          <dt>Rosa brand</dt>
+          <dd class="sg-hex">#ED6EA7</dd>
+          <dd>Cuore del logo, decori, riempimenti, anello di focus.</dd>
+          <dd><span class="sg-tag sg-tag--no">2,8:1 · no testo</span></dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#bf2268"></div>
+        <dl>
+          <dt>Rosa testo</dt>
+          <dd class="sg-hex">#BF2268</dd>
+          <dd>Link, bottone primario, occhielli. Il rosa "che si puo' leggere".</dd>
+          <dd><span class="sg-tag sg-tag--ok">5,8:1 · AA</span></dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#a51d5a"></div>
+        <dl>
+          <dt>Rosa scuro</dt>
+          <dd class="sg-hex">#A51D5A</dd>
+          <dd>Hover e stati premuti.</dd>
+          <dd><span class="sg-tag sg-tag--ok">7,2:1 · AAA</span></dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#706f6f"></div>
+        <dl>
+          <dt>Grigio brand</dt>
+          <dd class="sg-hex">#706F6F</dd>
+          <dd>La strada del logo, separatori, testo secondario grande.</dd>
+          <dd><span class="sg-tag sg-tag--ok">5,0:1 · AA</span></dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#383737"></div>
+        <dl>
+          <dt>Testo</dt>
+          <dd class="sg-hex">#383737</dd>
+          <dd>Testo corrente. Neutro caldo, mai nero puro.</dd>
+          <dd><span class="sg-tag sg-tag--ok">11,9:1 · AAA</span></dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#6b6768"></div>
+        <dl>
+          <dt>Testo tenue</dt>
+          <dd class="sg-hex">#6B6768</dd>
+          <dd>Didascalie, note, testo di supporto.</dd>
+          <dd><span class="sg-tag sg-tag--ok">5,4:1 · AA</span></dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#fbe4ee"></div>
+        <dl>
+          <dt>Rosa tenue</dt>
+          <dd class="sg-hex">#FBE4EE</dd>
+          <dd>Riempimenti, chip selezionati, evidenziazioni.</dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#fdf3f7"></div>
+        <dl>
+          <dt>Rosa velo</dt>
+          <dd class="sg-hex">#FDF3F7</dd>
+          <dd>Fondo delle sezioni alternate.</dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#3b2a32"></div>
+        <dl>
+          <dt>Scuro</dt>
+          <dd class="sg-hex">#3B2A32</dd>
+          <dd>Footer e sezioni scure. Prugna, non nero: resta caldo.</dd>
+        </dl>
+      </div>
+
+      <div class="sg-colore">
+        <div class="sg-campione" style="background:#e9e2e5"></div>
+        <dl>
+          <dt>Bordo</dt>
+          <dd class="sg-hex">#E9E2E5</dd>
+          <dd>Bordi di schede e campi del form.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="sg-nota" style="margin-top:var(--sp-5)">
+      <strong>Regola pratica.</strong> Se il colore porta informazione (testo,
+      icona, bordo di un campo in errore) usa <span class="sg-codice">--rosa-testo</span>.
+      Se e' decorazione (cuore, sfondo, linea) usa <span class="sg-codice">--rosa</span>.
+      Cosi' il sito resta leggibile senza perdere il rosa del logo.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TIPOGRAFIA ===================== -->
+<section class="sg-blocco sezione--velo">
+  <div class="contenitore">
+    <p class="occhiello">02</p>
+    <h2>Tipografia</h2>
+    <p class="sommario">
+      <strong>Fraunces</strong> per i titoli: un serif contemporaneo e caldo,
+      con terminali morbidi — espressivo senza essere lezioso, e in famiglia
+      con le lettere tonde del logotipo. <strong>Inter</strong> per il testo:
+      neutro, altissima leggibilita' sui numeri e nei campi del form, che qui
+      e' la parte che conta davvero. Entrambi self-hostati, un solo file
+      variabile a famiglia, nessuna CDN.
+    </p>
+
+    <div class="scheda">
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-4xl · Fraunces · opsz 144 · display</span>
+        <p class="t-4xl">Passeggiata in Rosa</p>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-3xl · h1</span>
+        <h1>Insieme per la ricerca</h1>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-2xl · h2</span>
+        <h2>Domenica 13 settembre 2026</h2>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-xl · h3</span>
+        <h3>Otto chilometri per Borgo Veneto</h3>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-lg · h4 / .sommario</span>
+        <h4>Ritrovo alle 8:00 in piazzale</h4>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-base · Inter · testo corrente</span>
+        <p style="max-width:var(--larghezza-testo)">
+          La Passeggiata in Rosa e' una camminata non competitiva aperta a tutti:
+          donne, uomini e bambini di ogni eta'. L'intero ricavato e' devoluto allo
+          IOV — Istituto Oncologico Veneto di Padova, per finanziare la ricerca
+          contro il tumore al seno. La quota e' di 8 euro; per i bambini fino a
+          6 anni compiuti l'iscrizione e' gratuita.
+        </p>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-sm · .piccolo</span>
+        <p class="piccolo">Iscrizioni online entro le 24:00 del 10 settembre 2026.</p>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">--t-xs · .minuscolo .tenue</span>
+        <p class="minuscolo tenue">Sito e automazioni a cura di Heneti — heneti.it</p>
+      </div>
+      <div class="sg-riga-tipo">
+        <span class="sg-etichetta">.occhiello — sopra i titoli di sezione</span>
+        <p class="occhiello">Info pratiche</p>
+      </div>
+    </div>
+
+    <p class="piccolo tenue" style="margin-top:var(--sp-4)">
+      Tutte le misure sono <span class="sg-codice">clamp()</span>: crescono con la
+      larghezza dello schermo senza scalini. Il minimo vale su telefono a 360px,
+      il massimo si raggiunge intorno ai 1200px.
+    </p>
+  </div>
+</section>
+
+<!-- ===================== BOTTONI E LINK ===================== -->
+<section class="sg-blocco">
+  <div class="contenitore">
+    <p class="occhiello">03</p>
+    <h2>Bottoni e link</h2>
+    <p class="sommario">
+      Forma a pillola, come le curve del logo. Il primario ha un'ombra rosa che
+      lo stacca senza appesantirlo.
+    </p>
+
+    <div class="scheda pila pila--larga">
+      <div>
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-3)">Stati normali</p>
+        <div class="sg-fila">
+          <a class="btn btn--primario" href="#">Pre-iscriviti</a>
+          <a class="btn btn--secondario" href="#">Leggi il regolamento</a>
+          <a class="btn btn--fantasma" href="#">Come arrivare</a>
+          <button class="btn btn--primario btn--piccolo" type="button">Aggiungi partecipante</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-3)">
+          Disabilitato — lo stato del bottone d'invio durante la chiamata all'API
+        </p>
+        <div class="sg-fila">
+          <button class="btn btn--primario" type="button" disabled>Invio in corso…</button>
+          <button class="btn btn--secondario" type="button" disabled>Non disponibile</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-3)">Link nel testo</p>
+        <p style="max-width:var(--larghezza-testo)">
+          Consulta il <a href="#">regolamento completo</a> e
+          l'<a href="#">informativa privacy</a> prima di iscriverti. Per domande
+          scrivi a <a href="mailto:info@passeggiatainrosa.it">info@passeggiatainrosa.it</a>.
+        </p>
+      </div>
+
+      <div>
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-3)">
+          Focus da tastiera — prova a premere Tab
+        </p>
+        <div class="sg-fila">
+          <a class="btn btn--secondario" href="#">Mettimi a fuoco</a>
+          <a class="btn btn--secondario" href="#">Poi me</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MOTIVO STRADA E CUORE ===================== -->
+<section class="sg-blocco sezione--velo">
+  <div class="contenitore">
+    <p class="occhiello">04</p>
+    <h2>Il motivo: strada e cuore</h2>
+    <p class="sommario">
+      Nel logo la strada grigia incornicia il cuore rosa. Sul sito la strada
+      diventa il filo che lega le sezioni e il cuore segna i punti di svolta.
+      Tre varianti, tutte riusabili.
+    </p>
+
+    <div class="pila pila--larga">
+
+      <div class="scheda">
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-4)">
+          a. <span class="sg-codice">.strada</span> — separatore, sola CSS, nessuna immagine
+        </p>
+        <div class="strada"></div>
+        <div class="strada strada--sottile" style="margin-top:var(--sp-5)"></div>
+      </div>
+
+      <div class="scheda">
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-2)">
+          b. <span class="sg-codice">.strada-sep</span> — la strada che incornicia il cuore
+        </p>
+        <div class="strada-sep" style="margin-block:var(--sp-5)">
+          <span class="strada"></span>
+          <svg class="cuore" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg>
+          <span class="strada"></span>
+        </div>
+      </div>
+
+      <div class="scheda">
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-4)">
+          c. <span class="sg-codice">.strada-curva</span> — accento a piena larghezza fra le sezioni
+        </p>
+        <svg class="strada-curva" viewBox="0 0 1200 150" fill="none" aria-hidden="true">
+          <path class="strada-curva__asfalto"
+            d="M20 120 C 240 120, 260 30, 480 30 S 760 130, 980 92 S 1140 40, 1180 34"/>
+          <path class="strada-curva__linea"
+            d="M20 120 C 240 120, 260 30, 480 30 S 760 130, 980 92 S 1140 40, 1180 34"/>
+        </svg>
+      </div>
+
+      <div class="scheda">
+        <p class="sg-etichetta" style="margin-bottom:var(--sp-4)">
+          d. <span class="sg-codice">.elenco-cuori</span> — cuori al posto dei pallini
+        </p>
+        <ul class="elenco-cuori">
+          <li>Ore 8:00 — apertura iscrizioni e consegna del gadget</li>
+          <li>Ore 8:30 — riscaldamento muscolare con Greta Nicoletti PT</li>
+          <li>Ore 9:00 — partenza dal piazzale della chiesa</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LOGO ===================== -->
+<section class="sg-blocco">
+  <div class="contenitore">
+    <p class="occhiello">05</p>
+    <h2>Il logo sui fondi</h2>
+    <p class="sommario">
+      Il file e' vettoriale (SVG, 24 KB): nitido a ogni dimensione e su ogni
+      schermo. Dentro ci sono elementi bianchi — il profilo del viso, la
+      segnaletica della strada — quindi il logo <strong>vuole un fondo
+      chiaro</strong>. Su fondo scuro resta leggibile ma perde il contrasto
+      del viso: verifica tu se ti convince per il footer.
+    </p>
+
+    <div class="sg-logo-prova">
+      <div class="sg-fondo-chiaro">
+        <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Logo su fondo bianco">
+        <span class="sg-etichetta">Fondo bianco — uso principale</span>
+      </div>
+      <div class="sg-fondo-velo">
+        <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Logo su fondo rosa velo">
+        <span class="sg-etichetta">Rosa velo #FDF3F7</span>
+      </div>
+      <div class="sg-fondo-scuro su-scuro">
+        <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Logo su fondo scuro">
+        <span class="sg-etichetta" style="color:#cbb8c1">Scuro #3B2A32 — da validare</span>
+      </div>
+    </div>
+
+    <div class="sg-nota" style="margin-top:var(--sp-5)">
+      <strong>Attenzione ai colori.</strong> Il rosa dentro il file SVG e'
+      <span class="sg-codice">#ED6EA7</span> e il grigio
+      <span class="sg-codice">#706F6F</span>: sono esattamente i valori che ora
+      guidano tutto il sito, quindi il logo non stona mai con l'interfaccia.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FONDO SCURO ===================== -->
+<section class="sg-blocco su-scuro">
+  <div class="contenitore">
+    <p class="occhiello" style="color:var(--rosa)">06</p>
+    <h2>Sezione scura</h2>
+    <p class="sommario" style="color:#cbb8c1">
+      Anteprima di come si comportano testo, link e strada sul fondo prugna
+      previsto per il footer.
+    </p>
+    <div class="strada-sep">
+      <span class="strada"></span>
+      <svg class="cuore" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg>
+      <span class="strada"></span>
+    </div>
+    <p style="max-width:var(--larghezza-testo)">
+      Organizzano la Parrocchia di Santa Margherita d'Adige e NOI Associazione
+      San Biagio APS, con il patrocinio di
+      <a href="#">IOV Padova</a>, Comune di Borgo Veneto e Provincia di Padova.
+    </p>
+    <div class="sg-fila" style="margin-top:var(--sp-5)">
+      <a class="btn btn--primario" href="#">Pre-iscriviti</a>
+      <a class="btn btn--secondario" href="#">Regolamento</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DECISIONE APERTA (TEMPORANEO) ===================== -->
+<section class="sg-blocco">
+  <div class="contenitore">
+    <p class="occhiello">Decisione aperta</p>
+    <h2>Ritaglio del logo Prislop</h2>
+
+    <div class="sg-decisione">
+      <p>
+        Il file consegnato non e' un logo ma la <strong>fotografia di un
+        biglietto da visita</strong>. Ho provato i tre ritagli qui sotto: tutti
+        portano con se' texture della carta, sfondo arancio sfumato, ombre e
+        bordi sfocati. Come da accordi <strong>resta in uso il PNG intero</strong>.
+      </p>
+
+      <div class="sg-ritagli">
+        <figure>
+          <img src="/sponsor/_sorgenti/prislop-ritaglio-A.png" alt="Ritaglio A: marchio completo con pay-off">
+          <figcaption><strong>A</strong> — tondo + scritta + pay-off. Si porta dietro il bordo beige del biglietto e tutto lo sfondo.</figcaption>
+        </figure>
+        <figure>
+          <img src="/sponsor/_sorgenti/prislop-ritaglio-B.png" alt="Ritaglio B: solo il tondo con lo smiley">
+          <figcaption><strong>B</strong> — solo il tondo. Grana della carta, ombra grigia e alone arancio ben visibili.</figcaption>
+        </figure>
+        <figure>
+          <img src="/sponsor/_sorgenti/prislop-ritaglio-C.png" alt="Ritaglio C: solo la scritta PRISLOP">
+          <figcaption><strong>C</strong> — solo la scritta. Fondo arancio con trama di tessuto e luce non uniforme.</figcaption>
+        </figure>
+      </div>
+
+      <p style="margin-top:var(--sp-4)">
+        La strada giusta e' chiedere a Prislop il file originale del logo
+        (PDF, SVG o EPS vettoriale, oppure un PNG su fondo trasparente).
+        Con quello il marchio entra nella griglia pulito come tutti gli altri.
+      </p>
+    </div>
+
+    <p class="piccolo tenue" style="margin-top:var(--sp-4)">
+      Questo blocco e i tre file di prova in
+      <span class="sg-codice">/sponsor/_sorgenti/</span> vanno cancellati una
+      volta presa la decisione.
+    </p>
+  </div>
+</section>
+
+<footer class="sg-blocco su-scuro" style="padding-block:var(--sp-6)">
+  <div class="contenitore">
+    <p class="piccolo" style="color:#cbb8c1">
+      Styleguide — Passeggiata in Rosa · pagina di lavoro, non indicizzata.
+      Sito e automazioni a cura di <a href="https://heneti.it">Heneti</a>.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
