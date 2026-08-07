@@ -1,0 +1,20 @@
+# Legenda sponsor — nome e sito di ogni logo.
+#
+# FORMATO (una riga per logo):
+#   cartella/file.png = Nome Azienda | https://sito.it
+#
+# - Il sito web dopo la "|" e FACOLTATIVO: se manca, il logo non e cliccabile.
+#     sponsor/normali/7.png = Panificio Rossi
+# - Le righe che iniziano con "#" e le righe vuote sono ignorate.
+# - ATTENZIONE: le estensioni sono state normalizzate in minuscolo (.png, .jpg).
+#   Scrivi i nomi file esattamente come sono su disco, altrimenti su Cloudflare
+#   Pages (case-sensitive) la riga non verra associata a nessun logo.
+# - Il nome viene usato come testo alternativo dell'immagine (accessibilita e SEO).
+# - I loghi senza una riga qui restano nella griglia con alt generico "Sponsor",
+#   quindi il file puo essere compilato anche un po' alla volta.
+#
+# ESEMPI (da cancellare quando arrivano i dati veri):
+# sponsor/main/1.png = Nome Sponsor Principale | https://www.esempio.it
+# sponsor/ristoro/3.png = Azienda Agricola Esempio
+# sponsor/associazioni/prislop.png = PRISLOP Organizzazione di Volontariato
+
