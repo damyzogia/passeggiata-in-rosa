@@ -3,33 +3,927 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Passeggiata in Rosa — sito in costruzione</title>
-<meta name="description" content="6ª Passeggiata in Rosa — domenica 13 settembre 2026, Borgo Veneto (PD). Sito in costruzione.">
+<title>6ª Passeggiata in Rosa — 13 settembre 2026, Borgo Veneto</title>
+<meta name="description" content="Camminata non competitiva di 8 km a Borgo Veneto (PD), domenica 13 settembre 2026. Il ricavato è interamente devoluto allo IOV di Padova per la ricerca sul tumore al seno. Quota 8 €, gratis fino a 6 anni compiuti.">
+
+<!-- TODO GO-LIVE: togliere questa riga dopo il test end-to-end del form.
+     Finche' c'e', il sito resta invisibile a Google. -->
 <meta name="robots" content="noindex">
-<link rel="icon" href="assets/img/favicon-passeggiata-rosa.png">
-<style>
-  :root { --rosa:#F24DAE; --grigio:#646262; }
-  * { box-sizing:border-box; }
-  html,body { height:100%; }
-  body {
-    margin:0;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:1.5rem; padding:2rem;
-    background:#fff; color:var(--grigio);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    text-align:center;
-  }
-  img { width:min(320px,80vw); height:auto; }
-  h1 { margin:0; font-size:clamp(1.25rem,4vw,1.75rem); font-weight:600; color:var(--rosa); }
-  p { margin:0; font-size:.95rem; }
-  .rule { width:64px; height:3px; border-radius:3px; background:var(--rosa); }
-</style>
+
+<link rel="canonical" href="https://passeggiatainrosa.it/">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#ed6ea7">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="6ª Passeggiata in Rosa — 13 settembre 2026">
+<meta property="og:description" content="Camminata non competitiva a Borgo Veneto. Il ricavato va allo IOV di Padova per la ricerca sul tumore al seno.">
+<meta property="og:url" content="https://passeggiatainrosa.it/">
+<meta property="og:image" content="https://passeggiatainrosa.it/assets/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin-variable.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
-  <img src="assets/img/logo-passeggiata-rosa.svg" alt="Logo Passeggiata in Rosa">
-  <div class="rule"></div>
-  <h1>Passeggiata in Rosa — sito in costruzione</h1>
-  <p>6ª edizione · domenica 13 settembre 2026 · Borgo Veneto (PD)</p>
-  <p>Sito e automazioni a cura di <a href="https://heneti.it" style="color:var(--rosa)">Heneti</a></p>
+
+<a class="salta-al-contenuto" href="#contenuto">Salta al contenuto</a>
+
+<!-- Sprite delle icone: definito una volta, riusato con <use>. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+  <symbol id="i-calendario" viewBox="0 0 24 24"><path d="M7 2v2H5.5A2.5 2.5 0 0 0 3 6.5v13A2.5 2.5 0 0 0 5.5 22h13a2.5 2.5 0 0 0 2.5-2.5v-13A2.5 2.5 0 0 0 18.5 4H17V2h-2v2H9V2H7zm-2 8h14v9.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V10z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></symbol>
+  <symbol id="i-percorso" viewBox="0 0 24 24"><path d="M18 15h-1.5v-2H18a1.5 1.5 0 0 0 0-3H8a4 4 0 0 1 0-8h6v2H8a2 2 0 0 0 0 4h10a3.5 3.5 0 0 1 0 7zM6.5 22 3 18.5 6.5 15v2.5H14v2H6.5V22z"/></symbol>
+  <symbol id="i-euro" viewBox="0 0 24 24"><path d="M15 18.5A6.5 6.5 0 0 1 8.9 14H14v-2H8.52a6.6 6.6 0 0 1 0-1H14V9H8.9A6.5 6.5 0 0 1 15 4.5c1.3 0 2.5.38 3.5 1.04l1-1.73A8.5 8.5 0 0 0 6.8 9H4v2h2.5a8.6 8.6 0 0 0 0 1H4v2h2.8a8.5 8.5 0 0 0 12.7 5.19l-1-1.73A6.44 6.44 0 0 1 15 18.5z"/></symbol>
+  <symbol id="i-orologio" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 10.59 3.7 3.7-1.41 1.42L11 13.41V6h2v6.59z"/></symbol>
+  <symbol id="i-facebook" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.26.07 1.64.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.26.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.8 3.8 0 0 1-1.38-.9 3.8 3.8 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 3.68a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.84-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></symbol>
+</svg>
+
+<header class="intestazione">
+  <div class="contenitore">
+    <a class="intestazione__logo" href="#" aria-label="Passeggiata in Rosa — inizio pagina">
+      <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Passeggiata in Rosa" width="108" height="100">
+    </a>
+
+    <nav class="navigazione" aria-label="Sezioni della pagina">
+      <ul>
+        <li><a href="#evento">L'evento</a></li>
+        <li><a href="#info">Info pratiche</a></li>
+        <li><a href="#iscriversi">Come iscriversi</a></li>
+        <li><a href="#regolamento">Regolamento</a></li>
+        <li><a href="#sponsor">Sponsor</a></li>
+      </ul>
+    </nav>
+
+    <div class="intestazione__azione">
+      <a class="btn btn--primario btn--piccolo" href="/iscrizione.html">Pre-iscriviti</a>
+    </div>
+  </div>
+</header>
+
+<main id="contenuto">
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <!-- SLOT FOTO: quando arriva l'immagine aerea (gente + chiesa), togli il
+         commento qui sotto e aggiungi la classe "hero--con-foto" alla sezione.
+    <div class="hero__foto">
+      <picture>
+        <source type="image/webp" srcset="/assets/foto/hero.webp">
+        <img src="/assets/foto/hero.jpg" alt="" width="1600" height="900">
+      </picture>
+    </div>
+    -->
+
+    <div class="contenitore hero__contenuto">
+      <img class="hero__logo" src="/assets/img/logo-passeggiata-rosa.svg"
+           alt="Logo della Passeggiata in Rosa" width="300" height="278">
+
+      <h1>6<sup>a</sup> Passeggiata in Rosa</h1>
+
+      <p class="hero__quando">
+        <span><svg class="cuore" style="color:var(--rosa-testo)" aria-hidden="true"><use href="#i-calendario"/></svg>
+          Domenica 13 settembre 2026</span>
+        <span><svg class="cuore" style="color:var(--rosa-testo)" aria-hidden="true"><use href="#i-pin"/></svg>
+          Borgo Veneto (PD)</span>
+      </p>
+
+      <p class="hero__causa">
+        Una camminata di 8 km aperta a tutti. Il ricavato è interamente devoluto
+        allo <strong>IOV — Istituto Oncologico Veneto di Padova</strong>,
+        per la ricerca sul tumore al seno.
+      </p>
+
+      <div class="hero__azioni">
+        <a class="btn btn--primario" href="/iscrizione.html">Pre-iscriviti</a>
+        <a class="btn btn--secondario" href="#info">Info pratiche</a>
+      </div>
+
+      <p class="hero__nota">Iscrizioni online entro le 24:00 del 10 settembre 2026</p>
+    </div>
+
+    <svg class="strada-curva hero__strada" viewBox="0 0 1200 150" fill="none" aria-hidden="true">
+      <path class="strada-curva__asfalto" d="M20 120 C 240 120, 260 30, 480 30 S 760 130, 980 92 S 1140 40, 1180 34"/>
+      <path class="strada-curva__linea" d="M20 120 C 240 120, 260 30, 480 30 S 760 130, 980 92 S 1140 40, 1180 34"/>
+    </svg>
+  </section>
+
+  <!-- ==================== L'EVENTO ==================== -->
+  <section class="sezione" id="evento">
+    <div class="contenitore">
+      <div class="sezione__intestazione">
+        <p class="occhiello">L'evento</p>
+        <h2>Si cammina insieme, non si gareggia</h2>
+      </div>
+
+      <div class="griglia griglia--2">
+        <div>
+          <p>
+            La Passeggiata in Rosa è una <strong>camminata non competitiva</strong>
+            aperta a tutti: donne, uomini e bambini di ogni età. Non ci sono
+            classifiche né premiazioni agonistiche — si va al proprio passo,
+            in compagnia, per le strade di Borgo Veneto.
+          </p>
+          <p>
+            All'arrivo vengono assegnati riconoscimenti speciali al partecipante
+            più anziano, al più giovane e al gruppo più numeroso. Partecipare
+            in squadra è ammesso e incoraggiato.
+          </p>
+        </div>
+
+        <div class="scheda-info">
+          <h3>
+            <svg class="scheda-info__icona" aria-hidden="true"><use href="#i-cuore"/></svg>
+            Perché si cammina
+          </h3>
+          <p>
+            L'intero ricavato, al netto delle spese organizzative, è devoluto
+            allo <strong>IOV — Istituto Oncologico Veneto di Padova</strong>,
+            di cui l'evento gode del patrocinio, per finanziare la ricerca
+            scientifica contro il tumore al seno.
+          </p>
+          <p class="piccolo tenue">
+            Allo IOV vengono devoluti i fondi raccolti, non i dati dei
+            partecipanti.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== INFO PRATICHE ==================== -->
+  <section class="sezione sezione--velo" id="info">
+    <div class="contenitore">
+      <div class="sezione__intestazione">
+        <p class="occhiello">Info pratiche</p>
+        <h2>Quando, dove e quanto</h2>
+      </div>
+
+      <div class="griglia griglia--3" style="margin-bottom:var(--sp-6)">
+
+        <div class="scheda-info">
+          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-orologio"/></svg> Programma</h3>
+          <ul class="elenco-cuori">
+            <li><span class="orario">8:00</span> — apertura iscrizioni e consegna del gadget</li>
+            <li><span class="orario">8:30</span> — riscaldamento muscolare a cura di Greta Nicoletti PT</li>
+            <li><span class="orario">9:00</span> — partenza</li>
+          </ul>
+        </div>
+
+        <div class="scheda-info">
+          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-percorso"/></svg> Percorso</h3>
+          <p class="dato-grande">circa 8 km</p>
+          <p>
+            Per le vie di Borgo Veneto, con <strong>sosta ristoro</strong> in
+            località Megliadino San Fidenzio.
+          </p>
+          <p class="piccolo tenue">
+            In caso di pioggia leggera la passeggiata si tiene comunque:
+            basta un ombrello.
+          </p>
+        </div>
+
+        <div class="scheda-info">
+          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-euro"/></svg> Quota</h3>
+          <p class="dato-grande">8,00 €</p>
+          <p>
+            <strong>Gratis per i bambini fino a 6 anni compiuti.</strong>
+            Comprende assicurazione, gadget ufficiale, ristoro lungo il
+            percorso e omaggio finale.
+          </p>
+          <p class="piccolo tenue">
+            Il pagamento avviene di persona al banco, il giorno dell'evento.
+          </p>
+        </div>
+      </div>
+
+      <div class="griglia griglia--2">
+        <div class="scheda-info">
+          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-pin"/></svg> Ritrovo</h3>
+          <p>
+            <strong>Piazzale della Chiesa di Santa Margherita d'Adige</strong><br>
+            Piazza Giovanni Battista Graziato / Via Roma 15<br>
+            35046 Borgo Veneto (PD)
+          </p>
+          <p>
+            <span class="scadenza">
+              <svg class="cuore" aria-hidden="true"><use href="#i-calendario"/></svg>
+              Domenica 13 settembre, dalle 8:00
+            </span>
+          </p>
+        </div>
+
+        <div class="mappa">
+          <iframe
+            title="Mappa del punto di ritrovo: piazzale della Chiesa di Santa Margherita d'Adige"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=11.5486%2C45.2114%2C11.5636%2C45.2194&amp;layer=mapnik&amp;marker=45.21540%2C11.55603"></iframe>
+          <div class="mappa__azioni">
+            <a class="btn btn--primario btn--piccolo"
+               href="https://www.google.com/maps/dir/?api=1&amp;destination=45.21540%2C11.55603"
+               target="_blank" rel="noopener">Come arrivare</a>
+            <a class="piccolo" href="https://maps.apple.com/?daddr=45.21540,11.55603"
+               target="_blank" rel="noopener">Apri in Apple Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== COME ISCRIVERSI ==================== -->
+  <section class="sezione" id="iscriversi">
+    <div class="contenitore">
+      <div class="sezione__intestazione">
+        <p class="occhiello">Come iscriversi</p>
+        <h2>Due strade, stessa camminata</h2>
+        <p class="sommario">
+          Con un solo accesso puoi iscrivere più persone: la prima è il
+          capofila, le altre si aggiungono una dopo l'altra.
+        </p>
+      </div>
+
+      <div class="griglia griglia--2" style="margin-top:var(--sp-6)">
+
+        <div class="via via--consigliata">
+          <span class="via__targa">Consigliata</span>
+          <h3>Online, da qui</h3>
+          <p>
+            Compili il modulo, ricevi un'email di conferma con un
+            <strong>codice QR</strong>. Il giorno dell'evento lo presenti al
+            banco per ritirare il gadget e versare la quota.
+          </p>
+          <p><span class="scadenza">Entro le 24:00 del 10 settembre 2026</span></p>
+          <div>
+            <a class="btn btn--primario" href="/iscrizione.html">Vai al modulo</a>
+          </div>
+        </div>
+
+        <div class="via">
+          <h3>In loco, la mattina stessa</h3>
+          <p>
+            Al punto iscrizioni in piazzale, senza prenotazione. Porta con te
+            i dati dei partecipanti per velocizzare la registrazione.
+          </p>
+          <p>
+            <span class="scadenza">Domenica 13 settembre, dalle 8:00 alle 9:00</span>
+          </p>
+          <p class="piccolo tenue">
+            Iscrivendoti online eviti la coda e ci aiuti a organizzare meglio
+            gadget e ristoro.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== REGOLAMENTO ==================== -->
+  <section class="sezione sezione--velo" id="regolamento">
+    <div class="contenitore">
+      <div class="sezione__intestazione">
+        <p class="occhiello">Regolamento</p>
+        <h2>Le regole, in breve</h2>
+        <p class="sommario">
+          Una sintesi dei punti principali. Il testo completo, che si accetta
+          al momento dell'iscrizione, è nella pagina dedicata.
+        </p>
+      </div>
+
+      <div class="fisarmonica">
+        <details>
+          <summary>Chi può partecipare</summary>
+          <div class="fisarmonica__corpo">
+            <p>
+              Tutti: donne, uomini e bambini di ogni età. La camminata non è
+              competitiva, quindi non prevede classifiche né premiazioni
+              agonistiche. È ammessa e favorita la partecipazione in gruppi o
+              squadre.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Quota e cosa comprende</summary>
+          <div class="fisarmonica__corpo">
+            <p>
+              La quota è di <strong>8,00 €</strong>, non rimborsabile: in caso
+              di rinuncia resta comunque devoluta in beneficenza. Comprende
+              assicurazione RCT e infortuni, gadget ufficiale (tote bag in
+              cotone offerta dagli sponsor), ristoro lungo il percorso e
+              omaggio finale. È gratuita per i bambini fino a 6 anni compiuti.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Iscrizione e ritiro del gadget</summary>
+          <div class="fisarmonica__corpo">
+            <p>
+              Online entro le 24:00 del 10 settembre 2026, oppure in loco il
+              giorno dell'evento dalle 8:00 alle 9:00. Chi si iscrive online
+              riceve un'email con un codice QR da presentare al banco per il
+              ritiro del gadget e il versamento della quota.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Riconoscimenti</summary>
+          <div class="fisarmonica__corpo">
+            <p>
+              All'arrivo sono assegnati riconoscimenti speciali al partecipante
+              più anziano, al partecipante più giovane e al gruppo più numeroso.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Condotta e responsabilità</summary>
+          <div class="fisarmonica__corpo">
+            <p>
+              I partecipanti si impegnano a rispettare il Codice della Strada e
+              le regole di correttezza. Ciascun partecipante dichiara di essere
+              in idonee condizioni fisiche e solleva l'Organizzazione da
+              responsabilità per infortuni, danni a terzi o a cose, furti o
+              smarrimenti, prima, durante e dopo la manifestazione. La
+              partecipazione avviene sotto la propria responsabilità.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Foto e video</summary>
+          <div class="fisarmonica__corpo">
+            <p>
+              Con l'iscrizione si autorizza l'Organizzazione a effettuare
+              riprese foto e video durante l'evento e a diffonderle sui propri
+              canali social, sul sito e sui materiali promozionali dell'evento.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Maltempo e modifiche</summary>
+          <div class="fisarmonica__corpo">
+            <p>
+              In caso di pioggia leggera la passeggiata si tiene comunque,
+              muniti di ombrello. L'Organizzazione si riserva di modificare il
+              regolamento per motivate esigenze organizzative o di sicurezza,
+              preservando la finalità benefica dell'evento.
+            </p>
+          </div>
+        </details>
+      </div>
+
+      <div style="margin-top:var(--sp-5)">
+        <a class="btn btn--secondario" href="/regolamento.html">Regolamento completo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SPONSOR ==================== -->
+  <section class="sezione" id="sponsor">
+    <div class="contenitore">
+      <div class="sezione__intestazione">
+        <p class="occhiello">Sponsor</p>
+        <h2>Chi rende possibile la passeggiata</h2>
+        <p class="sommario">
+          Ogni anno aziende e associazioni del territorio coprono le spese
+          organizzative: è grazie a loro che la quota di iscrizione può andare
+          tutta alla ricerca.
+        </p>
+      </div>
+
+      <div class="livello-sponsor">
+        <h3 class="livello-sponsor__titolo">Sponsor principali</h3>
+        <div class="griglia-sponsor griglia-sponsor--main">
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/0.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/0.webp">
+            <img src="/assets/sponsor/main/0.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="257">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/1.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/1.webp">
+            <img src="/assets/sponsor/main/1.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="251">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/2.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/2.webp">
+            <img src="/assets/sponsor/main/2.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="288">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/3.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/3.webp">
+            <img src="/assets/sponsor/main/3.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="293">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/4.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/4.webp">
+            <img src="/assets/sponsor/main/4.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="226">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/5.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/5.webp">
+            <img src="/assets/sponsor/main/5.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="432">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/6.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/6.webp">
+            <img src="/assets/sponsor/main/6.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="181">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/7.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/7.webp">
+            <img src="/assets/sponsor/main/7.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="247">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/8.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/8.webp">
+            <img src="/assets/sponsor/main/8.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="352">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/9.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/9.webp">
+            <img src="/assets/sponsor/main/9.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="262">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/10.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/10.webp">
+            <img src="/assets/sponsor/main/10.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="180">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/11.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/11.webp">
+            <img src="/assets/sponsor/main/11.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="243">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/12.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/12.webp">
+            <img src="/assets/sponsor/main/12.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="260">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/main/13.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/main/13.webp">
+            <img src="/assets/sponsor/main/13.jpg" alt="Sponsor" loading="lazy" decoding="async" width="440" height="274">
+          </picture>
+        </div>
+        </div>
+      </div>
+
+      <div class="livello-sponsor">
+        <h3 class="livello-sponsor__titolo">Sponsor</h3>
+        <div class="griglia-sponsor">
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/1.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/1.webp">
+            <img src="/assets/sponsor/normali/1.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="172">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/2.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/2.webp">
+            <img src="/assets/sponsor/normali/2.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/3.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/3.webp">
+            <img src="/assets/sponsor/normali/3.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/4.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/4.webp">
+            <img src="/assets/sponsor/normali/4.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/5.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/5.webp">
+            <img src="/assets/sponsor/normali/5.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/6.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/6.webp">
+            <img src="/assets/sponsor/normali/6.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/7.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/7.webp">
+            <img src="/assets/sponsor/normali/7.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/8.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/8.webp">
+            <img src="/assets/sponsor/normali/8.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/9.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/9.webp">
+            <img src="/assets/sponsor/normali/9.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/10.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/10.webp">
+            <img src="/assets/sponsor/normali/10.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="165">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/11.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/11.webp">
+            <img src="/assets/sponsor/normali/11.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/12.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/12.webp">
+            <img src="/assets/sponsor/normali/12.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/13.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/13.webp">
+            <img src="/assets/sponsor/normali/13.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/14.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/14.webp">
+            <img src="/assets/sponsor/normali/14.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/15.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/15.webp">
+            <img src="/assets/sponsor/normali/15.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/16.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/16.webp">
+            <img src="/assets/sponsor/normali/16.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/17.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/17.webp">
+            <img src="/assets/sponsor/normali/17.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/18.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/18.webp">
+            <img src="/assets/sponsor/normali/18.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/19.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/19.webp">
+            <img src="/assets/sponsor/normali/19.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/20.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/20.webp">
+            <img src="/assets/sponsor/normali/20.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/21.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/21.webp">
+            <img src="/assets/sponsor/normali/21.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="168">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/22.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/22.webp">
+            <img src="/assets/sponsor/normali/22.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/23.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/23.webp">
+            <img src="/assets/sponsor/normali/23.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/24.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/24.webp">
+            <img src="/assets/sponsor/normali/24.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/25.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/25.webp">
+            <img src="/assets/sponsor/normali/25.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/26.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/26.webp">
+            <img src="/assets/sponsor/normali/26.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="185">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/27.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/27.webp">
+            <img src="/assets/sponsor/normali/27.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/28.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/28.webp">
+            <img src="/assets/sponsor/normali/28.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/29.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/29.webp">
+            <img src="/assets/sponsor/normali/29.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/30.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/30.webp">
+            <img src="/assets/sponsor/normali/30.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="171">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/31.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/31.webp">
+            <img src="/assets/sponsor/normali/31.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/32.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/32.webp">
+            <img src="/assets/sponsor/normali/32.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/33.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/33.webp">
+            <img src="/assets/sponsor/normali/33.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/34.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/34.webp">
+            <img src="/assets/sponsor/normali/34.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="170">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/35.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/35.webp">
+            <img src="/assets/sponsor/normali/35.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="167">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/36.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/36.webp">
+            <img src="/assets/sponsor/normali/36.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="169">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/normali/37.jpg">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/normali/37.webp">
+            <img src="/assets/sponsor/normali/37.jpg" alt="Sponsor" loading="lazy" decoding="async" width="340" height="329">
+          </picture>
+        </div>
+        </div>
+      </div>
+
+      <div class="livello-sponsor">
+        <h3 class="livello-sponsor__titolo">Sponsor del ristoro</h3>
+        <div class="griglia-sponsor">
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/1.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/1.webp">
+            <img src="/assets/sponsor/ristoro/1.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="224">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/2.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/2.webp">
+            <img src="/assets/sponsor/ristoro/2.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="223">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/3.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/3.webp">
+            <img src="/assets/sponsor/ristoro/3.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="223">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/4.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/4.webp">
+            <img src="/assets/sponsor/ristoro/4.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="223">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/5.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/5.webp">
+            <img src="/assets/sponsor/ristoro/5.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="224">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/6.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/6.webp">
+            <img src="/assets/sponsor/ristoro/6.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="220">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/7.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/7.webp">
+            <img src="/assets/sponsor/ristoro/7.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="223">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/ristoro/8.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/ristoro/8.webp">
+            <img src="/assets/sponsor/ristoro/8.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="223">
+          </picture>
+        </div>
+        </div>
+      </div>
+
+      <div class="livello-sponsor">
+        <h3 class="livello-sponsor__titolo">Associazioni e volontariato</h3>
+        <div class="griglia-sponsor">
+        <div class="tessera-sponsor" data-sorgente="sponsor/associazioni/gruppo-alpini-borgo-veneto.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/associazioni/gruppo-alpini-borgo-veneto.webp">
+            <img src="/assets/sponsor/associazioni/gruppo-alpini-borgo-veneto.png" alt="Sponsor" loading="lazy" decoding="async" width="151" height="150">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/associazioni/montagnana-soccorso.jpg">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/associazioni/montagnana-soccorso.webp">
+            <img src="/assets/sponsor/associazioni/montagnana-soccorso.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="195">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/associazioni/noi-megliadino-san-fidenzio.jpg">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/associazioni/noi-megliadino-san-fidenzio.webp">
+            <img src="/assets/sponsor/associazioni/noi-megliadino-san-fidenzio.jpg" alt="Sponsor" loading="lazy" decoding="async" width="300" height="500">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/associazioni/prislop.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/associazioni/prislop.webp">
+            <img src="/assets/sponsor/associazioni/prislop.jpg" alt="Sponsor" loading="lazy" decoding="async" width="380" height="128">
+          </picture>
+        </div>
+        <div class="tessera-sponsor" data-sorgente="sponsor/associazioni/protezione-civile-borgo-veneto.png">
+          <picture>
+            <source type="image/webp" srcset="/assets/sponsor/associazioni/protezione-civile-borgo-veneto.webp">
+            <img src="/assets/sponsor/associazioni/protezione-civile-borgo-veneto.png" alt="Sponsor" loading="lazy" decoding="async" width="380" height="380">
+          </picture>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CHI SIAMO ==================== -->
+  <section class="sezione sezione--velo" id="chi-siamo">
+    <div class="contenitore">
+      <div class="sezione__intestazione">
+        <p class="occhiello">Chi siamo</p>
+        <h2>Un gruppo di volontari di Borgo Veneto</h2>
+      </div>
+
+      <div style="max-width:var(--larghezza-testo)">
+        <p>
+          La Passeggiata in Rosa è organizzata dalla
+          <strong>Parrocchia di Santa Margherita d'Adige</strong> e da
+          <strong>NOI Associazione San Biagio APS</strong>, con il patrocinio
+          dello IOV — Istituto Oncologico Veneto di Padova, del Comune di
+          Borgo Veneto e della Provincia di Padova.
+        </p>
+        <p class="tenue">
+          Il racconto di come è nata la passeggiata e delle edizioni passate
+          arriverà presto su questa pagina.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==================== PIEDE ==================== -->
+<footer class="piede su-scuro">
+  <div class="contenitore">
+
+    <img class="piede__logo" src="/assets/img/logo-passeggiata-rosa-chiaro.svg"
+         alt="Passeggiata in Rosa" width="190" height="176">
+
+    <div class="piede__griglia">
+
+      <div>
+        <h3>Organizzano</h3>
+        <div class="loghi-istituzionali" style="margin-bottom:var(--sp-5)">
+          <span class="piastrella">
+            <picture>
+              <source type="image/webp" srcset="/assets/loghi/parrocchia-santa-margherita.webp">
+              <img src="/assets/loghi/parrocchia-santa-margherita.png" alt="Parrocchia di Santa Margherita d'Adige" loading="lazy">
+            </picture>
+          </span>
+          <span class="piastrella">
+            <picture>
+              <source type="image/webp" srcset="/assets/loghi/noi-san-biagio.webp">
+              <img src="/assets/loghi/noi-san-biagio.png" alt="NOI Associazione San Biagio APS" loading="lazy">
+            </picture>
+          </span>
+        </div>
+
+        <h3>Con il patrocinio di</h3>
+        <div class="loghi-istituzionali">
+          <span class="piastrella">
+            <picture>
+              <source type="image/webp" srcset="/assets/loghi/logo-iov-irccs.webp">
+              <img src="/assets/loghi/logo-iov-irccs.jpg" alt="IOV — Istituto Oncologico Veneto IRCCS" loading="lazy">
+            </picture>
+          </span>
+          <span class="piastrella">
+            <picture>
+              <source type="image/webp" srcset="/assets/loghi/comune-borgo-veneto.webp">
+              <img src="/assets/loghi/comune-borgo-veneto.png" alt="Comune di Borgo Veneto" loading="lazy">
+            </picture>
+          </span>
+          <span class="piastrella">
+            <picture>
+              <source type="image/webp" srcset="/assets/loghi/provincia-di-padova.webp">
+              <img src="/assets/loghi/provincia-di-padova.png" alt="Provincia di Padova" loading="lazy">
+            </picture>
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <h3>Il sito</h3>
+        <ul>
+          <li><a href="#evento">L'evento</a></li>
+          <li><a href="#info">Info pratiche</a></li>
+          <li><a href="/iscrizione.html">Pre-iscriviti</a></li>
+          <li><a href="/regolamento.html">Regolamento completo</a></li>
+          <li><a href="/privacy.html">Informativa privacy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Contatti</h3>
+        <ul>
+          <li><a href="mailto:info@passeggiatainrosa.it">info@passeggiatainrosa.it</a></li>
+          <li><a href="mailto:passeggiatainrosa@gmail.com">passeggiatainrosa@gmail.com</a></li>
+        </ul>
+
+        <h3 style="margin-top:var(--sp-6)">Seguici</h3>
+        <div class="social">
+          <a href="https://www.facebook.com/passeggiatainrosa/" target="_blank" rel="noopener" aria-label="Passeggiata in Rosa su Facebook">
+            <svg aria-hidden="true"><use href="#i-facebook"/></svg>
+          </a>
+          <a href="https://www.instagram.com/passeggiata.in.rosa/" target="_blank" rel="noopener" aria-label="Passeggiata in Rosa su Instagram">
+            <svg aria-hidden="true"><use href="#i-instagram"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="piede__firma">
+      <p>© 2026 Passeggiata in Rosa · Borgo Veneto (PD)</p>
+      <p>Sito e automazioni a cura di <a href="https://heneti.it" target="_blank" rel="noopener">Heneti</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/sponsor.js" defer></script>
 </body>
 </html>

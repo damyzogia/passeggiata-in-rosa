@@ -1,0 +1,526 @@
+/* =========================================================================
+   Passeggiata in Rosa — site.css
+   Stili delle pagine pubbliche. Dipende da base.css: qui non si inventano
+   colori o spaziature, si usano solo le variabili del design system.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   INTESTAZIONE
+   Niente menu a panino: sotto i 900px restano logo e bottone, le ancore
+   compaiono quando c'e' spazio. Zero JavaScript.
+   ------------------------------------------------------------------------- */
+
+.intestazione {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bordo);
+}
+
+.intestazione > .contenitore {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-height: 64px;
+  padding-block: var(--sp-2);
+}
+
+.intestazione__logo { flex: none; }
+.intestazione__logo img { width: 92px; }
+
+.navigazione { display: none; margin-left: auto; }
+
+.navigazione ul {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  list-style: none;
+  padding: 0;
+}
+
+.navigazione a {
+  color: var(--testo);
+  text-decoration: none;
+  font-size: var(--t-sm);
+  font-weight: 550;
+  padding-block: var(--sp-2);
+  border-bottom: 2px solid transparent;
+}
+.navigazione a:hover { color: var(--rosa-testo); border-bottom-color: var(--rosa); }
+
+.intestazione__azione { margin-left: auto; flex: none; }
+.navigazione + .intestazione__azione { margin-left: var(--sp-5); }
+
+@media (min-width: 900px) {
+  .navigazione { display: block; }
+  .intestazione__logo img { width: 108px; }
+}
+
+/* -------------------------------------------------------------------------
+   HERO
+   ------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--rosa-velo) 0%, #fff 100%);
+  padding-block: var(--sp-8) 0;
+  text-align: center;
+}
+
+.hero__contenuto {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-5);
+  position: relative;
+  z-index: 2;
+}
+
+.hero__logo { width: min(300px, 62vw); }
+
+.hero h1 {
+  font-size: var(--t-3xl);
+  font-variation-settings: 'opsz' 96, 'SOFT' 50, 'WONK' 0;
+  margin: 0;
+}
+
+.hero__quando {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2) var(--sp-4);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  color: var(--rosa-testo);
+}
+
+.hero__quando span { display: inline-flex; align-items: center; gap: var(--sp-2); }
+
+.hero__causa {
+  max-width: 46ch;
+  color: var(--testo-tenue);
+  font-size: var(--t-lg);
+  text-wrap: pretty;
+}
+
+.hero__azioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  justify-content: center;
+  margin-top: var(--sp-2);
+}
+
+.hero__nota { font-size: var(--t-sm); color: var(--testo-tenue); }
+
+/* La strada che chiude l'hero e accompagna alla sezione successiva. */
+.hero__strada { margin-top: var(--sp-6); margin-bottom: -2px; }
+
+/* --- SLOT FOTOGRAFICO ---------------------------------------------------
+   Predisposto per l'immagine aerea (gente + chiesa). Quando la foto c'e':
+   1. togli il commento al <picture> dentro .hero__foto in index.html
+   2. aggiungi la classe "hero--con-foto" alla sezione .hero
+   Il resto (velo, contrasto del testo, ritaglio) e' gia' calcolato qui.    */
+
+.hero__foto {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: none;
+}
+
+.hero__foto img { width: 100%; height: 100%; object-fit: cover; }
+
+.hero--con-foto .hero__foto { display: block; }
+
+.hero--con-foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Velo chiaro: tiene il testo scuro leggibile sopra qualunque fotografia. */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.78) 55%, #fff 100%);
+}
+
+/* -------------------------------------------------------------------------
+   SEZIONI E SCHEDE
+   ------------------------------------------------------------------------- */
+
+.sezione__intestazione {
+  display: grid;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-7);
+  max-width: var(--larghezza-testo);
+}
+
+.griglia {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) { .griglia--2 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .griglia--3 { grid-template-columns: repeat(3, 1fr); } }
+
+.scheda-info {
+  display: grid;
+  gap: var(--sp-3);
+  align-content: start;
+  background: #fff;
+  border: 1px solid var(--bordo);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--ombra-1);
+}
+
+.scheda-info h3 {
+  font-size: var(--t-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.scheda-info__icona {
+  flex: none;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0.45rem;
+  border-radius: var(--r-pill);
+  background: var(--rosa-tenue);
+  color: var(--rosa-testo);
+  fill: currentColor;
+}
+
+.dato-grande {
+  font-family: var(--font-titoli);
+  font-size: var(--t-2xl);
+  font-variation-settings: 'opsz' 72, 'SOFT' 50;
+  line-height: 1.1;
+  color: var(--rosa-testo);
+}
+
+.orario {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  color: var(--testo);
+}
+
+/* -------------------------------------------------------------------------
+   MAPPA
+   ------------------------------------------------------------------------- */
+
+.mappa {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--bordo);
+  box-shadow: var(--ombra-1);
+  background: var(--sfondo-alt);
+}
+
+.mappa iframe {
+  display: block;
+  width: 100%;
+  height: 340px;
+  border: 0;
+}
+
+.mappa__azioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: center;
+  padding: var(--sp-4);
+  background: #fff;
+  border-top: 1px solid var(--bordo);
+}
+
+/* -------------------------------------------------------------------------
+   COME ISCRIVERSI — due strade a confronto
+   ------------------------------------------------------------------------- */
+
+.via {
+  position: relative;
+  display: grid;
+  gap: var(--sp-3);
+  align-content: start;
+  background: #fff;
+  border: 1px solid var(--bordo);
+  border-radius: var(--r-lg);
+  padding: var(--sp-6) var(--sp-5);
+  box-shadow: var(--ombra-1);
+}
+
+.via--consigliata {
+  border-color: var(--rosa);
+  box-shadow: var(--ombra-2);
+}
+
+.via__targa {
+  position: absolute;
+  top: calc(var(--sp-4) * -1);
+  left: var(--sp-5);
+  padding: 0.3em 0.9em;
+  border-radius: var(--r-pill);
+  background: var(--rosa-testo);
+  color: #fff;
+  font-size: var(--t-xs);
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.scadenza {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.4em 0.9em;
+  border-radius: var(--r-pill);
+  background: var(--rosa-tenue);
+  color: var(--rosa-scuro);
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------
+   FISARMONICA (details/summary nativi: accessibili e senza JavaScript)
+   ------------------------------------------------------------------------- */
+
+.fisarmonica {
+  display: grid;
+  gap: var(--sp-2);
+  max-width: var(--larghezza-testo);
+}
+
+.fisarmonica details {
+  background: #fff;
+  border: 1px solid var(--bordo);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.fisarmonica details[open] { border-color: var(--rosa); }
+
+.fisarmonica summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+  transition: background var(--transizione);
+}
+
+.fisarmonica summary::-webkit-details-marker { display: none; }
+.fisarmonica summary:hover { background: var(--rosa-velo); }
+
+.fisarmonica summary::after {
+  content: '';
+  margin-left: auto;
+  flex: none;
+  width: 0.7em;
+  height: 0.7em;
+  border-right: 2px solid var(--rosa-testo);
+  border-bottom: 2px solid var(--rosa-testo);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform var(--transizione);
+}
+
+.fisarmonica details[open] summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+
+.fisarmonica__corpo {
+  padding: 0 var(--sp-5) var(--sp-5);
+  color: var(--testo-tenue);
+}
+
+/* -------------------------------------------------------------------------
+   SPONSOR
+   ------------------------------------------------------------------------- */
+
+.livello-sponsor + .livello-sponsor { margin-top: var(--sp-7); }
+
+.livello-sponsor__titolo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+  font-family: var(--font-testo);
+  font-size: var(--t-sm);
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.livello-sponsor__titolo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--bordo);
+}
+
+.griglia-sponsor {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  align-items: stretch;
+}
+
+.griglia-sponsor--main { grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); }
+
+.tessera-sponsor {
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4);
+  min-height: 96px;
+  background: #fff;
+  border: 1px solid var(--bordo);
+  border-radius: var(--r-md);
+  transition: border-color var(--transizione), box-shadow var(--transizione), transform var(--transizione);
+}
+
+.griglia-sponsor--main .tessera-sponsor { min-height: 124px; }
+
+.tessera-sponsor img {
+  max-width: 100%;
+  max-height: 76px;
+  width: auto;
+  object-fit: contain;
+}
+
+.griglia-sponsor--main .tessera-sponsor img { max-height: 100px; }
+
+/* Solo le tessere che il file legenda.csv ha reso cliccabili reagiscono. */
+a.tessera-sponsor:hover {
+  border-color: var(--rosa);
+  box-shadow: var(--ombra-2);
+  transform: translateY(-2px);
+}
+
+/* -------------------------------------------------------------------------
+   PIEDE
+   ------------------------------------------------------------------------- */
+
+.piede { padding-block: var(--sp-8) var(--sp-6); }
+
+.piede__logo { width: 190px; margin-bottom: var(--sp-5); }
+
+.piede__griglia {
+  display: grid;
+  gap: var(--sp-7);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 780px) {
+  .piede__griglia { grid-template-columns: 1.3fr 1fr 1fr; gap: var(--sp-6); }
+}
+
+.piede h3 {
+  font-family: var(--font-testo);
+  font-size: var(--t-sm);
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #cbb8c1;
+  margin-bottom: var(--sp-4);
+}
+
+.piede ul { list-style: none; padding: 0; display: grid; gap: var(--sp-3); }
+
+.piede a { text-decoration: none; }
+.piede a:hover { text-decoration: underline; }
+
+.social { display: flex; gap: var(--sp-3); }
+
+.social a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(246, 238, 242, 0.28);
+  color: #f6eef2;
+}
+.social a:hover { background: var(--rosa); color: var(--scuro); border-color: var(--rosa); }
+.social svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* I loghi di patrocini e organizzatori sono a colori: su fondo prugna vanno
+   posati su una piastrella chiara, altrimenti spariscono. */
+.loghi-istituzionali {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: center;
+}
+
+.loghi-istituzionali .piastrella {
+  display: grid;
+  place-items: center;
+  padding: var(--sp-3);
+  min-width: 84px;
+  min-height: 64px;
+  background: #fff;
+  border-radius: var(--r-sm);
+}
+
+.loghi-istituzionali img { max-height: 46px; width: auto; max-width: 110px; object-fit: contain; }
+
+.piede__firma {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-5);
+  border-top: 1px solid rgba(246, 238, 242, 0.16);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-5);
+  justify-content: space-between;
+  font-size: var(--t-sm);
+  color: #cbb8c1;
+}
+
+/* -------------------------------------------------------------------------
+   PAGINE DI TESTO (regolamento, privacy)
+   ------------------------------------------------------------------------- */
+
+.testo-lungo {
+  max-width: var(--larghezza-testo);
+  margin-inline: auto;
+}
+
+.testo-lungo h2 {
+  font-size: var(--t-xl);
+  margin-top: var(--sp-7);
+  margin-bottom: var(--sp-3);
+}
+
+.testo-lungo h2:first-of-type { margin-top: var(--sp-5); }
+
+.testo-lungo h3 {
+  font-size: var(--t-lg);
+  margin-top: var(--sp-5);
+  margin-bottom: var(--sp-2);
+}
+
+.testo-lungo p,
+.testo-lungo ul { margin-bottom: var(--sp-4); }
+
+.testo-lungo ul { padding-left: 1.3em; }
+.testo-lungo li { margin-bottom: var(--sp-2); }
+
+.scheda-evidenza {
+  background: var(--rosa-velo);
+  border-left: 4px solid var(--rosa);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-6);
+}
+
+.scheda-evidenza ul { list-style: none; padding: 0; display: grid; gap: var(--sp-2); }
+
+.briciole {
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+  margin-bottom: var(--sp-4);
+}
+.briciole a { color: var(--testo-tenue); }

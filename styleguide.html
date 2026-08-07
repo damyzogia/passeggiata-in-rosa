@@ -6,7 +6,11 @@
 <title>Styleguide — Passeggiata in Rosa</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Pagina di lavoro: direzione visiva del sito Passeggiata in Rosa.">
-<link rel="icon" href="/assets/img/favicon-passeggiata-rosa.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/css/base.css">
 <style>
   /* Stili validi solo per questa pagina di lavoro: non finiscono in base.css. */
@@ -476,9 +480,11 @@
     <p class="sommario">
       Il file e' vettoriale (SVG, 24 KB): nitido a ogni dimensione e su ogni
       schermo. Dentro ci sono elementi bianchi — il profilo del viso, la
-      segnaletica della strada — quindi il logo <strong>vuole un fondo
-      chiaro</strong>. Su fondo scuro resta leggibile ma perde il contrasto
-      del viso: verifica tu se ti convince per il footer.
+      segnaletica della strada — quindi la versione a colori
+      <strong>vuole un fondo chiaro</strong>. Sul prugna si usa invece la
+      <strong>variante monocromatica chiara</strong>: il marchio diventa
+      bianco e viso e segnaletica vengono bucati col colore del fondo, cosi'
+      non si perdono.
     </p>
 
     <div class="sg-logo-prova">
@@ -491,8 +497,19 @@
         <span class="sg-etichetta">Rosa velo #FDF3F7</span>
       </div>
       <div class="sg-fondo-scuro su-scuro">
-        <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Logo su fondo scuro">
-        <span class="sg-etichetta" style="color:#cbb8c1">Scuro #3B2A32 — da validare</span>
+        <img src="/assets/img/logo-passeggiata-rosa-chiaro.svg" alt="Logo monocromatico chiaro su fondo prugna">
+        <span class="sg-etichetta" style="color:#cbb8c1">Variante chiara su #3B2A32</span>
+      </div>
+    </div>
+
+    <div class="sg-logo-prova" style="margin-top:var(--sp-4)">
+      <div class="sg-fondo-scuro su-scuro">
+        <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Logo a colori su fondo scuro">
+        <span class="sg-etichetta" style="color:#cbb8c1">Confronto: versione a colori sul prugna — da non usare</span>
+      </div>
+      <div class="sg-fondo-chiaro">
+        <img src="/assets/img/marchio-passeggiata-rosa.svg" alt="Solo marchio" style="width:min(120px,32vw)">
+        <span class="sg-etichetta">Marchio senza logotipo — icone e favicon</span>
       </div>
     </div>
 
@@ -528,50 +545,6 @@
       <a class="btn btn--primario" href="#">Pre-iscriviti</a>
       <a class="btn btn--secondario" href="#">Regolamento</a>
     </div>
-  </div>
-</section>
-
-<!-- ===================== DECISIONE APERTA (TEMPORANEO) ===================== -->
-<section class="sg-blocco">
-  <div class="contenitore">
-    <p class="occhiello">Decisione aperta</p>
-    <h2>Ritaglio del logo Prislop</h2>
-
-    <div class="sg-decisione">
-      <p>
-        Il file consegnato non e' un logo ma la <strong>fotografia di un
-        biglietto da visita</strong>. Ho provato i tre ritagli qui sotto: tutti
-        portano con se' texture della carta, sfondo arancio sfumato, ombre e
-        bordi sfocati. Come da accordi <strong>resta in uso il PNG intero</strong>.
-      </p>
-
-      <div class="sg-ritagli">
-        <figure>
-          <img src="/sponsor/_sorgenti/prislop-ritaglio-A.png" alt="Ritaglio A: marchio completo con pay-off">
-          <figcaption><strong>A</strong> — tondo + scritta + pay-off. Si porta dietro il bordo beige del biglietto e tutto lo sfondo.</figcaption>
-        </figure>
-        <figure>
-          <img src="/sponsor/_sorgenti/prislop-ritaglio-B.png" alt="Ritaglio B: solo il tondo con lo smiley">
-          <figcaption><strong>B</strong> — solo il tondo. Grana della carta, ombra grigia e alone arancio ben visibili.</figcaption>
-        </figure>
-        <figure>
-          <img src="/sponsor/_sorgenti/prislop-ritaglio-C.png" alt="Ritaglio C: solo la scritta PRISLOP">
-          <figcaption><strong>C</strong> — solo la scritta. Fondo arancio con trama di tessuto e luce non uniforme.</figcaption>
-        </figure>
-      </div>
-
-      <p style="margin-top:var(--sp-4)">
-        La strada giusta e' chiedere a Prislop il file originale del logo
-        (PDF, SVG o EPS vettoriale, oppure un PNG su fondo trasparente).
-        Con quello il marchio entra nella griglia pulito come tutti gli altri.
-      </p>
-    </div>
-
-    <p class="piccolo tenue" style="margin-top:var(--sp-4)">
-      Questo blocco e i tre file di prova in
-      <span class="sg-codice">/sponsor/_sorgenti/</span> vanno cancellati una
-      volta presa la decisione.
-    </p>
   </div>
 </section>
 
