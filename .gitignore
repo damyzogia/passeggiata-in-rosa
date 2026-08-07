@@ -1,0 +1,31 @@
+# Sistema operativo
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# File temporanei e di lavoro
+*.tmp
+*.bak
+*.orig
+~$*
+*.psd
+*.ai
+
+# Nulla da buildare: il sito è statico e si pubblica dalla root.
+# Se in futuro servissero tool locali:
+node_modules/
+.wrangler/
+.env
+.env.*
+
+# Claude Code (locale)
+.claude/settings.local.json
