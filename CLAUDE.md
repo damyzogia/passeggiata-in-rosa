@@ -57,6 +57,9 @@ Relazione: una **Squadra** raccoglie più **Prenotazioni**; una **Prenotazione**
 - **Pre-iscrizione online (questa fase):** per **ogni** partecipante sono **obbligatori** nome, cognome, data di nascita, sesso. **Facoltativo solo il gruppo.** Del capofila serve anche l'**email** (per la conferma), telefono facoltativo.
 - **Iscrizione veloce al banco (fase gestionale, dopo):** versione magra — nome di riferimento + gruppo + numero paganti + eventuale "di cui bambini gratis". Data di nascita solo quando serve. Il sistema salva i dati presenti e lascia vuoto il resto.
 
+### Da fare nella fase form (NON ora)
+- **Controllo email duplicata.** Se l'email inserita ha già una prenotazione, non creare un doppione: avvisare l'utente e offrirgli di **modificare quella esistente**. Richiede due cose che oggi non ci sono: un **endpoint di ricerca per email** lato Apps Script e un **flusso di modifica** lato frontend (recupero prenotazione → modifica partecipanti → salvataggio atomico). Vale anche qui la regola 3: il controllo non sostituisce il `request_id`, lo affianca.
+
 ## Quota
 € **8,00** a partecipante. **Gratis i bambini fino a 6 anni compiuti** = nati **dal 14/09/2019 in poi**. Totale = (partecipanti paganti) × 8. Chi non ha data di nascita è considerato pagante.
 

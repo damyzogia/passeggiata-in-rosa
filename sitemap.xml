@@ -2,25 +2,31 @@
 <!--
   Elenca SOLO le pagine che esistono davvero: una sitemap che punta a URL
   inesistenti fa perdere fiducia al crawler.
-  Da aggiungere quando saranno pubblicate: iscrizione.html.
+  Da aggiungere quando sara' pubblicata: iscrizione.html.
   Restano fuori per scelta: conferma.html (personale) e styleguide.html.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://passeggiatainrosa.it/</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://passeggiatainrosa.it/sponsor.html</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://passeggiatainrosa.it/regolamento.html</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://passeggiatainrosa.it/privacy.html</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
