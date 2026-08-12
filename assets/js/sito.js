@@ -57,8 +57,25 @@
           osservatore.unobserve(v.target);
         });
       },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 }
+      // Margine in pixel, non in percentuale: con una percentuale, su schermi
+      // molto alti la zona morta in fondo diventa enorme e un elemento che ci
+      // finisce dentro non si rivela mai, perche' la pagina non puo' scorrere
+      // oltre. Con un valore fisso il comportamento resta lo stesso ovunque.
+      { rootMargin: '0px 0px -60px 0px', threshold: 0.08 }
     );
+
+    // Rete di sicurezza: se dopo il caricamento qualcosa e' ancora nascosto ma
+    // gia' dentro lo schermo, lo si mostra. Meglio un'animazione saltata che
+    // un contenuto invisibile.
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        daRivelare.forEach(function (e) {
+          if (e.classList.contains('e-visibile')) return;
+          var r = e.getBoundingClientRect();
+          if (r.top < window.innerHeight && r.bottom > 0) e.classList.add('e-visibile');
+        });
+      }, 400);
+    });
 
     daRivelare.forEach(function (e) {
       // Lo sfalsamento si dichiara nell'HTML con data-rivela="1", "2"...

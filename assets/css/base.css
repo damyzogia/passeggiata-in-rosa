@@ -52,7 +52,8 @@
   --bordo: #e9e2e5;
   --sfondo: #ffffff;
   --sfondo-alt: #fdf9fa;
-  --scuro: #3b2a32;         /* fondo scuro brandizzato (footer, hero scuro) */
+  --scuro: #6b1234;         /* bordeaux: fondo scuro brandizzato (footer, sezioni scure) */
+  --rosa-chiaro: #f8a6c8;   /* rosa per testo e bottoni SUL fondo scuro: 6,4:1 */
 
   /* --- Stati --- */
   --errore: #b3261e;
@@ -463,22 +464,22 @@ a:hover { color: var(--rosa-scuro); }
 
 /* :not(.btn) e' necessario: senza, questa regola vince sul colore del testo
    dei bottoni (piu' specifica di .btn--primario) e li manda fuori contrasto. */
-.su-scuro a:not(.btn) { color: var(--rosa); }
+.su-scuro a:not(.btn) { color: var(--rosa-chiaro); }
 .su-scuro a:not(.btn):hover { color: #fff; }
 
-/* Su fondo scuro il rosa del logo diventa finalmente un riempimento: come
-   sfondo con testo --scuro sopra da' 4,7:1, quindi qui puo' fare il primario. */
+/* Sul bordeaux il rosa chiaro fa da riempimento: con il testo --scuro sopra
+   da' 6,4:1, ben oltre la soglia. */
 .su-scuro .btn--primario {
-  background: var(--rosa);
+  background: var(--rosa-chiaro);
   color: var(--scuro);
   box-shadow: none;
 }
-.su-scuro .btn--primario:hover { background: #f7a0c6; color: var(--scuro); }
+.su-scuro .btn--primario:hover { background: #fdc9de; color: var(--scuro); }
 
 .su-scuro .btn--secondario {
   background: transparent;
   color: #fff;
-  border-color: var(--rosa);
+  border-color: var(--rosa-chiaro);
 }
 .su-scuro .btn--secondario:hover {
   background: rgba(237, 110, 167, 0.18);

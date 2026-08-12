@@ -151,7 +151,7 @@ dialog.menu {
   color: var(--testo);
 }
 
-dialog.menu::backdrop { background: rgba(59, 42, 50, 0.55); }
+dialog.menu::backdrop { background: rgba(107, 18, 52, 0.55); }
 
 dialog.menu[open] {
   display: flex;
@@ -358,13 +358,13 @@ body.con-barra-pollice { padding-bottom: 112px; }
      3. velo rosa uniforme su tutta la foto, che scalda e uniforma. */
   background:
     radial-gradient(ellipse 76% 60% at 50% 48%,
-      rgba(59, 42, 50, 0.42) 0%,
-      rgba(59, 42, 50, 0.22) 55%,
+      rgba(107, 18, 52, 0.42) 0%,
+      rgba(107, 18, 52, 0.22) 55%,
       rgba(59, 42, 50, 0) 82%),
     linear-gradient(180deg,
       rgba(59, 42, 50, 0.08) 0%,
       rgba(59, 42, 50, 0.14) 55%,
-      rgba(59, 42, 50, 0.38) 100%),
+      rgba(107, 18, 52, 0.38) 100%),
     rgba(237, 110, 167, 0.34);
 }
 
@@ -427,7 +427,7 @@ body.con-barra-pollice { padding-bottom: 112px; }
   gap: var(--sp-2) var(--sp-4);
   font-size: var(--t-lg);
   font-weight: 650;
-  text-shadow: 0 1px 12px rgba(59, 42, 50, 0.55);
+  text-shadow: 0 1px 12px rgba(107, 18, 52, 0.55);
 }
 
 .hero__riga svg { width: 1.1em; height: 1.1em; fill: var(--rosa); flex: none; }
@@ -436,14 +436,14 @@ body.con-barra-pollice { padding-bottom: 112px; }
   font-size: var(--t-base);
   font-weight: 500;
   color: #f3e2ea;
-  text-shadow: 0 1px 10px rgba(59, 42, 50, 0.6);
+  text-shadow: 0 1px 10px rgba(107, 18, 52, 0.6);
 }
 
 .hero__causa {
   max-width: 34ch;
   font-size: var(--t-base);
   color: #f6eef2;
-  text-shadow: 0 1px 10px rgba(59, 42, 50, 0.6);
+  text-shadow: 0 1px 10px rgba(107, 18, 52, 0.6);
   text-wrap: pretty;
 }
 
@@ -489,7 +489,7 @@ body.con-barra-pollice { padding-bottom: 112px; }
   opacity: 0.9;
 }
 
-.hero__scorri span { text-shadow: 0 1px 8px rgba(59, 42, 50, 0.7); }
+.hero__scorri span { text-shadow: 0 1px 8px rgba(107, 18, 52, 0.7); }
 
 .hero__scorri i {
   display: block;
@@ -646,12 +646,12 @@ body.con-barra-pollice { padding-bottom: 112px; }
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(59, 42, 50, 0.93) 0%, rgba(59, 42, 50, 0.86) 100%),
+    linear-gradient(180deg, rgba(107, 18, 52, 0.93) 0%, rgba(107, 18, 52, 0.86) 100%),
     linear-gradient(90deg, rgba(191, 34, 104, 0.34) 0%, rgba(59, 42, 50, 0) 60%);
 }
 
 .numeri h2 { color: #fff; }
-.numeri .occhiello { color: var(--rosa); }
+.numeri .occhiello { color: var(--rosa-chiaro); }
 
 .griglia-numeri {
   display: grid;
@@ -902,7 +902,7 @@ dialog.lente {
 }
 
 dialog.lente::backdrop {
-  background: rgba(35, 24, 30, 0.9);
+  background: rgba(74, 12, 36, 0.92);
   backdrop-filter: blur(6px);
 }
 
@@ -1283,7 +1283,7 @@ dialog.lente[open] {
   color: #f6eef2;
   transition: background var(--transizione), color var(--transizione), border-color var(--transizione);
 }
-.social a:hover { background: var(--rosa); color: var(--scuro); border-color: var(--rosa); }
+.social a:hover { background: var(--rosa-chiaro); color: var(--scuro); border-color: var(--rosa-chiaro); }
 .social svg { width: 20px; height: 20px; fill: currentColor; }
 
 /* I loghi istituzionali sono a colori: sul prugna vanno posati su una

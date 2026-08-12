@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-<meta name="theme-color" content="#3b2a32">
+<meta name="theme-color" content="#6b1234">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="it_IT">
@@ -453,7 +453,40 @@
 
       </div>
 
-      <div style="display:flex;justify-content:center;margin-top:var(--sp-7)">
+      <div class="nastro" style="margin-top:var(--sp-7)">
+        <a class="nastro__voce" href="/assets/foto/foto_1-1400.jpg" data-lente data-nome="Passeggiata in Rosa, edizioni passate">
+          <picture>
+            <source type="image/webp" srcset="/assets/foto/foto_1-400.webp">
+            <img src="/assets/foto/foto_1-400.jpg" alt="Passeggiata in Rosa, edizioni passate" width="400" height="300" loading="lazy" decoding="async">
+          </picture>
+        </a>
+        <a class="nastro__voce" href="/assets/foto/foto_2-1400.jpg" data-lente data-nome="Passeggiata in Rosa, edizioni passate">
+          <picture>
+            <source type="image/webp" srcset="/assets/foto/foto_2-400.webp">
+            <img src="/assets/foto/foto_2-400.jpg" alt="Passeggiata in Rosa, edizioni passate" width="400" height="300" loading="lazy" decoding="async">
+          </picture>
+        </a>
+        <a class="nastro__voce" href="/assets/foto/foto_5-1400.jpg" data-lente data-nome="Passeggiata in Rosa, edizioni passate">
+          <picture>
+            <source type="image/webp" srcset="/assets/foto/foto_5-400.webp">
+            <img src="/assets/foto/foto_5-400.jpg" alt="Passeggiata in Rosa, edizioni passate" width="400" height="300" loading="lazy" decoding="async">
+          </picture>
+        </a>
+        <a class="nastro__voce" href="/assets/foto/foto_6-1400.jpg" data-lente data-nome="Passeggiata in Rosa, edizioni passate">
+          <picture>
+            <source type="image/webp" srcset="/assets/foto/foto_6-400.webp">
+            <img src="/assets/foto/foto_6-400.jpg" alt="Passeggiata in Rosa, edizioni passate" width="400" height="300" loading="lazy" decoding="async">
+          </picture>
+        </a>
+        <a class="nastro__voce" href="/assets/foto/foto_4-1400.jpg" data-lente data-nome="Passeggiata in Rosa, edizioni passate">
+          <picture>
+            <source type="image/webp" srcset="/assets/foto/foto_4-400.webp">
+            <img src="/assets/foto/foto_4-400.jpg" alt="Passeggiata in Rosa, edizioni passate" width="400" height="300" loading="lazy" decoding="async">
+          </picture>
+        </a>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-top:var(--sp-6)">
         <a class="btn btn--secondario" href="/storia.html">Leggi la nostra storia</a>
       </div>
     </div>
@@ -488,6 +521,31 @@
             interamente di volontariato.
           </p>
         </div>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="divisorio-strada" aria-hidden="true">
+    <svg class="strada-curva" viewBox="0 0 1200 150" width="1200" height="150" fill="none">
+      <path class="strada-curva__asfalto" d="M20 40 C 260 40, 300 128, 520 118 S 820 24, 1010 60 S 1150 116, 1180 120"/>
+      <path class="strada-curva__linea" d="M20 40 C 260 40, 300 128, 520 118 S 820 24, 1010 60 S 1150 116, 1180 120"/>
+    </svg>
+  </div>
+
+  <!-- ==================== SOSTENITORI ==================== -->
+  <section class="sezione sezione--velo sezione--centrata" id="sostenitori">
+    <div class="contenitore" style="text-align:center">
+      <div class="sezione__intestazione" data-rivela="0">
+        <p class="occhiello">Sostenitori</p>
+        <h2>Un grazie a chi rende tutto possibile</h2>
+        <p class="sommario">
+          Aziende e associazioni del territorio coprono le spese, così la quota
+          va tutta alla ricerca.
+        </p>
+      </div>
+      <div data-rivela="1">
+        <a class="btn btn--primario btn--grande" href="/sponsor.html">Scopri i sostenitori</a>
       </div>
     </div>
   </section>
@@ -627,7 +685,18 @@
   </div>
 </dialog>
 
+
+<!-- Lightbox: apre le miniature del nastro. -->
+<dialog class="lente" aria-label="Immagine ingrandita">
+  <figure class="lente__telaio">
+    <button class="lente__chiudi" type="button" aria-label="Chiudi">&times;</button>
+    <img class="lente__img" alt="">
+    <figcaption class="lente__didascalia" hidden></figcaption>
+  </figure>
+</dialog>
+
 <script src="/assets/js/sito.js" defer></script>
 <script src="/assets/js/menu.js" defer></script>
+<script src="/assets/js/lente.js" defer></script>
 </body>
 </html>
