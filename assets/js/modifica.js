@@ -84,7 +84,11 @@
 
     occupato(accInvia, true, 'Cerco…', 'Trova la mia iscrizione');
 
-    API.chiama('caricaPerModifica', { email: email, data_nascita: data })
+    Attesa.durante(
+      moduloAccesso,
+      API.chiama('caricaPerModifica', { email: email, data_nascita: data }),
+      'Cerco la tua iscrizione…'
+    )
       .then(function (r) {
         prenotazione = r.prenotazione || r;
         mostraScheda(email, data);
@@ -120,7 +124,11 @@
 
     var squadra = prenotazione.squadra || '';
     gruppi.riempi([], squadra);
-    API.chiama('getSquadre', {})
+    Attesa.durante(
+      document.getElementById('chip-gruppi'),
+      API.chiama('getSquadre', {}),
+      'Carico i gruppi…'
+    )
       .then(function (r) { gruppi.riempi(r.squadre || [], squadra); })
       .catch(function () { /* si resta con le sole voci di base */ });
 
@@ -159,7 +167,11 @@
 
     occupato(salva, true, 'Salvo…', 'Salva le modifiche');
 
-    API.chiama('aggiornaPrenotazione', dati, { requestId: idSalvataggio })
+    Attesa.durante(
+      moduloModifica,
+      API.chiama('aggiornaPrenotazione', dati, { requestId: idSalvataggio }),
+      'Salvo le modifiche…'
+    )
       .then(function (r) {
         var c = Modulo.conta(dati.partecipanti);
         var q = new URLSearchParams({

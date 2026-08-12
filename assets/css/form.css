@@ -435,3 +435,83 @@ fieldset[disabled] * { cursor: not-allowed; }
   .intestazione, .barra-pollice, .piede, .stampa-no { display: none !important; }
   body { padding: 0; }
 }
+
+/* -------------------------------------------------------------------------
+   VELO DI ATTESA
+   Copre l'area coinvolta dalla chiamata e ne impedisce l'uso finche' il
+   server non risponde. Chiaro e non nero: sopra un modulo bianco un fondo
+   scuro sembrerebbe un errore invece che un'attesa.
+   ------------------------------------------------------------------------- */
+
+.in-attesa { position: relative; }
+
+.velo-attesa {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  padding: var(--sp-4);
+  /* Velo chiaro appena rosato: si legge che qualcosa sta succedendo senza
+     nascondere del tutto quello che c'e' sotto. */
+  background: rgba(253, 243, 247, 0.92);
+  border-radius: inherit;
+  text-align: center;
+}
+
+.velo-attesa__corpo {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-3);
+  text-align: center;
+}
+
+/* Modulo piu alto dello schermo: il messaggio segue la vista, altrimenti
+   resterebbe al centro del modulo, cioe fuori dalla piega. */
+.velo-attesa--lungo { align-content: start; }
+
+.velo-attesa--lungo .velo-attesa__corpo {
+  position: sticky;
+  top: 38vh;
+}
+
+.velo-attesa__rotella {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 4px solid var(--rosa-tenue);
+  border-top-color: var(--rosa-testo);
+  border-radius: 50%;
+  animation: velo-gira 800ms linear infinite;
+}
+
+.velo-attesa__testo {
+  /* Grande e scuro: chi ha 70 anni deve leggerlo senza avvicinare il telefono. */
+  font-size: var(--t-lg);
+  font-weight: 650;
+  color: var(--rosa-scuro);
+}
+
+@keyframes velo-gira { to { transform: rotate(360deg); } }
+
+/* Con il movimento ridotto la rotella sparisce del tutto: resta il testo,
+   che e' quello che porta l'informazione. */
+@media (prefers-reduced-motion: reduce) {
+  .velo-attesa__rotella { display: none; }
+}
+
+/* Sui veli piccoli, come quello del campo email, la rotella si stringe e
+   testo e rotella stanno in riga. */
+.campo > .velo-attesa .velo-attesa__corpo,
+.velo-attesa--riga .velo-attesa__corpo {
+  grid-auto-flow: column;
+  align-items: center;
+}
+
+.campo > .velo-attesa .velo-attesa__rotella {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 3px;
+}
+
+.campo > .velo-attesa .velo-attesa__testo { font-size: var(--t-base); }
+

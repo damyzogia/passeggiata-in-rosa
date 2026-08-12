@@ -61,7 +61,11 @@
   );
   gruppi.riempi([], '');
 
-  API.chiama('getSquadre', {})
+  Attesa.durante(
+    document.getElementById('chip-gruppi'),
+    API.chiama('getSquadre', {}),
+    'Carico i gruppi…'
+  )
     .then(function (r) { gruppi.riempi(r.squadre || [], ''); })
     .catch(function () {
       /* Senza elenco restano "Nessun gruppo" e "Crea nuovo gruppo": si puo'
@@ -106,9 +110,11 @@
       return;
     }
 
-    campoEmail.setAttribute('aria-busy', 'true');
-
-    API.chiama('verificaEmail', { email: email })
+    Attesa.durante(
+      campoEmail.closest('.campo'),
+      API.chiama('verificaEmail', { email: email }),
+      'Controllo l’email…'
+    )
       .then(function (r) {
         if (r.valida === false) {
           Modulo.mostraErroreCampo(campoEmail, 'Questo indirizzo non sembra corretto.');
@@ -132,9 +138,6 @@
           e.messaggio || 'Non siamo riusciti a controllare l’email. Puoi proseguire.'
         );
         apriModulo(email);
-      })
-      .finally(function () {
-        campoEmail.removeAttribute('aria-busy');
       });
   }
 
@@ -179,7 +182,11 @@
 
     occupato(true);
 
-    API.chiama('creaPrenotazione', dati, { requestId: idInvio })
+    Attesa.durante(
+      modulo,
+      API.chiama('creaPrenotazione', dati, { requestId: idInvio }),
+      'Invio l’iscrizione…'
+    )
       .then(function (r) {
         if (!r.codice) throw new Error('Risposta senza codice');
         /* Si va alla conferma con i soli dati che vengono dal server. Nessun
