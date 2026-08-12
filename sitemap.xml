@@ -2,6 +2,8 @@
 <!--
   Elenca SOLO le pagine che esistono davvero: una sitemap che punta a URL
   inesistenti fa perdere fiducia al crawler.
+  Le iscrizioni sono chiuse al pubblico durante le prove: iscrizione-test.html
+  e modifica-test.html restano fuori dalla sitemap e non sono linkate.
   Restano fuori per scelta: conferma.html (personale) e styleguide.html.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

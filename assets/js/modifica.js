@@ -16,7 +16,7 @@
   var accesso = document.getElementById('accesso');
   var scheda = document.getElementById('scheda');
   var accEmail = document.getElementById('acc-email');
-  var accData = document.getElementById('acc-data');
+  var accNascita = document.getElementById('acc-nascita');
   var accInvia = document.getElementById('acc-invia');
   var accAvviso = document.getElementById('acc-avviso');
   var accAvvisoTitolo = document.getElementById('acc-avviso-titolo');
@@ -32,6 +32,8 @@
   var prenotazione = null;
   var idSalvataggio = null;
   var inCorso = false;
+
+  Modulo.preparaData(accNascita);
 
   var persone = new Modulo.Partecipanti(
     document.getElementById('elenco-persone'),
@@ -65,7 +67,7 @@
     accAvviso.hidden = true;
 
     var email = accEmail.value.trim().toLowerCase();
-    var data = accData.value;
+    var data = Modulo.leggiData(accNascita);
     var primoErrore = null;
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
@@ -73,8 +75,10 @@
       primoErrore = accEmail;
     }
     if (!data) {
-      Modulo.mostraErroreCampo(accData, 'Serve la data di nascita.');
-      if (!primoErrore) primoErrore = accData;
+      var boxData = accNascita.querySelector('[data-errore="nascita"]');
+      boxData.textContent = 'Scegli giorno, mese e anno di nascita.';
+      boxData.hidden = false;
+      if (!primoErrore) primoErrore = accNascita.querySelector('[data-campo="giorno"]');
     }
     if (primoErrore) { primoErrore.focus(); return; }
 

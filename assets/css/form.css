@@ -210,17 +210,59 @@ fieldset[disabled] * { cursor: not-allowed; }
   .coppia { grid-template-columns: 1fr 1fr; }
 }
 
-.gratis {
+
+/* -------------------------------------------------------------------------
+   DATA A TRE TENDINE
+   Il calendario del telefono e' scomodo per chi cerca il 1948: tre elenchi
+   sono piu' lenti da toccare ma molto piu' facili da capire.
+   ------------------------------------------------------------------------- */
+
+.tre-tendine {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1.1fr;
+  gap: var(--sp-2);
+}
+
+.tre-tendine select {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.75rem 0.6rem;
+  font-size: 16px;
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: border-color var(--transizione), box-shadow var(--transizione);
+}
+
+.tre-tendine select:hover { border-color: #d8ccd1; }
+
+.tre-tendine select:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+/* -------------------------------------------------------------------------
+   PILLOLA DELLA QUOTA
+   Compare solo quando la data e' completa: senza data non si puo' sapere
+   se una persona paga o no, e dirlo lo stesso sarebbe una bugia.
+   ------------------------------------------------------------------------- */
+
+.pillola {
   display: inline-flex;
   align-items: center;
-  gap: var(--sp-2);
-  padding: 0.3em 0.8em;
+  padding: 0.3em 0.85em;
   border-radius: var(--r-pill);
-  background: #e2f3ea;
-  color: #14603d;
   font-size: var(--t-xs);
   font-weight: 700;
+  white-space: nowrap;
 }
+
+.pillola[hidden] { display: none; }
+.pillola--gratis { background: #e2f3ea; color: #14603d; }
+.pillola--quota { background: var(--rosa-tenue); color: var(--rosa-scuro); }
 
 /* -------------------------------------------------------------------------
    TOTALE

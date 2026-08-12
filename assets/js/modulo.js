@@ -1,6 +1,7 @@
 /* =========================================================================
    modulo.js — pezzi comuni a iscrizione e modifica: elenco partecipanti,
-   chip dei gruppi, calcolo del totale, validazione e messaggi.
+   chip dei gruppi, data di nascita a tre tendine, calcolo del totale,
+   validazione e messaggi.
 
    Qui non si parla con il server: quello lo fa api.js. Qui si costruisce
    e si legge il modulo, e basta.
@@ -10,9 +11,15 @@ window.Modulo = (function () {
   'use strict';
 
   var QUOTA = 8;
-  /* Gratis i bambini fino a 6 anni compiuti: nati dal 14/09/2019 in poi,
-     cioe' chi il giorno della camminata non ha ancora compiuto 7 anni. */
+  /* Gratis i bambini fino a 6 anni compiuti: nati dal 14/09/2019 in poi. */
   var NATI_GRATIS_DA = '2019-09-14';
+
+  var MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+    'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  var ANNO_MAX = 2026;
+  var ANNO_MIN = 1915;
+
+  function due(n) { return (n < 10 ? '0' : '') + n; }
 
   function euro(n) {
     return n.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
@@ -22,37 +29,90 @@ window.Modulo = (function () {
     return !!dataNascita && dataNascita >= NATI_GRATIS_DA;
   }
 
-
-  /* :has() copre la quasi totalita dei browser, ma un chip che non mostra di
-     essere selezionato bloccherebbe la compilazione su un telefono vecchio.
-     La classe e la cintura di sicurezza. */
+  /* :has() copre quasi tutti i browser, ma un chip che non mostra di essere
+     selezionato bloccherebbe la compilazione su un telefono vecchio: la
+     classe e' la cintura di sicurezza. */
   function segnaScelti(radice) {
-    radice.querySelectorAll(".chip input").forEach(function (i) {
-      var etichetta = i.closest(".chip");
-      if (etichetta) etichetta.classList.toggle("chip--scelto", i.checked);
+    radice.querySelectorAll('.chip input').forEach(function (i) {
+      var etichetta = i.closest('.chip');
+      if (etichetta) etichetta.classList.toggle('chip--scelto', i.checked);
     });
   }
 
-  document.addEventListener("change", function (ev) {
-    if (ev.target.closest && ev.target.closest(".chip")) segnaScelti(document);
+  document.addEventListener('change', function (ev) {
+    if (ev.target.closest && ev.target.closest('.chip')) segnaScelti(document);
   });
+
+  /* ------------------------------------------------------- data a tendine
+     Tre menu invece del calendario: per chi ha 70 anni, scegliere "1948" da
+     un elenco e' molto piu' semplice che navigare all'indietro fra i mesi. */
+
+  function preparaData(box) {
+    var g = box.querySelector('[data-campo="giorno"]');
+    var m = box.querySelector('[data-campo="mese"]');
+    var a = box.querySelector('[data-campo="anno"]');
+    if (!g || !m || !a || g.getAttribute('data-pronto')) return;
+
+    m.innerHTML = '<option value="">Mese</option>' +
+      MESI.map(function (nome, i) { return '<option value="' + (i + 1) + '">' + nome + '</option>'; }).join('');
+
+    var anni = '';
+    for (var y = ANNO_MAX; y >= ANNO_MIN; y--) anni += '<option value="' + y + '">' + y + '</option>';
+    a.innerHTML = '<option value="">Anno</option>' + anni;
+
+    function rifaiGiorni() {
+      var scelto = g.value;
+      /* Senza anno si usa un anno bisestile, cosi' il 29 febbraio resta
+         disponibile; quando l'anno arriva, l'elenco si corregge da solo. */
+      var quanti = m.value ? new Date(Number(a.value) || 2024, Number(m.value), 0).getDate() : 31;
+      var o = '<option value="">Giorno</option>';
+      for (var d = 1; d <= quanti; d++) o += '<option value="' + d + '">' + d + '</option>';
+      g.innerHTML = o;
+      if (scelto && Number(scelto) <= quanti) g.value = scelto;
+    }
+
+    m.addEventListener('change', rifaiGiorni);
+    a.addEventListener('change', rifaiGiorni);
+    rifaiGiorni();
+    g.setAttribute('data-pronto', '1');
+  }
+
+  /* Ritorna 'YYYY-MM-DD', oppure '' se anche solo una tendina e' vuota:
+     mezza data non e' una data. */
+  function leggiData(box) {
+    var g = box.querySelector('[data-campo="giorno"]');
+    var m = box.querySelector('[data-campo="mese"]');
+    var a = box.querySelector('[data-campo="anno"]');
+    if (!g || !m || !a) return '';
+    if (!g.value || !m.value || !a.value) return '';
+    return a.value + '-' + due(Number(m.value)) + '-' + due(Number(g.value));
+  }
+
+  function impostaData(box, iso) {
+    if (!iso) return;
+    var p = String(iso).slice(0, 10).split('-');
+    if (p.length !== 3) return;
+    var g = box.querySelector('[data-campo="giorno"]');
+    var m = box.querySelector('[data-campo="mese"]');
+    var a = box.querySelector('[data-campo="anno"]');
+    if (!g || !m || !a) return;
+    a.value = String(Number(p[0]));
+    m.value = String(Number(p[1]));
+    m.dispatchEvent(new Event('change', { bubbles: true }));
+    g.value = String(Number(p[2]));
+  }
 
   /* ------------------------------------------------------------------ conti */
   function conta(persone) {
     var gratis = 0;
     persone.forEach(function (p) { if (eGratis(p.data_nascita)) gratis++; });
     var paganti = persone.length - gratis;
-    return {
-      totali: persone.length,
-      gratis: gratis,
-      paganti: paganti,
-      importo: paganti * QUOTA
-    };
+    return { totali: persone.length, gratis: gratis, paganti: paganti, importo: paganti * QUOTA };
   }
 
   function descriviTotale(c) {
     var pezzi = [c.totali + (c.totali === 1 ? ' partecipante' : ' partecipanti')];
-    if (c.gratis > 0) pezzi.push(c.gratis + (c.gratis === 1 ? ' gratis' : ' gratis'));
+    if (c.gratis > 0) pezzi.push(c.gratis + ' gratis');
     return pezzi.join(' · ');
   }
 
@@ -90,7 +150,7 @@ window.Modulo = (function () {
       p.remove();
       self.rinumera();
       self.alCambio();
-      if (dopo) { var n = dopo.querySelector('input'); if (n) n.focus(); }
+      if (dopo) { var n = dopo.querySelector('input, select'); if (n) n.focus(); }
     });
   }
 
@@ -98,24 +158,27 @@ window.Modulo = (function () {
     var nodo = this.modello.content.firstElementChild.cloneNode(true);
     var indice = this.contenitore.querySelectorAll('.persona').length;
 
-    // I gruppi di radio del sesso devono avere un name diverso per persona,
-    // altrimenti selezionarne uno deseleziona quello della persona prima.
+    /* I radio devono avere un name diverso per persona, altrimenti
+       selezionarne uno deseleziona quello della persona precedente. */
     nodo.querySelectorAll('input[type="radio"]').forEach(function (r) {
-      r.name = 'sesso-' + indice + '-' + Math.random().toString(16).slice(2, 8);
+      var campo = r.getAttribute('data-campo') || 'r';
+      r.name = campo + '-' + indice + '-' + Math.random().toString(16).slice(2, 8);
     });
+
+    this.contenitore.appendChild(nodo);
+    preparaData(nodo);
 
     if (dati) {
       var v = function (sel, val) { var c = nodo.querySelector(sel); if (c && val) c.value = val; };
       v('[data-campo="nome"]', dati.nome);
       v('[data-campo="cognome"]', dati.cognome);
-      v('[data-campo="data_nascita"]', dati.data_nascita);
+      impostaData(nodo, dati.data_nascita);
       if (dati.sesso) {
         var r = nodo.querySelector('[data-campo="sesso"][value="' + dati.sesso + '"]');
-        if (r) r.checked = true;
+        if (r) { r.checked = true; segnaScelti(nodo); }
       }
     }
 
-    this.contenitore.appendChild(nodo);
     this.rinumera();
     this.alCambio();
     return nodo;
@@ -130,11 +193,23 @@ window.Modulo = (function () {
       var via = p.querySelector('.persona__via');
       if (via) via.hidden = persone.length <= 1;
 
-      var data = p.querySelector('[data-campo="data_nascita"]');
-      var etichetta = p.querySelector('.gratis');
-      if (etichetta) etichetta.hidden = !(data && eGratis(data.value));
+      aggiornaPillola(p);
     });
   };
+
+  /* La pillola compare SOLO a data completa: dire "gratis" senza sapere
+     quando e' nata la persona sarebbe una bugia. */
+  function aggiornaPillola(p) {
+    var pill = p.querySelector('[data-pillola]');
+    if (!pill) return;
+    var data = leggiData(p);
+    if (!data) { pill.hidden = true; return; }
+    var gratis = eGratis(data);
+    pill.hidden = false;
+    pill.textContent = gratis ? 'Gratis' : euro(QUOTA);
+    pill.classList.toggle('pillola--gratis', gratis);
+    pill.classList.toggle('pillola--quota', !gratis);
+  }
 
   Partecipanti.prototype.leggi = function () {
     var fuori = [];
@@ -144,7 +219,7 @@ window.Modulo = (function () {
       fuori.push({
         nome: val('[data-campo="nome"]'),
         cognome: val('[data-campo="cognome"]'),
-        data_nascita: val('[data-campo="data_nascita"]'),
+        data_nascita: leggiData(p),
         sesso: sesso ? sesso.value : ''
       });
     });
@@ -166,12 +241,16 @@ window.Modulo = (function () {
       };
       controlla('[data-campo="nome"]', 'Manca il nome.');
       controlla('[data-campo="cognome"]', 'Manca il cognome.');
-      controlla('[data-campo="data_nascita"]', 'Manca la data di nascita.');
 
-      var data = p.querySelector('[data-campo="data_nascita"]');
-      if (data && data.value && data.value > oggi) {
-        mostraErroreCampo(data, 'La data di nascita non puo’ essere nel futuro.');
-        if (!primo) primo = data;
+      var boxData = p.querySelector('[data-errore="nascita"]');
+      var data = leggiData(p);
+      if (boxData) {
+        var testo = '';
+        if (!data) testo = 'Scegli giorno, mese e anno di nascita.';
+        else if (data > oggi) testo = 'La data di nascita non puo’ essere nel futuro.';
+        boxData.textContent = testo;
+        boxData.hidden = !testo;
+        if (testo && !primo) primo = p.querySelector('[data-campo="giorno"]');
       }
 
       var sesso = p.querySelector('[data-campo="sesso"]:checked');
@@ -210,11 +289,13 @@ window.Modulo = (function () {
     html += this.chip('__nuovo__', 'Crea nuovo gruppo', false);
     this.contenitore.innerHTML = html;
 
-    // Un gruppo che arriva da una prenotazione ma non e' fra le squadre note
-    // va comunque mostrato, altrimenti salvando lo si perderebbe.
-    if (selezionata && !this.contenitore.querySelector('input[value="' + CSS.escape(selezionata) + '"]')) {
+    /* Un gruppo che arriva da una prenotazione ma non e' fra le squadre note
+       va comunque mostrato, altrimenti salvando lo si perderebbe. */
+    var gia = this.contenitore.querySelector('input[value="' + String(selezionata).replace(/"/g, '\\"') + '"]');
+    if (selezionata && !gia) {
       this.contenitore.insertAdjacentHTML('beforeend', this.chip(selezionata, selezionata, true));
     }
+    segnaScelti(this.contenitore);
   };
 
   Gruppi.prototype.chip = function (valore, etichetta, scelto) {
@@ -242,7 +323,11 @@ window.Modulo = (function () {
     eGratis: eGratis,
     conta: conta,
     descriviTotale: descriviTotale,
+    preparaData: preparaData,
+    leggiData: leggiData,
+    impostaData: impostaData,
     segnaScelti: segnaScelti,
+    aggiornaPillola: aggiornaPillola,
     mostraErroreCampo: mostraErroreCampo,
     pulisciErrori: pulisciErrori,
     Partecipanti: Partecipanti,
