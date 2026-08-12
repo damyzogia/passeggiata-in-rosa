@@ -228,13 +228,28 @@ window.Modulo = (function () {
       pill.classList.toggle('pillola--quota', !gratis);
     }
 
+    /* La scelta Adulto/Bambino si allinea da sola alla data: lasciarla sul
+       valore sbagliato con accanto un avviso che dice il contrario e' un
+       modo sicuro per confondere. Qui l'interruttore segue il fatto. */
+    var atteso = gratis ? 'bambino' : 'adulto';
+    var giusto = p.querySelector('[data-campo="tipo"][value="' + atteso + '"]');
+    var correzione = !!scelto && scelto.value !== atteso;
+
+    if (giusto && !giusto.checked) {
+      giusto.checked = true;
+      segnaScelti(p);
+    }
+
+    /* L'avviso spiega perche' la scelta e' cambiata, e resta finche' resta
+       quella data: senza memoria sparirebbe al primo tasto premuto altrove,
+       prima ancora di essere letto. */
+    if (correzione) p.setAttribute('data-corretto', data);
+    else if (p.getAttribute('data-corretto') !== data) p.removeAttribute('data-corretto');
+
     if (nota) {
-      var testo = '';
-      if (scelto && scelto.value === 'bambino' && !gratis) {
-        testo = 'Questa persona ha più di 6 anni: va registrata come adulto (quota ' + euro(QUOTA) + ').';
-      } else if (scelto && scelto.value === 'adulto' && gratis) {
-        testo = 'Ha meno di 6 anni: l’iscrizione è gratuita.';
-      }
+      var testo = p.getAttribute('data-corretto') === data
+        ? (gratis ? 'Ha meno di 6 anni: iscrizione gratuita.' : 'Ha più di 6 anni: quota intera ' + euro(QUOTA) + '.')
+        : '';
       nota.textContent = testo;
       nota.hidden = !testo;
     }
