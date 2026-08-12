@@ -3,7 +3,7 @@
 ## Chi siamo
 Dietro la Passeggiata in Rosa c'è un **gruppo spontaneo di donne** di Santa Margherita d'Adige: amiche da tempo attive nella vita della parrocchia, che hanno trasformato un'esperienza personale difficile in un progetto per tutti. Sono loro le "teste pensanti" che curano ogni dettaglio — dalla ricerca degli sponsor al logo, dai gadget ai ristori lungo il percorso.
 
-A dare all'iniziativa la sua cornice associativa e organizzativa è il **Circolo NOI San Biagio di Santa Margherita d'Adige**, sotto il patrocinio della Parrocchia: è ciò che permette di accogliere in sicurezza centinaia di partecipanti e di far funzionare una macchina fatta quasi interamente di volontariato.
+A dare all'iniziativa la sua cornice associativa e organizzativa è il **NOI Associazione San Biagio APS di Santa Margherita d'Adige**, sotto il patrocinio della Parrocchia: è ciò che permette di accogliere in sicurezza centinaia di partecipanti e di far funzionare una macchina fatta quasi interamente di volontariato.
 
 ## Come è nata
 Tutto è cominciato nel **2019**. Una delle amiche del gruppo aveva affrontato un tumore al seno, e da quell'esperienza è nata una domanda semplice: come possiamo essere d'aiuto a chi passa la stessa cosa? La risposta è stata sostenere concretamente la ricerca dello **IOV – Istituto Oncologico Veneto** di Padova.

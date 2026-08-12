@@ -1168,6 +1168,82 @@ dialog.lente[open] {
 
 .griglia-sponsor--con-nome .tessera-sponsor img { max-height: 84px; }
 
+
+/* -------------------------------------------------------------------------
+   FIGURA CON DIDASCALIA
+   Una foto dentro il testo lungo, con la sua spiegazione sotto.
+   ------------------------------------------------------------------------- */
+
+.figura {
+  margin: var(--sp-5) 0;
+  max-width: 420px;
+}
+
+.figura figcaption {
+  margin-top: var(--sp-2);
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--testo-tenue);
+}
+
+/* -------------------------------------------------------------------------
+   NASTRO DI MINIATURE
+   Scorre col dito su mobile e con la rotellina su desktop. Le miniature
+   hanno tutte la stessa misura: e' un nastro, non una galleria a griglia,
+   quindi niente immagini grandi incorporate nella pagina.
+   ------------------------------------------------------------------------- */
+
+.nastro {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(140px, 42vw, 190px);
+  gap: var(--sp-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--sp-3);
+  /* Sfonda i margini del testo lungo: il nastro parte dal bordo pagina, cosi'
+     si capisce che continua oltre lo schermo. */
+  margin-inline: calc(var(--margine-pagina) * -1);
+  padding-inline: var(--margine-pagina);
+  scrollbar-width: thin;
+  scrollbar-color: var(--rosa) transparent;
+}
+
+.nastro__voce {
+  position: relative;
+  display: block;
+  scroll-snap-align: start;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  line-height: 0;
+  cursor: zoom-in;
+  box-shadow: var(--ombra-1);
+  transition: transform var(--transizione), box-shadow var(--transizione);
+}
+
+.nastro__voce img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* Filo rosa, come le altre foto del sito. */
+.nastro__voce::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid rgba(237, 110, 167, 0.45);
+  pointer-events: none;
+}
+
+.nastro__voce:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ombra-2);
+}
+
 /* -------------------------------------------------------------------------
    14. PIEDE
    ------------------------------------------------------------------------- */
