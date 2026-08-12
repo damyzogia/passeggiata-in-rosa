@@ -1,5 +1,5 @@
 /* =========================================================================
-   sito.js — comportamenti della landing e della pagina sponsor.
+   sito.js — comportamenti comuni: testata, rivelazioni, contatori, barra CTA.
 
    Regole di casa:
    - la pagina deve funzionare ed essere leggibile anche senza questo file:
@@ -110,70 +110,6 @@
     }
   }
 
-  /* ------------------------------------------------ 5. Lightbox
-     Usata sia dalla galleria sia dai loghi sponsor.                          */
-  var lente = document.querySelector('.lente');
-  if (!lente) return;
-
-  var img = lente.querySelector('img');
-  var didascalia = lente.querySelector('.lente__didascalia');
-  var chiudi = lente.querySelector('.lente__chiudi');
-  var collegamento = lente.querySelector('.lente__link');
-  var chiHaAperto = null;
-
-  document.addEventListener('click', function (ev) {
-    var innesco = ev.target.closest('[data-lente]');
-    if (innesco) { apri(innesco); return; }
-    // Tap fuori dal telaio: chiude.
-    if (lente.classList.contains('e-aperta') && !ev.target.closest('.lente__telaio')) chiudiLente();
-  });
-
-  chiudi.addEventListener('click', chiudiLente);
-
-  document.addEventListener('keydown', function (ev) {
-    if (!lente.classList.contains('e-aperta')) return;
-    if (ev.key === 'Escape') { chiudiLente(); return; }
-    // Trappola del fuoco: dentro la lente ci sono al massimo due comandi.
-    if (ev.key === 'Tab') {
-      var fuocabili = [chiudi].concat(
-        collegamento && collegamento.hidden === false ? [collegamento] : []
-      );
-      var i = fuocabili.indexOf(document.activeElement);
-      ev.preventDefault();
-      var prossimo = ev.shiftKey ? i - 1 : i + 1;
-      if (prossimo < 0) prossimo = fuocabili.length - 1;
-      if (prossimo >= fuocabili.length) prossimo = 0;
-      fuocabili[prossimo].focus();
-    }
-  });
-
-  function apri(innesco) {
-    var sorgente = innesco.getAttribute('data-lente');
-    if (!sorgente) return;
-
-    chiHaAperto = innesco;
-    img.src = sorgente;
-    img.alt = innesco.getAttribute('data-nome') || 'Immagine ingrandita';
-
-    var nome = innesco.getAttribute('data-nome');
-    didascalia.textContent = nome || '';
-    didascalia.hidden = !nome;
-
-    var url = innesco.getAttribute('data-url');
-    if (collegamento) {
-      collegamento.hidden = !url;
-      if (url) { collegamento.href = url; }
-    }
-
-    lente.classList.add('e-aperta');
-    document.body.style.overflow = 'hidden';
-    chiudi.focus();
-  }
-
-  function chiudiLente() {
-    lente.classList.remove('e-aperta');
-    document.body.style.overflow = '';
-    img.removeAttribute('src');
-    if (chiHaAperto) { chiHaAperto.focus(); chiHaAperto = null; }
-  }
+  /* La lightbox vive in lente.js: e un componente a se, riusabile su piu
+     pagine e costruito su <dialog> nativo. */
 })();

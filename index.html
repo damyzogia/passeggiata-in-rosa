@@ -28,7 +28,9 @@
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin-variable.woff2" crossorigin>
-<link rel="preload" as="image" href="/assets/foto/foto-hero-808.webp" fetchpriority="high">
+<link rel="preload" as="image" fetchpriority="high"
+      imagesrcset="/assets/foto/foto-hero-640.webp 640w, /assets/foto/foto-hero-1000.webp 1000w, /assets/foto/foto-hero-1400.webp 1400w, /assets/foto/foto-hero-2000.webp 2000w"
+      imagesizes="100vw">
 <link rel="preload" as="image" fetchpriority="high"
       imagesrcset="/assets/img/logo-6a-edizione-400.webp 400w, /assets/img/logo-6a-edizione-640.webp 640w, /assets/img/logo-6a-edizione-900.webp 900w, /assets/img/logo-6a-edizione-1300.webp 1300w, /assets/img/logo-6a-edizione-1800.webp 1800w"
       imagesizes="(min-width: 640px) 320px, 62vw">
@@ -83,8 +85,13 @@
 
     <div class="hero__foto">
       <picture>
-        <source type="image/webp" srcset="/assets/foto/foto-hero-480.webp 480w, /assets/foto/foto-hero-808.webp 808w" sizes="100vw">
-        <img src="/assets/foto/foto-hero-808.jpg" alt="" width="808" height="1072" fetchpriority="high" decoding="async">
+        <source type="image/webp"
+                srcset="/assets/foto/foto-hero-640.webp 640w,
+                        /assets/foto/foto-hero-1000.webp 1000w,
+                        /assets/foto/foto-hero-1400.webp 1400w,
+                        /assets/foto/foto-hero-2000.webp 2000w"
+                sizes="100vw">
+        <img src="/assets/foto/foto-hero-1400.jpg" alt="" width="2000" height="1500" fetchpriority="high" decoding="async">
       </picture>
     </div>
     <div class="hero__velo"></div>
