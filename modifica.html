@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Passeggiata in Rosa — Modifica la tua iscrizione</title>
-<meta name="description" content="Recupera e modifica la tua pre-iscrizione alla Passeggiata in Rosa: aggiungi o togli partecipanti, cambia il gruppo.">
+<title>Passeggiata in Rosa — Modifica o annulla la tua iscrizione</title>
+<meta name="description" content="Recupera la tua pre-iscrizione alla Passeggiata in Rosa: puoi aggiungere o togliere partecipanti, cambiare il gruppo, oppure annullare del tutto la prenotazione.">
 
 <link rel="canonical" href="https://passeggiatainrosa.it/modifica.html">
 
@@ -54,12 +54,13 @@
       <p class="briciole"><a href="/">Home</a> › Modifica iscrizione</p>
 
       <p class="occhiello">Modifica</p>
-      <h1>Modifica la tua iscrizione</h1>
+      <h1>Modifica o annulla la tua iscrizione</h1>
 
       <!-- ============ ACCESSO ============ -->
       <section id="accesso">
         <p class="sommario" style="margin-bottom:var(--sp-6)">
-          Per ritrovare la tua pre-iscrizione servono l&rsquo;email con cui
+          Da qui puoi cambiare i partecipanti e il gruppo, oppure annullare
+          del tutto la prenotazione. Per ritrovarla servono l&rsquo;email con cui
           l&rsquo;hai fatta e la tua data di nascita.
         </p>
 
@@ -109,6 +110,10 @@
             serve e salva: il totale si aggiorna da solo.</p>
         </div>
 
+        <p class="piccolo" style="margin-bottom:var(--sp-5)">
+          <a href="#annullo">Vuoi annullare la prenotazione?</a>
+        </p>
+
         <form id="modulo-modifica" novalidate>
 
           <section class="passo">
@@ -157,11 +162,11 @@
         </form>
 
           <!-- Annullamento: due conferme prima di toccare il server, perche'
-               questa e' l'unica azione del sito che non si puo' disfare. -->
+               questa e' l'unica azione del sito che non e' reversibile. -->
           <section class="passo passo--pericolo" id="annullo">
             <h2 class="passo__titolo">Non partecipi più?</h2>
             <p class="passo__aiuto">
-              Puoi annullare la prenotazione. L&rsquo;operazione non si può disfare.
+              Puoi annullare la prenotazione. L&rsquo;operazione non è reversibile.
             </p>
 
             <button class="btn btn--pericolo" type="button" id="annulla-avvia">
@@ -170,7 +175,7 @@
 
             <div class="avviso avviso--errore" id="annulla-1" hidden>
               <p class="avviso__titolo">Sei sicuro di voler annullare?</p>
-              <p>L&rsquo;operazione non si può disfare.</p>
+              <p>L&rsquo;operazione non è reversibile.</p>
               <div class="avviso__azioni">
                 <button class="btn btn--pericolo btn--piccolo" type="button" id="annulla-si1">Sì, voglio annullare</button>
                 <button class="btn btn--fantasma btn--piccolo" type="button" id="annulla-no1">No, torna indietro</button>

@@ -194,8 +194,8 @@
 
 
   /* ------------------------------------------------------- annullamento
-     Due conferme prima di chiamare il server: e' l'unica azione che non si
-     puo' disfare, e un tocco per sbaglio cancellerebbe l'iscrizione di
+     Due conferme prima di chiamare il server: e' l'unica azione che non e'
+     reversibile, e un tocco per sbaglio cancellerebbe l'iscrizione di
      tutto un gruppo. */
   var annullo = document.getElementById('annullo');
   var avvia = document.getElementById('annulla-avvia');

@@ -314,6 +314,7 @@ window.Modulo = (function () {
     this.contenitore = contenitore;
     this.campoNuovo = campoNuovo;
     var self = this;
+
     contenitore.addEventListener('change', function () {
       var scelto = contenitore.querySelector('input[name="gruppo"]:checked');
       var nuovo = scelto && scelto.value === '__nuovo__';
@@ -321,9 +322,35 @@ window.Modulo = (function () {
       if (nuovo) self.campoNuovo.querySelector('input').focus();
       if (alCambio) alCambio();
     });
+
+    /* Chi scrive un nome nel campo sta creando un gruppo, punto: la scelta
+       si sposta da sola su "Crea nuovo gruppo". Senza, il nome scritto non
+       verrebbe inviato e il gruppo non nascerebbe, senza che nessuno lo
+       dica. */
+    var testo = campoNuovo.querySelector('input');
+    if (testo) {
+      testo.addEventListener('input', function () {
+        var nuovo = contenitore.querySelector('input[value="__nuovo__"]');
+        if (nuovo && !nuovo.checked) {
+          nuovo.checked = true;
+          segnaScelti(contenitore);
+          if (alCambio) alCambio();
+        }
+      });
+    }
   }
 
   Gruppi.prototype.riempi = function (squadre, selezionata) {
+    /* I chip vengono ricostruiti quando l'elenco squadre arriva dal server,
+       cioe' dopo che la persona ha gia' potuto scegliere. Quello che aveva
+       scelto, o scritto, non va buttato via dal rifacimento. */
+    var prima = this.contenitore.querySelector('input[name="gruppo"]:checked');
+    var sceltaPrima = prima ? prima.value : null;
+    var testoNuovo = this.campoNuovo.querySelector('input');
+    var stavaCreando = sceltaPrima === '__nuovo__' || !!(testoNuovo && testoNuovo.value.trim());
+
+    if (sceltaPrima !== null && sceltaPrima !== '__nuovo__') selezionata = sceltaPrima;
+
     var html = '';
     html += this.chip('', 'Nessun gruppo', !selezionata);
     (squadre || []).forEach(function (s) {
@@ -339,6 +366,17 @@ window.Modulo = (function () {
     if (selezionata && !gia) {
       this.contenitore.insertAdjacentHTML('beforeend', this.chip(selezionata, selezionata, true));
     }
+
+    /* Rimetto "Crea nuovo gruppo" se era li' che stavamo, tenendo aperto il
+       campo col nome gia' digitato. */
+    if (stavaCreando) {
+      var nuovo = this.contenitore.querySelector('input[value="__nuovo__"]');
+      if (nuovo) {
+        nuovo.checked = true;
+        this.campoNuovo.hidden = false;
+      }
+    }
+
     segnaScelti(this.contenitore);
   };
 

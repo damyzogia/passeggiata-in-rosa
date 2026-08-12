@@ -518,7 +518,7 @@ fieldset[disabled] * { cursor: not-allowed; }
 
 /* -------------------------------------------------------------------------
    ANNULLAMENTO
-   L'unica azione del sito che non si puo' disfare: il colore lo dice, e la
+   L'unica azione del sito che non e' reversibile: il colore lo dice, e la
    sezione sta staccata dal resto per non farci finire dentro per sbaglio.
    ------------------------------------------------------------------------- */
 
