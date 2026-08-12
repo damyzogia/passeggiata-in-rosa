@@ -9,5 +9,6 @@ Disallow: /sponsor/_sorgenti/
 
 # La conferma e' personale e raggiungibile solo con il proprio codice.
 Disallow: /conferma.html
+Disallow: /conferma-modifica.html
 
 Sitemap: https://passeggiatainrosa.it/sitemap.xml

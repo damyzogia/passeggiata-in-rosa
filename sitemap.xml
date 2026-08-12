@@ -2,7 +2,6 @@
 <!--
   Elenca SOLO le pagine che esistono davvero: una sitemap che punta a URL
   inesistenti fa perdere fiducia al crawler.
-  Da aggiungere quando sara' pubblicata: iscrizione.html.
   Restano fuori per scelta: conferma.html (personale) e styleguide.html.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

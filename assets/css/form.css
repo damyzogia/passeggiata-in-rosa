@@ -1,0 +1,377 @@
+/* =========================================================================
+   form.css — modulo di pre-iscrizione, modifica e conferma.
+   Dipende da base.css e site.css.
+
+   Il pubblico e' soprattutto donne over 50 che compilano dal telefono:
+   campi alti, etichette grandi e sempre visibili, errori vicini al campo
+   che li ha generati, nessun trucchetto tipo etichetta che sparisce.
+   ========================================================================= */
+
+.modulo { max-width: 44rem; margin-inline: auto; }
+
+.passo {
+  background: #fff;
+  border: 1px solid var(--bordo);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--ombra-1);
+}
+
+.passo + .passo { margin-top: var(--sp-4); }
+
+.passo__titolo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--t-lg);
+  margin-bottom: var(--sp-2);
+}
+
+.passo__numero {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--r-pill);
+  background: var(--rosa-tenue);
+  color: var(--rosa-testo);
+  font-family: var(--font-testo);
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+
+.passo__aiuto {
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+  margin-bottom: var(--sp-4);
+}
+
+/* Un blocco disabilitato non deve sembrare rotto, solo "non ancora". */
+.passo[disabled],
+fieldset[disabled] .passo { opacity: 1; }
+
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+
+fieldset[disabled] { opacity: 0.5; }
+fieldset[disabled] * { cursor: not-allowed; }
+
+/* -------------------------------------------------------------------------
+   CAMPI
+   ------------------------------------------------------------------------- */
+
+.campo { display: grid; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.campo:last-child { margin-bottom: 0; }
+
+.campo > label,
+.gruppo-campi > legend {
+  font-weight: 650;
+  font-size: var(--t-base);
+  color: var(--testo);
+}
+
+.campo__nota { font-size: var(--t-sm); color: var(--testo-tenue); }
+
+.campo input[type='text'],
+.campo input[type='email'],
+.campo input[type='tel'],
+.campo input[type='date'],
+.campo select {
+  width: 100%;
+  /* 52px di altezza reale: comodo da toccare, e su iOS 16px di corpo evita
+     lo zoom automatico all'ingresso nel campo. */
+  min-height: 52px;
+  padding: 0.75rem 1rem;
+  font-size: 16px;
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+  transition: border-color var(--transizione), box-shadow var(--transizione);
+}
+
+.campo input:hover { border-color: #d8ccd1; }
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.campo input[aria-invalid='true'] { border-color: var(--errore); }
+
+.campo__errore {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--errore);
+}
+
+.campo__errore[hidden] { display: none; }
+
+/* -------------------------------------------------------------------------
+   CHIP — gruppo e sesso. Mai una tendina: si vede tutto e si tocca una volta.
+   ------------------------------------------------------------------------- */
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.6em 1.1em;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-pill);
+  background: #fff;
+  font-size: var(--t-base);
+  font-weight: 550;
+  color: var(--testo);
+  cursor: pointer;
+  transition: border-color var(--transizione), background var(--transizione),
+    color var(--transizione);
+}
+
+.chip input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.chip:hover { border-color: var(--rosa); }
+
+.chip:has(input:checked),
+.chip--scelto {
+  border-color: var(--rosa-testo);
+  background: var(--rosa-tenue);
+  color: var(--rosa-scuro);
+  font-weight: 650;
+}
+
+.chip:has(input:focus-visible) {
+  outline: 3px solid var(--rosa);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   PARTECIPANTI
+   ------------------------------------------------------------------------- */
+
+.persona {
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  background: var(--sfondo-alt);
+}
+
+.persona + .persona { margin-top: var(--sp-3); }
+
+.persona__testata {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.persona__nome {
+  font-family: var(--font-titoli);
+  font-size: var(--t-lg);
+  font-weight: 600;
+}
+
+.persona__via {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 44px;
+  padding: 0 var(--sp-3);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--rosa-testo);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.persona__via:hover { background: var(--rosa-tenue); color: var(--rosa-scuro); }
+
+.coppia { display: grid; gap: var(--sp-4); }
+
+@media (min-width: 560px) {
+  .coppia { grid-template-columns: 1fr 1fr; }
+}
+
+.gratis {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.3em 0.8em;
+  border-radius: var(--r-pill);
+  background: #e2f3ea;
+  color: #14603d;
+  font-size: var(--t-xs);
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------------------
+   TOTALE
+   ------------------------------------------------------------------------- */
+
+.totale {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-4);
+  margin-top: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--rosa-tenue);
+  border: 2px solid var(--rosa);
+  border-radius: var(--r-lg);
+}
+
+.totale__voce { font-size: var(--t-sm); color: var(--rosa-scuro); font-weight: 600; }
+
+.totale__cifra {
+  font-family: var(--font-titoli);
+  font-size: var(--t-2xl);
+  font-variation-settings: 'opsz' 72, 'SOFT' 50;
+  line-height: 1;
+  color: var(--rosa-scuro);
+}
+
+/* -------------------------------------------------------------------------
+   CONSENSI
+   ------------------------------------------------------------------------- */
+
+.consenso {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  align-items: start;
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  cursor: pointer;
+}
+
+.consenso:hover { background: var(--rosa-velo); }
+.consenso + .consenso { margin-top: var(--sp-2); }
+
+.consenso input {
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  accent-color: var(--rosa-testo);
+  cursor: pointer;
+}
+
+.consenso span { font-size: var(--t-sm); line-height: 1.5; }
+
+/* -------------------------------------------------------------------------
+   AVVISI
+   ------------------------------------------------------------------------- */
+
+.avviso {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--r-md);
+  border-left: 4px solid;
+  font-size: var(--t-sm);
+}
+
+.avviso[hidden] { display: none; }
+
+.avviso__titolo { font-weight: 700; font-size: var(--t-base); }
+
+.avviso--attenzione { background: var(--rosa-velo); border-color: var(--rosa); color: var(--testo); }
+.avviso--errore { background: #fdecea; border-color: var(--errore); color: #7d1c16; }
+.avviso--ok { background: #e2f3ea; border-color: var(--successo); color: #14603d; }
+
+.avviso__azioni { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
+/* -------------------------------------------------------------------------
+   INVIO
+   ------------------------------------------------------------------------- */
+
+.invio { display: grid; gap: var(--sp-3); justify-items: center; margin-top: var(--sp-5); }
+.invio .btn { width: 100%; }
+
+@media (min-width: 560px) { .invio .btn { width: auto; min-width: 18rem; } }
+
+/* Rotella di attesa dentro il bottone: dice che qualcosa sta succedendo. */
+.filatoio {
+  width: 1.1em;
+  height: 1.1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: gira 700ms linear infinite;
+}
+
+@keyframes gira { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .filatoio { animation-duration: 2s; }
+}
+
+/* -------------------------------------------------------------------------
+   CONFERMA
+   ------------------------------------------------------------------------- */
+
+.conferma { display: grid; gap: var(--sp-5); justify-items: center; text-align: center; }
+
+.conferma__codice {
+  font-family: var(--font-titoli);
+  font-size: var(--t-3xl);
+  font-variation-settings: 'opsz' 96, 'SOFT' 50;
+  letter-spacing: 0.04em;
+  color: var(--rosa-testo);
+  line-height: 1;
+}
+
+.qr {
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-lg);
+  box-shadow: var(--ombra-1);
+}
+
+.qr svg { width: min(260px, 62vw); height: auto; display: block; }
+
+.riepilogo {
+  display: grid;
+  gap: var(--sp-2);
+  width: 100%;
+  max-width: 26rem;
+  text-align: left;
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--sfondo-alt);
+  border: 1px solid var(--bordo);
+  border-radius: var(--r-md);
+}
+
+.riepilogo div { display: flex; justify-content: space-between; gap: var(--sp-4); }
+.riepilogo dt { color: var(--testo-tenue); font-size: var(--t-sm); }
+.riepilogo dd { margin: 0; font-weight: 650; }
+
+.stampa-no { }
+
+@media print {
+  .intestazione, .barra-pollice, .piede, .stampa-no { display: none !important; }
+  body { padding: 0; }
+}

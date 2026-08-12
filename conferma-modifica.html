@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Passeggiata in Rosa — Iscrizione aggiornata</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#ed6ea7">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin-variable.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/form.css">
+</head>
+<body>
+
+<a class="salta-al-contenuto" href="#contenuto">Salta al contenuto</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+</svg>
+
+<header class="intestazione stampa-no">
+  <div class="contenitore">
+    <a class="intestazione__logo" href="/" aria-label="Passeggiata in Rosa — home">
+      <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Passeggiata in Rosa" width="92" height="85">
+    </a>
+  </div>
+</header>
+
+<main id="contenuto" class="sezione">
+  <div class="contenitore">
+    <div class="modulo">
+
+      <div class="conferma" id="conferma">
+        <svg class="cuore" viewBox="0 0 24 24" width="52" height="52" fill="currentColor"
+             style="color:var(--rosa)" aria-hidden="true"><use href="#i-cuore"/></svg>
+
+        <div>
+          <p class="occhiello">Iscrizione aggiornata</p>
+          <h1>Modifiche salvate</h1>
+        </div>
+
+        <p class="sommario" style="text-align:center">
+          Il codice resta lo stesso. Presentalo al banco il giorno dell&rsquo;evento
+          per ritirare il gadget e versare la quota. <strong>Il pagamento è di
+          persona.</strong>
+        </p>
+
+        <p class="conferma__codice" id="codice">—</p>
+
+        <div class="qr" id="qr"></div>
+
+        <dl class="riepilogo" id="riepilogo" hidden></dl>
+
+        <p class="piccolo tenue" id="avviso-email" hidden></p>
+
+        <div class="avviso__azioni stampa-no" style="justify-content:center">
+          <button class="btn btn--secondario" type="button" onclick="window.print()">Stampa o salva in PDF</button>
+          <a class="btn btn--fantasma" href="/modifica.html">Modifica l&rsquo;iscrizione</a>
+        </div>
+
+        <p class="piccolo tenue stampa-no">
+          <a href="/">Torna alla home</a>
+        </p>
+      </div>
+
+      <div id="senza-codice" hidden>
+        <p class="occhiello">Conferma</p>
+        <h1>Non troviamo il codice</h1>
+        <p class="sommario">
+          Questa pagina mostra il codice di una pre-iscrizione appena
+          completata. Se sei arrivato qui per sbaglio, puoi iscriverti o
+          recuperare la tua iscrizione.
+        </p>
+        <div class="avviso__azioni" style="margin-top:var(--sp-5)">
+          <a class="btn btn--primario" href="/iscrizione.html">Pre-iscriviti</a>
+          <a class="btn btn--secondario" href="/modifica.html">Modifica l&rsquo;iscrizione</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="piede su-scuro stampa-no" style="padding-block:var(--sp-6)">
+  <div class="contenitore piede__firma" style="margin-top:0;padding-top:0;border-top:0">
+    <p>© 2026 Passeggiata in Rosa · Borgo Veneto (PD) ·
+      <a href="mailto:info@passeggiatainrosa.it">info@passeggiatainrosa.it</a></p>
+    <p>Sito e automazioni a cura di <a href="https://heneti.it" target="_blank" rel="noopener">Heneti</a></p>
+  </div>
+</footer>
+
+<script src="/assets/js/qrcode.js" defer></script>
+<script src="/assets/js/conferma.js" defer></script>
+</body>
+</html>
