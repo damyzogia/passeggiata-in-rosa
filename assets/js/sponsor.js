@@ -9,9 +9,9 @@
      cartella/file.png = Nome Azienda | https://sito.it
    Il sito dopo la barra e' facoltativo.
 
-   Nota: il click su una tessera apre la lightbox (vedi sito.js), non il
-   sito dello sponsor. Il link, se c'e', compare dentro la lightbox: cosi'
-   il gesto e' prevedibile e nessuno finisce fuori dal sito per sbaglio.
+   Nota: il click su una tessera apre solo l'ingrandimento del logo. Il
+   sito dello sponsor, anche se presente nel CSV, non viene usato: senza
+   una legenda compilata sarebbe un link che non porta da nessuna parte.
    ========================================================================= */
 
 (function () {
@@ -71,6 +71,7 @@
     var img = tessera.querySelector('img');
     if (img) img.alt = 'Logo ' + voce.nome;
     tessera.setAttribute('data-nome', voce.nome);
-    if (voce.url) tessera.setAttribute('data-url', voce.url);
+    // Il sito dello sponsor non viene usato: la tessera apre solo
+    // l'ingrandimento del logo. La colonna resta nel CSV per il futuro.
   }
 })();

@@ -69,6 +69,11 @@
       </ul>
     </nav>
 
+
+    <button class="menu-bottone" type="button" aria-expanded="false" aria-controls="menu-mobile" aria-label="Apri il menu">
+      <span></span><span></span><span></span>
+    </button>
+
     <div class="intestazione__azione">
       <a class="btn btn--primario" href="/iscrizione.html">Pre-iscriviti</a>
     </div>
@@ -569,6 +574,31 @@
   <span class="barra-pollice__nota">Online entro il 10 settembre · 8 € a persona</span>
 </div>
 
+<!-- Navigazione mobile: overlay a tutta pagina, voci grandi e ben distanziate.
+     Vive in menu.js ed e costruito su <dialog>, come la lightbox. -->
+<dialog class="menu" id="menu-mobile" aria-label="Menu di navigazione">
+  <div class="menu__testata">
+    <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Passeggiata in Rosa" width="48" height="45">
+    <button class="menu__chiudi" type="button" aria-label="Chiudi il menu">&times;</button>
+  </div>
+
+  <nav aria-label="Sezioni del sito">
+    <ul class="menu__voci">
+        <li><a href="#evento">Evento</a></li>
+        <li><a href="#info">Info pratiche</a></li>
+        <li><a href="#iscriversi">Come iscriversi</a></li>
+        <li><a href="#storia">La nostra storia</a></li>
+        <li><a href="/sponsor.html">Sponsor</a></li>
+    </ul>
+  </nav>
+
+  <div class="menu__piede">
+    <a class="btn btn--primario btn--grande" href="/iscrizione.html">Pre-iscriviti</a>
+    <p>Online entro il 10 settembre &middot; 8 &euro; a persona</p>
+  </div>
+</dialog>
+
 <script src="/assets/js/sito.js" defer></script>
+<script src="/assets/js/menu.js" defer></script>
 </body>
 </html>

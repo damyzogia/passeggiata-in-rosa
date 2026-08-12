@@ -97,6 +97,148 @@
   .intestazione > .contenitore { min-height: 56px; }
 }
 
+
+/* -------------------------------------------------------------------------
+   1b. MENU MOBILE — overlay a tutta pagina
+   Costruito su <dialog>, come la lightbox: top layer, trappola del fuoco e
+   inertizzazione della pagina le mette il browser.
+   Il bottone compare solo se JavaScript e <dialog> ci sono davvero: un
+   bottone che non apre niente sarebbe peggio di nessun bottone.
+   ------------------------------------------------------------------------- */
+
+.menu-bottone { display: none; }
+
+.js-menu .menu-bottone {
+  display: grid;
+  place-content: center;
+  gap: 5px;
+  margin-left: auto;
+  flex: none;
+  /* 48x48: bersaglio comodo anche con una mano sola. */
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--bordo);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color var(--transizione), background var(--transizione);
+}
+
+.js-menu .menu-bottone:hover { border-color: var(--rosa); background: var(--rosa-velo); }
+
+.menu-bottone span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--testo);
+}
+
+@media (min-width: 920px) {
+  .js-menu .menu-bottone { display: none; }
+}
+
+dialog.menu {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--sfondo);
+  color: var(--testo);
+}
+
+dialog.menu::backdrop { background: rgba(59, 42, 50, 0.55); }
+
+dialog.menu[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu__testata {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  min-height: var(--testata-h);
+  padding-inline: var(--margine-pagina);
+  border-bottom: 1px solid var(--bordo);
+}
+
+.menu__testata img { height: 44px; width: auto; }
+
+.menu__chiudi {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--bordo);
+  background: #fff;
+  color: var(--testo);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.menu__chiudi:hover { border-color: var(--rosa); background: var(--rosa-velo); color: var(--rosa-testo); }
+
+.menu__voci {
+  flex: 1;
+  align-content: start;
+  display: grid;
+  gap: var(--sp-1);
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-5) var(--margine-pagina);
+  overflow-y: auto;
+}
+
+/* Voci grandi e ben distanziate: il pubblico e' soprattutto over 50 che
+   legge dal telefono. */
+.menu__voci a {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  font-family: var(--font-titoli);
+  font-size: var(--t-xl);
+  font-weight: 600;
+  font-variation-settings: 'opsz' 48, 'SOFT' 40;
+  color: var(--testo);
+  text-decoration: none;
+  border-bottom: 1px solid var(--bordo);
+  transition: background var(--transizione), color var(--transizione);
+}
+
+.menu__voci li:last-child a { border-bottom: 0; }
+
+.menu__voci a:hover,
+.menu__voci a:focus-visible {
+  background: var(--rosa-velo);
+  color: var(--rosa-testo);
+}
+
+.menu__piede {
+  padding: var(--sp-4) var(--margine-pagina);
+  padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--bordo);
+  background: var(--rosa-velo);
+}
+
+.menu__piede .btn { width: 100%; }
+
+.menu__piede p {
+  margin-top: var(--sp-3);
+  text-align: center;
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
 /* -------------------------------------------------------------------------
    2. BARRA CTA IN BASSO (mobile)
    L'elemento piu' importante della pagina per questo pubblico.
@@ -165,13 +307,23 @@ body.con-barra-pollice { padding-bottom: 112px; }
   z-index: -2;
 }
 
+/* Il <picture> deve riempire il contenitore, altrimenti l'altezza al 100%
+   dell'immagine si calcola su un'altezza automatica e non ha effetto: la
+   foto si ferma al proprio rettangolo 4:3 e sotto resta il fondo pieno. */
+.hero__foto picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .hero__foto img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* La foto e orizzontale 4:3: il taglio favorisce la parte bassa,
-     dove ci sono il gruppo alla partenza e la facciata della chiesa. */
-  object-position: center 62%;
+  /* Taglio spostato in basso: il gruppo alla partenza e la facciata della
+     chiesa devono restare in campo anche sui desktop larghi e bassi, dove
+     il ritaglio verticale e' piu' aggressivo. */
+  object-position: 50% 72%;
 }
 
 /* Zoom lentissimo: da' vita alla fotografia senza distrarre. */
@@ -193,14 +345,21 @@ body.con-barra-pollice { padding-bottom: 112px; }
   position: absolute;
   inset: 0;
   z-index: -1;
+  /* Velo leggero: serve a far leggere il testo bianco, non a coprire la
+     fotografia. Il grosso del contrasto arriva dallo scrim locale dietro
+     logo e testo, non da un lavaggio su tutta l'area. */
   background:
-    /* Vignettatura: chiude i bordi e porta l'occhio al centro. */
-    radial-gradient(120% 85% at 50% 42%, rgba(59, 42, 50, 0) 42%, rgba(59, 42, 50, 0.55) 100%),
+    /* Scrim morbido sotto la colonna dei contenuti. */
+    radial-gradient(ellipse 74% 58% at 50% 50%,
+      rgba(59, 42, 50, 0.52) 0%,
+      rgba(59, 42, 50, 0.34) 52%,
+      rgba(59, 42, 50, 0) 80%),
+    /* Velatura d'insieme, tenue: la foto resta visibile dall'alto in basso. */
     linear-gradient(180deg,
-      rgba(237, 110, 167, 0.72) 0%,
-      rgba(191, 34, 104, 0.58) 24%,
-      rgba(59, 42, 50, 0.74) 58%,
-      rgba(59, 42, 50, 0.97) 100%);
+      rgba(191, 34, 104, 0.26) 0%,
+      rgba(59, 42, 50, 0.20) 38%,
+      rgba(59, 42, 50, 0.30) 72%,
+      rgba(59, 42, 50, 0.46) 100%);
 }
 
 .hero__contenuto {
@@ -463,6 +622,9 @@ body.con-barra-pollice { padding-bottom: 112px; }
 }
 
 .numeri__foto { position: absolute; inset: 0; z-index: -2; }
+/* Stesso motivo dell'hero: senza questa riga l'altezza al 100% non ha
+   appiglio e la foto si ferma al proprio rettangolo. */
+.numeri__foto picture { display: block; width: 100%; height: 100%; }
 .numeri__foto img { width: 100%; height: 100%; object-fit: cover; }
 
 .numeri__velo {
@@ -851,6 +1013,16 @@ dialog.lente[open] {
 }
 
 .griglia-sponsor--main .tessera-sponsor { min-height: 124px; }
+
+/* Il <picture> riempie la tessera mentre l'immagine, limitata in altezza,
+   e' piu' stretta: dentro un <button> il testo veniva centrato dallo stile
+   di sistema, dentro un <a> no. Qui la centratura la mette il <picture>. */
+.tessera-sponsor picture {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
 
 .tessera-sponsor img { max-width: 100%; max-height: 76px; width: auto; object-fit: contain; }
 .griglia-sponsor--main .tessera-sponsor img { max-height: 100px; }

@@ -14,8 +14,7 @@
    L'innesco e' un link all'immagine piena, marcato con data-lente:
 
      <a href="/percorso/immagine.jpg" data-lente
-        data-nome="Didascalia"           (facoltativo)
-        data-url="https://sito.it">      (facoltativo)
+        data-nome="Didascalia">          (facoltativo)
 
    Se <dialog> non esiste o il JavaScript non parte, il link resta un link:
    il visitatore apre l'immagine invece di trovare una pagina rotta.
@@ -29,7 +28,6 @@
 
   var img = lente.querySelector('.lente__img');
   var didascalia = lente.querySelector('.lente__didascalia');
-  var collegamento = lente.querySelector('.lente__link');
   var chiudi = lente.querySelector('.lente__chiudi');
 
   var scorrimento = 0;
@@ -91,7 +89,6 @@
 
   function apri(innesco, sorgente) {
     var nome = innesco.getAttribute('data-nome') || '';
-    var url = innesco.getAttribute('data-url') || '';
 
     // Le proporzioni si prendono dalla miniatura, che e' gia' caricata: senza,
     // il riquadro nasce a dimensione zero e "scatta" alla misura giusta solo
@@ -107,14 +104,6 @@
 
     didascalia.textContent = nome;
     didascalia.hidden = !nome;
-
-    if (collegamento) {
-      // Solo http/https: un indirizzo arbitrario non deve poter diventare
-      // un href javascript:.
-      var ammesso = /^https?:\/\//i.test(url);
-      collegamento.hidden = !ammesso;
-      if (ammesso) collegamento.href = url;
-    }
 
     // Blocco dello scorrimento. Va fatto PRIMA di showModal(), altrimenti
     // il salto si vede. scrollBehavior a 'auto' evita che il ripristino
