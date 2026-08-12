@@ -912,12 +912,20 @@ dialog.lente[open] {
   justify-items: center;
 }
 
+/* Pannello attorno all'immagine: serve a dare alla X un angolo suo, sul
+   margine, invece che sopra il logo. Vale per qualunque proporzione, perche'
+   lo spazio in alto e' riservato dal padding e non dipende dall'immagine. */
 .lente__telaio {
   position: relative;
   margin: 0;
   display: grid;
   gap: var(--sp-3);
   justify-items: center;
+  padding: 56px var(--sp-5) var(--sp-5);
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--ombra-3);
+  max-width: min(92vw, 1100px);
 }
 
 /* L'immagine non viene mai tagliata: si adatta al lato piu' stretto e
@@ -925,28 +933,30 @@ dialog.lente[open] {
    davvero visibile sui telefoni con le barre del browser. */
 .lente__img {
   display: block;
-  max-width: min(92vw, 1100px);
-  max-height: 82dvh;
+  max-width: 100%;
+  /* Il pannello aggiunge circa 100px fra spazio per la X e margini: l'altezza
+     dell'immagine li tiene in conto, cosi' l'insieme resta dentro lo schermo. */
+  max-height: min(70dvh, 760px);
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: var(--r-md);
-  background: #fff;
-  box-shadow: var(--ombra-3);
+  border-radius: var(--r-sm);
 }
 
 .lente__didascalia {
   margin: 0;
-  max-width: 60ch;
+  max-width: 46ch;
   font-size: var(--t-sm);
   text-align: center;
-  color: #f6eef2;
+  color: var(--testo-tenue);
 }
 
+/* Nell'angolo del pannello, sul margine bianco: non copre mai l'immagine,
+   qualunque siano le sue proporzioni. */
 .lente__chiudi {
   position: absolute;
-  top: var(--sp-2);
-  right: var(--sp-2);
+  top: 6px;
+  right: 6px;
   z-index: 2;
   /* 44x44: area di tocco piena anche se il segno grafico e' piccolo. */
   width: 44px;
@@ -954,10 +964,9 @@ dialog.lente[open] {
   display: grid;
   place-items: center;
   border-radius: var(--r-pill);
-  border: 1px solid rgba(255, 255, 255, 0.34);
-  background: rgba(35, 24, 30, 0.66);
-  backdrop-filter: blur(4px);
-  color: #fff;
+  border: 1px solid var(--bordo);
+  background: #fff;
+  color: var(--testo);
   font-size: 24px;
   line-height: 1;
   cursor: pointer;
@@ -1070,6 +1079,95 @@ dialog.lente[open] {
 .nastro-loghi .tessera-sponsor:hover { transform: none; border-color: var(--bordo); box-shadow: none; }
 .nastro-loghi img { max-height: 56px; }
 
+
+/* -------------------------------------------------------------------------
+   MARCHIO CON DIDASCALIA
+   Usato per organizzatori, patrocini e associazioni. I file di partenza sono
+   disomogenei: chi ha solo lo stemma, chi ha gia' la scritta, chi e' quadrato
+   e chi orizzontale. La coerenza non la puo' dare il file, quindi la danno la
+   piastrella (area identica per tutti, logo contenuto e centrato) e il nome
+   scritto sotto.
+   Non si usa nelle griglie sponsor main/normali/ristoro: li' i loghi sono
+   tanti e quasi tutti portano gia' il nome dentro.
+   ------------------------------------------------------------------------- */
+
+.marchio-ist {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+  text-align: center;
+}
+
+.marchio-ist__piastrella {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 78px;
+  padding: var(--sp-3);
+  background: #fff;
+  border-radius: var(--r-sm);
+}
+
+/* Il <picture> deve centrare a sua volta: e' lui il figlio della griglia,
+   e l'immagine dentro e' piu' stretta per via del limite di altezza. */
+.marchio-ist__piastrella picture {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marchio-ist__piastrella img {
+  max-width: 100%;
+  max-height: 52px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.marchio-ist__nome {
+  font-size: var(--t-xs);
+  line-height: 1.35;
+  color: var(--testo-tenue);
+  text-wrap: balance;
+}
+
+/* Logo IOV dentro la scheda "Perche' si cammina": firma la destinazione dei
+   fondi, senza cornice perche' la scheda e' gia' un riquadro. */
+.marchio-iov {
+  display: grid;
+  place-items: center;
+  margin-top: var(--sp-2);
+}
+
+.marchio-iov picture { display: grid; place-items: center; }
+
+.marchio-iov img {
+  max-height: 70px;
+  max-width: 190px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.su-scuro .marchio-ist__nome { color: #cbb8c1; }
+
+/* Variante per la griglia associazioni: stesse regole, piastrella piu' alta
+   perche' li' c'e' piu' spazio in larghezza. */
+.griglia-sponsor--con-nome {
+  grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+  align-items: start;
+}
+
+.griglia-sponsor--con-nome .marchio-ist { gap: var(--sp-3); }
+
+.griglia-sponsor--con-nome .tessera-sponsor {
+  width: 100%;
+  min-height: 118px;
+}
+
+.griglia-sponsor--con-nome .tessera-sponsor img { max-height: 84px; }
+
 /* -------------------------------------------------------------------------
    14. PIEDE
    ------------------------------------------------------------------------- */
@@ -1114,19 +1212,12 @@ dialog.lente[open] {
 
 /* I loghi istituzionali sono a colori: sul prugna vanno posati su una
    piastrella chiara, altrimenti spariscono. */
-.loghi-istituzionali { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
-
-.loghi-istituzionali .piastrella {
+.loghi-istituzionali {
   display: grid;
-  place-items: center;
-  padding: var(--sp-3);
-  min-width: 84px;
-  min-height: 64px;
-  background: #fff;
-  border-radius: var(--r-sm);
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  gap: var(--sp-4) var(--sp-3);
+  align-items: start;
 }
-
-.loghi-istituzionali img { max-height: 46px; width: auto; max-width: 110px; object-fit: contain; }
 
 .piede__firma {
   margin-top: var(--sp-7);

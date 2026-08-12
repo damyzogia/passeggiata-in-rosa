@@ -5,7 +5,7 @@ Con il patrocinio dello IOV – Istituto Oncologico Veneto di Padova
 
 ## Scheda dell'evento
 - **Data:** domenica 13 settembre 2026
-- **Ritrovo:** ore 8:00 — Piazzale della Chiesa di Santa Margherita d'Adige (Piazza Giovanni Battista Graziato / Via Roma 15), Borgo Veneto (PD)
+- **Ritrovo:** ore 8:00 — Piazzale della Chiesa di Santa Margherita d'Adige — Via Roma 32 — 35046 Borgo Veneto (PD), loc. Santa Margherita d'Adige
 - **Programma:** ore 8:00 apertura iscrizioni e consegna gadget; ore 8:30 riscaldamento muscolare a cura di Greta Nicoletti PT; ore 9:00 partenza
 - **Percorso:** circa 8 km per le vie di Borgo Veneto, con sosta ristoro in località Megliadino San Fidenzio
 - **Quota:** € 8,00 — gratuita per i bambini fino a 6 anni compiuti
