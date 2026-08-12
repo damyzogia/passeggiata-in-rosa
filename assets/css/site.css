@@ -237,7 +237,9 @@ body.con-barra-pollice { padding-bottom: 112px; }
 .hero__marchio img {
   position: relative;
   z-index: 1;
-  width: min(410px, 78vw);
+  /* Piu contenuto di prima: il logo non deve occupare mezza schermata.
+     Le sorgenti arrivano a 1800px, quindi resta nitido anche su retina. */
+  width: min(320px, 62vw);
   height: auto;
 }
 

@@ -29,7 +29,9 @@
 
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin-variable.woff2" crossorigin>
 <link rel="preload" as="image" href="/assets/foto/foto-hero-808.webp" fetchpriority="high">
-<link rel="preload" as="image" href="/assets/img/logo-6a-edizione-800.webp" fetchpriority="high">
+<link rel="preload" as="image" fetchpriority="high"
+      imagesrcset="/assets/img/logo-6a-edizione-400.webp 400w, /assets/img/logo-6a-edizione-640.webp 640w, /assets/img/logo-6a-edizione-900.webp 900w, /assets/img/logo-6a-edizione-1300.webp 1300w, /assets/img/logo-6a-edizione-1800.webp 1800w"
+      imagesizes="(min-width: 640px) 320px, 62vw">
 <link rel="stylesheet" href="/assets/css/base.css">
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
@@ -92,20 +94,18 @@
       <div class="hero__marchio">
         <picture>
           <source type="image/webp"
-                  srcset="/assets/img/logo-6a-edizione-500.webp 500w,
-                          /assets/img/logo-6a-edizione-800.webp 800w,
-                          /assets/img/logo-6a-edizione-1100.webp 1100w,
-                          /assets/img/logo-6a-edizione-1500.webp 1500w"
-                  sizes="(min-width: 640px) 410px, 78vw">
+                  srcset="/assets/img/logo-6a-edizione-400.webp 400w,
+                          /assets/img/logo-6a-edizione-640.webp 640w,
+                          /assets/img/logo-6a-edizione-900.webp 900w,
+                          /assets/img/logo-6a-edizione-1300.webp 1300w,
+                          /assets/img/logo-6a-edizione-1800.webp 1800w"
+                  sizes="(min-width: 640px) 320px, 62vw">
           <img src="/assets/img/logo-6a-edizione.png"
-               alt="6ª Passeggiata in Rosa" width="1100" height="731" fetchpriority="high">
+               alt="6ª Passeggiata in Rosa" width="900" height="598" fetchpriority="high">
         </picture>
       </div>
 
-      <p class="hero__riga">
-        <svg aria-hidden="true"><use href="#i-calendario"/></svg>
-        Domenica 13 settembre 2026
-      </p>
+      <p class="hero__riga">Domenica 13 settembre 2026</p>
 
       <p class="hero__luogo">Santa Margherita d'Adige · Borgo Veneto (PD)</p>
 
@@ -132,7 +132,7 @@
     <div class="contenitore">
       <div class="sezione__intestazione" data-rivela="0">
         <p class="occhiello">L'evento</p>
-        <h2>Si cammina insieme, non si gareggia</h2>
+        <h2>Un passo dopo l&#39;altro, per la ricerca</h2>
       </div>
 
       <div class="griglia griglia--2">
@@ -158,7 +158,7 @@
 
         <div class="scheda-info" data-rivela="2">
           <h3>
-            <svg class="scheda-info__icona" aria-hidden="true"><use href="#i-cuore"/></svg>
+            <svg class="scheda-info__icona" width="38" height="38" fill="currentColor" aria-hidden="true"><use href="#i-cuore"/></svg>
             Perché si cammina
           </h3>
           <p>
@@ -177,7 +177,7 @@
   </section>
 
   <div class="divisorio-strada" aria-hidden="true">
-    <svg class="strada-curva" viewBox="0 0 1200 150" fill="none">
+    <svg class="strada-curva" viewBox="0 0 1200 150" width="1200" height="150" fill="none">
       <path class="strada-curva__asfalto" d="M20 120 C 240 120, 260 30, 480 30 S 760 130, 980 92 S 1140 40, 1180 34"/>
       <path class="strada-curva__linea" d="M20 120 C 240 120, 260 30, 480 30 S 760 130, 980 92 S 1140 40, 1180 34"/>
     </svg>
@@ -194,7 +194,7 @@
       <div class="griglia griglia--3" style="margin-bottom:var(--sp-6)">
 
         <div class="scheda-info" data-rivela="1">
-          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-orologio"/></svg> Programma</h3>
+          <h3><svg class="scheda-info__icona" width="38" height="38" fill="currentColor" aria-hidden="true"><use href="#i-orologio"/></svg> Programma</h3>
           <ul class="elenco-cuori">
             <li><span class="orario">8:00</span> — apertura iscrizioni e consegna del gadget</li>
             <li><span class="orario">8:30</span> — riscaldamento muscolare con Greta Nicoletti PT</li>
@@ -203,7 +203,7 @@
         </div>
 
         <div class="scheda-info" data-rivela="2">
-          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-percorso"/></svg> Percorso</h3>
+          <h3><svg class="scheda-info__icona" width="38" height="38" fill="currentColor" aria-hidden="true"><use href="#i-percorso"/></svg> Percorso</h3>
           <p class="dato-grande">circa 8 km</p>
           <p>
             Per le vie di Borgo Veneto, con <strong>sosta ristoro</strong> in
@@ -222,7 +222,7 @@
         </div>
 
         <div class="scheda-info" data-rivela="3">
-          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-euro"/></svg> Quota</h3>
+          <h3><svg class="scheda-info__icona" width="38" height="38" fill="currentColor" aria-hidden="true"><use href="#i-euro"/></svg> Quota</h3>
           <p class="dato-grande">8,00 €</p>
           <p>
             <strong>Gratis per i bambini fino a 6 anni compiuti.</strong>
@@ -237,7 +237,7 @@
 
       <div class="griglia griglia--2">
         <div class="scheda-info" data-rivela="1">
-          <h3><svg class="scheda-info__icona" aria-hidden="true"><use href="#i-pin"/></svg> Ritrovo</h3>
+          <h3><svg class="scheda-info__icona" width="38" height="38" fill="currentColor" aria-hidden="true"><use href="#i-pin"/></svg> Ritrovo</h3>
           <p>
             <strong>Piazzale della Chiesa di Santa Margherita d'Adige</strong><br>
             Piazza Giovanni Battista Graziato / Via Roma 15<br>
@@ -245,7 +245,7 @@
           </p>
           <p>
             <span class="scadenza">
-              <svg aria-hidden="true"><use href="#i-calendario"/></svg>
+              <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#i-calendario"/></svg>
               Domenica 13 settembre, dalle 8:00
             </span>
           </p>
@@ -367,7 +367,7 @@
   </section>
 
   <div class="divisorio-strada" aria-hidden="true">
-    <svg class="strada-curva" viewBox="0 0 1200 150" fill="none">
+    <svg class="strada-curva" viewBox="0 0 1200 150" width="1200" height="150" fill="none">
       <path class="strada-curva__asfalto" d="M20 40 C 260 40, 300 128, 520 118 S 820 24, 1010 60 S 1150 116, 1180 120"/>
       <path class="strada-curva__linea" d="M20 40 C 260 40, 300 128, 520 118 S 820 24, 1010 60 S 1150 116, 1180 120"/>
     </svg>
@@ -423,7 +423,7 @@
         </div>
 
         <div class="tappa" data-rivela="6">
-          <span class="tappa__bollo"><svg aria-hidden="true"><use href="#i-cuore"/></svg></span>
+          <span class="tappa__bollo"><svg width="22" height="22" fill="currentColor" aria-hidden="true"><use href="#i-cuore"/></svg></span>
           <h3>13 settembre 2026 — la sesta</h3>
           <p>La prossima camminata. Le pre-iscrizioni sono aperte.</p>
           <div style="margin-top:var(--sp-4)">
@@ -540,10 +540,10 @@
         <h3 style="margin-top:var(--sp-6)">Seguici</h3>
         <div class="social">
           <a href="https://www.facebook.com/passeggiatainrosa/" target="_blank" rel="noopener" aria-label="Passeggiata in Rosa su Facebook">
-            <svg aria-hidden="true"><use href="#i-facebook"/></svg>
+            <svg width="20" height="20" fill="currentColor" aria-hidden="true"><use href="#i-facebook"/></svg>
           </a>
           <a href="https://www.instagram.com/passeggiata.in.rosa/" target="_blank" rel="noopener" aria-label="Passeggiata in Rosa su Instagram">
-            <svg aria-hidden="true"><use href="#i-instagram"/></svg>
+            <svg width="20" height="20" fill="currentColor" aria-hidden="true"><use href="#i-instagram"/></svg>
           </a>
         </div>
       </div>
