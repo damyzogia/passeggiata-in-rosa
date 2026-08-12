@@ -13,8 +13,27 @@
 
   var motoRidotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ------------------------------------------------ 1. Ombra dell'intestazione */
+  /* ------------------------------------------------ 0. Altezza della testata
+     L'hero e' alto "schermo meno testata". Il CSS ha un valore di ripiego,
+     ma la testata reale cambia con il carattere di sistema e con la larghezza:
+     se il valore e' sottostimato, l'hero sfora e l'indicatore "scorri" finisce
+     sotto la piega. Meglio misurarla che indovinarla.                        */
   var testata = document.querySelector('.intestazione');
+
+  if (testata) {
+    var misuraTestata = function () {
+      var h = Math.round(testata.getBoundingClientRect().height);
+      if (h > 0) document.documentElement.style.setProperty('--testata-h', h + 'px');
+    };
+    misuraTestata();
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(misuraTestata).observe(testata);
+    } else {
+      window.addEventListener('resize', misuraTestata, { passive: true });
+    }
+  }
+
+  /* ------------------------------------------------ 1. Ombra dell'intestazione */
   if (testata) {
     var aggiornaTestata = function () {
       testata.classList.toggle('intestazione--staccata', window.scrollY > 8);
