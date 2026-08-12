@@ -244,6 +244,24 @@ fieldset[disabled] * { cursor: not-allowed; }
   box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
 }
 
+
+/* La nota compare solo quando la scelta dichiarata e la data non vanno
+   d'accordo: spiega chi ha ragione, senza bloccare nulla. */
+.nota-quota {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-sm);
+  background: var(--rosa-velo);
+  border-left: 3px solid var(--rosa);
+  font-size: var(--t-sm);
+  line-height: 1.45;
+  color: var(--testo);
+}
+
+.nota-quota[hidden] { display: none; }
+
 /* -------------------------------------------------------------------------
    PILLOLA DELLA QUOTA
    Compare solo quando la data e' completa: senza data non si puo' sapere

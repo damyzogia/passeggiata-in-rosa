@@ -166,6 +166,14 @@
       <button class="persona__via" type="button" hidden>Rimuovi</button>
     </div>
 
+    <fieldset class="campo gruppo-campi">
+      <legend>Tipo di quota</legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" data-campo="tipo" value="adulto"> Adulto &mdash; quota 8 &euro;</label>
+        <label class="chip"><input type="radio" data-campo="tipo" value="bambino"> Bambino &mdash; gratis (0-6 anni)</label>
+      </div>
+    </fieldset>
+
     <div class="coppia">
       <div class="campo">
         <label>Nome <span aria-hidden="true">*</span></label>
@@ -187,6 +195,7 @@
         <select data-campo="anno" aria-label="Anno di nascita"><option value="">Anno</option></select>
       </div>
       <p class="campo__errore" data-errore="nascita" hidden></p>
+      <p class="nota-quota" data-nota-quota hidden></p>
     </fieldset>
 
     <fieldset class="campo gruppo-campi">

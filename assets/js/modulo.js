@@ -158,11 +158,15 @@ window.Modulo = (function () {
     var nodo = this.modello.content.firstElementChild.cloneNode(true);
     var indice = this.contenitore.querySelectorAll('.persona').length;
 
-    /* I radio devono avere un name diverso per persona, altrimenti
-       selezionarne uno deseleziona quello della persona precedente. */
+    /* Un name per gruppo di scelta e per persona.
+       Il suffisso casuale va calcolato UNA volta sola: se lo si calcola
+       dentro il ciclo, ogni radio finisce in un gruppo tutto suo e le due
+       opzioni smettono di escludersi — si potrebbero spuntare insieme
+       Femmina e Maschio, e nessuna delle due si potrebbe piu' togliere. */
+    var suffisso = indice + '-' + Math.random().toString(16).slice(2, 8);
     nodo.querySelectorAll('input[type="radio"]').forEach(function (r) {
       var campo = r.getAttribute('data-campo') || 'r';
-      r.name = campo + '-' + indice + '-' + Math.random().toString(16).slice(2, 8);
+      r.name = campo + '-' + suffisso;
     });
 
     this.contenitore.appendChild(nodo);
@@ -198,17 +202,42 @@ window.Modulo = (function () {
   };
 
   /* La pillola compare SOLO a data completa: dire "gratis" senza sapere
-     quando e' nata la persona sarebbe una bugia. */
+     quando e' nata la persona sarebbe una bugia.
+
+     La scelta "Adulto / Bambino" serve solo a far capire la regola: il
+     prezzo lo decide sempre la data di nascita, come fa il backend. Se le
+     due cose non concordano si avvisa e si segue la data. */
   function aggiornaPillola(p) {
     var pill = p.querySelector('[data-pillola]');
-    if (!pill) return;
+    var nota = p.querySelector('[data-nota-quota]');
     var data = leggiData(p);
-    if (!data) { pill.hidden = true; return; }
+    var scelto = p.querySelector('[data-campo="tipo"]:checked');
+
+    if (!data) {
+      if (pill) pill.hidden = true;
+      if (nota) nota.hidden = true;
+      return;
+    }
+
     var gratis = eGratis(data);
-    pill.hidden = false;
-    pill.textContent = gratis ? 'Gratis' : euro(QUOTA);
-    pill.classList.toggle('pillola--gratis', gratis);
-    pill.classList.toggle('pillola--quota', !gratis);
+
+    if (pill) {
+      pill.hidden = false;
+      pill.textContent = gratis ? 'Gratis' : euro(QUOTA);
+      pill.classList.toggle('pillola--gratis', gratis);
+      pill.classList.toggle('pillola--quota', !gratis);
+    }
+
+    if (nota) {
+      var testo = '';
+      if (scelto && scelto.value === 'bambino' && !gratis) {
+        testo = 'Questa persona ha più di 6 anni: va registrata come adulto (quota ' + euro(QUOTA) + ').';
+      } else if (scelto && scelto.value === 'adulto' && gratis) {
+        testo = 'Ha meno di 6 anni: l’iscrizione è gratuita.';
+      }
+      nota.textContent = testo;
+      nota.hidden = !testo;
+    }
   }
 
   Partecipanti.prototype.leggi = function () {
