@@ -83,7 +83,8 @@ Relazione: una **Squadra** raccoglie più **Prenotazioni**; una **Prenotazione**
 - **Tono:** caldo, femminile ma non stucchevole, pulito, mobile-first.
 
 ## Contatti / social (footer)
-- Email: info@passeggiatainrosa.it · passeggiatainrosa@gmail.com
+- Email: **passeggiatainrosa@gmail.com** — è l'unico indirizzo attivo e l'unico da usare nel sito.
+  - `info@passeggiatainrosa.it` NON è ancora attivo (DNS da configurare): non va scritto da nessuna parte finché non funziona, altrimenti si raccolgono richieste che nessuno legge.
 - Facebook: https://www.facebook.com/passeggiatainrosa/ · Instagram: @passeggiata.in.rosa
 - Firma: "Sito e automazioni a cura di Heneti — heneti.it"
 

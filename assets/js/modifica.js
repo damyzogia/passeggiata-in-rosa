@@ -117,6 +117,7 @@
     prenotazione.data_nascita = prenotazione.data_nascita || data;
 
     document.getElementById('codice-trovato').textContent = prenotazione.codice || '—';
+    document.getElementById('annulla-codice').textContent = prenotazione.codice || '—';
 
     var elenco = prenotazione.partecipanti || [];
     if (!elenco.length) elenco = [{}];
@@ -188,6 +189,68 @@
           e.messaggio || 'Si è verificato un problema. Riprova fra qualche istante.';
         avvisoErrore.hidden = false;
         avvisoErrore.scrollIntoView({ block: 'center' });
+      });
+  });
+
+
+  /* ------------------------------------------------------- annullamento
+     Due conferme prima di chiamare il server: e' l'unica azione che non si
+     puo' disfare, e un tocco per sbaglio cancellerebbe l'iscrizione di
+     tutto un gruppo. */
+  var annullo = document.getElementById('annullo');
+  var avvia = document.getElementById('annulla-avvia');
+  var passo1 = document.getElementById('annulla-1');
+  var passo2 = document.getElementById('annulla-2');
+  var annullaErrore = document.getElementById('annulla-errore');
+  var annullaErroreTesto = document.getElementById('annulla-errore-testo');
+  var idAnnullo = null;
+
+  function passoAnnullo(n) {
+    avvia.hidden = n > 0;
+    passo1.hidden = n !== 1;
+    passo2.hidden = n !== 2;
+    if (n === 0) annullaErrore.hidden = true;
+  }
+
+  avvia.addEventListener('click', function () { passoAnnullo(1); passo1.scrollIntoView({ block: 'center' }); });
+  document.getElementById('annulla-no1').addEventListener('click', function () { passoAnnullo(0); });
+  document.getElementById('annulla-no2').addEventListener('click', function () { passoAnnullo(0); });
+  document.getElementById('annulla-si1').addEventListener('click', function () { passoAnnullo(2); });
+
+  document.getElementById('annulla-si2').addEventListener('click', function () {
+    if (inCorso || !prenotazione) return;
+    annullaErrore.hidden = true;
+
+    /* Stesso identificativo a ogni tentativo: se la prima chiamata e'
+       arrivata ma la risposta si e' persa, il server riconosce il doppione. */
+    if (!idAnnullo) idAnnullo = API.nuovoId();
+
+    inCorso = true;
+
+    Attesa.durante(
+      annullo,
+      API.chiama('annullaPrenotazione', {
+        codice: prenotazione.codice,
+        email: prenotazione.email,
+        data_nascita: prenotazione.data_nascita
+      }, { requestId: idAnnullo }),
+      'Annullo la prenotazione…'
+    )
+      .then(function () {
+        document.getElementById('annullata-codice').textContent = prenotazione.codice || '—';
+        scheda.hidden = true;
+        document.getElementById('annullata').hidden = false;
+        window.scrollTo(0, 0);
+      })
+      .catch(function (e) {
+        inCorso = false;
+        passoAnnullo(0);
+        annullaErroreTesto.textContent =
+          e.codice === 'NON_AUTORIZZATO'
+            ? 'La verifica non è riuscita. Ricarica la pagina e ritrova la prenotazione, poi riprova.'
+            : (e.messaggio || 'Si è verificato un problema. Riprova fra qualche istante.');
+        annullaErrore.hidden = false;
+        annullaErrore.scrollIntoView({ block: 'center' });
       });
   });
 

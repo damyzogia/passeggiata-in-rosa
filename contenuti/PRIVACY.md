@@ -4,7 +4,7 @@
 
 ## Titolare del trattamento
 Parrocchia di Santa Margherita d'Adige e NOI Associazione San Biagio APS.
-Per ogni richiesta relativa ai tuoi dati puoi scrivere a: **info@passeggiatainrosa.it**.
+Per ogni richiesta relativa ai tuoi dati puoi scrivere a: **passeggiatainrosa@gmail.com**.
 
 ## Quali dati raccogliamo
 Al momento della pre-iscrizione raccogliamo, per ciascun partecipante: **nome, cognome, data di nascita e sesso**; il **gruppo/squadra** eventualmente indicato; e, per la persona che effettua l'iscrizione (capofila), **nome, indirizzo email** e, se fornito, **numero di telefono**.
@@ -22,7 +22,7 @@ I dati anagrafici **non vengono diffusi né ceduti a terzi** per finalità comme
 Durante l'evento potranno essere effettuate riprese foto e video, diffuse sui canali dell'organizzazione secondo quanto previsto dal Regolamento, che si accetta all'atto dell'iscrizione.
 
 ## I tuoi diritti
-In ogni momento puoi chiedere l'accesso ai tuoi dati, la loro rettifica o cancellazione, la limitazione o l'opposizione al trattamento, e puoi revocare il consenso prestato, scrivendo a info@passeggiatainrosa.it. Hai inoltre diritto di proporre reclamo al Garante per la protezione dei dati personali (www.garanteprivacy.it).
+In ogni momento puoi chiedere l'accesso ai tuoi dati, la loro rettifica o cancellazione, la limitazione o l'opposizione al trattamento, e puoi revocare il consenso prestato, scrivendo a passeggiatainrosa@gmail.com. Hai inoltre diritto di proporre reclamo al Garante per la protezione dei dati personali (www.garanteprivacy.it).
 
 ## Consensi richiesti in fase di iscrizione (obbligatori per partecipare)
 1. **Presa visione e accettazione** del Regolamento e della presente informativa sulla privacy.

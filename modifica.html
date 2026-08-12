@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Passeggiata in Rosa — Modifica la tua iscrizione</title>
+<meta name="description" content="Recupera e modifica la tua pre-iscrizione alla Passeggiata in Rosa: aggiungi o togli partecipanti, cambia il gruppo.">
+
+<link rel="canonical" href="https://passeggiatainrosa.it/modifica.html">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#ed6ea7">
+
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin-variable.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/form.css">
+</head>
+<body>
+
+<a class="salta-al-contenuto" href="#contenuto">Salta al contenuto</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+</svg>
+
+<header class="intestazione">
+  <div class="contenitore">
+    <a class="intestazione__logo" href="/" aria-label="Passeggiata in Rosa — home">
+      <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Passeggiata in Rosa" width="92" height="85">
+    </a>
+    <nav class="navigazione" aria-label="Sezioni del sito">
+      <ul>
+        <li><a href="/#evento">Evento</a></li>
+        <li><a href="/#info">Info</a></li>
+        <li><a href="/storia.html">Storia</a></li>
+        <li><a href="/sponsor.html">Sponsor</a></li>
+      </ul>
+    </nav>
+    <button class="menu-bottone" type="button" aria-expanded="false" aria-controls="menu-mobile" aria-label="Apri il menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="contenuto" class="sezione">
+  <div class="contenitore">
+    <div class="modulo">
+
+      <p class="briciole"><a href="/">Home</a> › Modifica iscrizione</p>
+
+      <p class="occhiello">Modifica</p>
+      <h1>Modifica la tua iscrizione</h1>
+
+      <!-- ============ ACCESSO ============ -->
+      <section id="accesso">
+        <p class="sommario" style="margin-bottom:var(--sp-6)">
+          Per ritrovare la tua pre-iscrizione servono l&rsquo;email con cui
+          l&rsquo;hai fatta e la tua data di nascita.
+        </p>
+
+        <form id="modulo-accesso" novalidate>
+          <section class="passo">
+            <div class="campo">
+              <label for="acc-email">Email <span aria-hidden="true">*</span></label>
+              <input type="email" id="acc-email" autocomplete="email" inputmode="email" required>
+              <p class="campo__errore" hidden></p>
+            </div>
+
+            <fieldset class="campo gruppo-campi" id="acc-nascita">
+              <legend>La tua data di nascita <span aria-hidden="true">*</span></legend>
+              <div class="tre-tendine">
+                <select data-campo="giorno" aria-label="Giorno di nascita"><option value="">Giorno</option></select>
+                <select data-campo="mese" aria-label="Mese di nascita"><option value="">Mese</option></select>
+                <select data-campo="anno" aria-label="Anno di nascita"><option value="">Anno</option></select>
+              </div>
+              <p class="campo__nota">Quella della prima persona indicata nell&rsquo;iscrizione.</p>
+              <p class="campo__errore" data-errore="nascita" hidden></p>
+            </fieldset>
+
+            <div class="avviso avviso--errore" id="acc-avviso" hidden>
+              <p class="avviso__titolo" id="acc-avviso-titolo">Non abbiamo trovato l&rsquo;iscrizione</p>
+              <p id="acc-avviso-testo"></p>
+              <div class="avviso__azioni">
+                <a class="btn btn--secondario btn--piccolo" href="/iscrizione.html">Fai una nuova iscrizione</a>
+              </div>
+            </div>
+
+            <div class="invio">
+              <button class="btn btn--primario btn--grande" type="submit" id="acc-invia">
+                Trova la mia iscrizione
+              </button>
+            </div>
+          </section>
+        </form>
+
+          <!-- Annullamento: due conferme prima di toccare il server, perche'
+               questa e' l'unica azione del sito che non si puo' disfare. -->
+          <section class="passo passo--pericolo" id="annullo">
+            <h2 class="passo__titolo">Non partecipi più?</h2>
+            <p class="passo__aiuto">
+              Puoi annullare la prenotazione. L&rsquo;operazione non si può disfare.
+            </p>
+
+            <button class="btn btn--pericolo" type="button" id="annulla-avvia">
+              Annulla la prenotazione
+            </button>
+
+            <div class="avviso avviso--errore" id="annulla-1" hidden>
+              <p class="avviso__titolo">Sei sicuro di voler annullare?</p>
+              <p>L&rsquo;operazione non si può disfare.</p>
+              <div class="avviso__azioni">
+                <button class="btn btn--pericolo btn--piccolo" type="button" id="annulla-si1">Sì, voglio annullare</button>
+                <button class="btn btn--fantasma btn--piccolo" type="button" id="annulla-no1">No, torna indietro</button>
+              </div>
+            </div>
+
+            <div class="avviso avviso--errore" id="annulla-2" hidden>
+              <p class="avviso__titolo">Ultima conferma</p>
+              <p>La prenotazione <strong id="annulla-codice"></strong> verrà annullata
+                 definitivamente, per tutti i partecipanti.</p>
+              <div class="avviso__azioni">
+                <button class="btn btn--pericolo btn--piccolo" type="button" id="annulla-si2">Sì, annulla definitivamente</button>
+                <button class="btn btn--fantasma btn--piccolo" type="button" id="annulla-no2">No, torna indietro</button>
+              </div>
+            </div>
+
+            <div class="avviso avviso--errore" id="annulla-errore" hidden>
+              <p class="avviso__titolo">Non siamo riusciti ad annullare</p>
+              <p id="annulla-errore-testo"></p>
+            </div>
+          </section>
+      </section>
+
+      <!-- Esito dell'annullamento: prende il posto di tutto il resto. -->
+      <section id="annullata" hidden>
+        <div class="conferma">
+          <svg class="cuore" viewBox="0 0 24 24" width="52" height="52" fill="currentColor"
+               style="color:var(--rosa)" aria-hidden="true"><use href="#i-cuore"/></svg>
+          <div>
+            <p class="occhiello">Prenotazione annullata</p>
+            <h2>Ci dispiace non vederti</h2>
+          </div>
+          <p class="sommario" style="text-align:center">
+            La prenotazione <strong id="annullata-codice"></strong> è stata annullata.
+            Il codice non è più valido.
+          </p>
+          <p class="piccolo tenue">
+            Se cambi idea sei sempre in tempo fino al 10 settembre.
+          </p>
+          <div class="avviso__azioni" style="justify-content:center">
+            <a class="btn btn--primario" href="/iscrizione.html">Iscriviti di nuovo</a>
+            <a class="btn btn--fantasma" href="/">Torna alla home</a>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ MODIFICA ============ -->
+      <section id="scheda" hidden>
+        <div class="avviso avviso--ok" style="margin-bottom:var(--sp-5)">
+          <p class="avviso__titolo">Iscrizione trovata</p>
+          <p>Codice <strong id="codice-trovato"></strong>. Modifica quello che
+            serve e salva: il totale si aggiorna da solo.</p>
+        </div>
+
+        <form id="modulo-modifica" novalidate>
+
+          <section class="passo">
+            <h2 class="passo__titolo"><span class="passo__numero">1</span> Gruppo</h2>
+            <p class="passo__aiuto">Facoltativo, e vale per tutta l&rsquo;iscrizione.</p>
+            <div class="chips" id="chip-gruppi" role="radiogroup" aria-label="Scegli il gruppo"></div>
+            <div class="campo" id="campo-nuovo-gruppo" hidden style="margin-top:var(--sp-4)">
+              <label for="nuovo-gruppo">Nome del nuovo gruppo</label>
+              <input type="text" id="nuovo-gruppo" maxlength="60" autocomplete="off">
+            </div>
+          </section>
+
+          <section class="passo">
+            <h2 class="passo__titolo"><span class="passo__numero">2</span> Chi partecipa</h2>
+            <p class="passo__aiuto">
+              Puoi aggiungere o togliere persone. La prima è quella che ha
+              fatto l&rsquo;iscrizione.
+            </p>
+
+            <div id="elenco-persone"></div>
+
+            <div style="margin-top:var(--sp-4)">
+              <button class="btn btn--secondario" type="button" id="aggiungi">+ Aggiungi partecipante</button>
+            </div>
+
+            <div class="totale" aria-live="polite">
+              <span class="totale__voce" id="totale-voce">—</span>
+              <span class="totale__cifra" id="totale-cifra">—</span>
+            </div>
+          </section>
+
+          <div class="avviso avviso--errore" id="avviso-errore" hidden>
+            <p class="avviso__titolo">Non siamo riusciti a salvare le modifiche</p>
+            <p id="errore-testo"></p>
+            <div class="avviso__azioni">
+              <button class="btn btn--secondario btn--piccolo" type="button" id="riprova">Riprova</button>
+            </div>
+          </div>
+
+          <div class="invio">
+            <button class="btn btn--primario btn--grande" type="submit" id="salva">Salva le modifiche</button>
+            <p class="piccolo tenue">
+              Nessun pagamento online: la quota si versa al banco il giorno dell&rsquo;evento.
+            </p>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<template id="modello-persona">
+  <div class="persona">
+    <div class="persona__testata">
+      <span class="persona__nome">I tuoi dati</span>
+      <span class="pillola" data-pillola hidden></span>
+      <button class="persona__via" type="button" hidden>Rimuovi</button>
+    </div>
+
+    <fieldset class="campo gruppo-campi">
+      <legend>Tipo di quota</legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" data-campo="tipo" value="adulto"> Adulto &mdash; quota 8 &euro;</label>
+        <label class="chip"><input type="radio" data-campo="tipo" value="bambino"> Bambino &mdash; gratis (0-6 anni)</label>
+      </div>
+    </fieldset>
+
+    <div class="coppia">
+      <div class="campo">
+        <label>Nome <span aria-hidden="true">*</span></label>
+        <input type="text" data-campo="nome" autocomplete="given-name" required>
+        <p class="campo__errore" hidden></p>
+      </div>
+      <div class="campo">
+        <label>Cognome <span aria-hidden="true">*</span></label>
+        <input type="text" data-campo="cognome" autocomplete="family-name" required>
+        <p class="campo__errore" hidden></p>
+      </div>
+    </div>
+
+    <fieldset class="campo gruppo-campi">
+      <legend>Data di nascita <span aria-hidden="true">*</span></legend>
+      <div class="tre-tendine">
+        <select data-campo="giorno" aria-label="Giorno di nascita"><option value="">Giorno</option></select>
+        <select data-campo="mese" aria-label="Mese di nascita"><option value="">Mese</option></select>
+        <select data-campo="anno" aria-label="Anno di nascita"><option value="">Anno</option></select>
+      </div>
+      <p class="campo__errore" data-errore="nascita" hidden></p>
+      <p class="nota-quota" data-nota-quota hidden></p>
+    </fieldset>
+
+    <fieldset class="campo gruppo-campi">
+      <legend>Sesso <span aria-hidden="true">*</span></legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" data-campo="sesso" value="F"> Femmina</label>
+        <label class="chip"><input type="radio" data-campo="sesso" value="M"> Maschio</label>
+      </div>
+      <p class="campo__errore" data-errore="sesso" hidden></p>
+    </fieldset>
+  </div>
+</template>
+
+<footer class="piede su-scuro" style="padding-block:var(--sp-6)">
+  <div class="contenitore piede__firma" style="margin-top:0;padding-top:0;border-top:0">
+    <p>© 2026 Passeggiata in Rosa · Borgo Veneto (PD) ·
+      <a href="mailto:passeggiatainrosa@gmail.com">passeggiatainrosa@gmail.com</a></p>
+    <p>Sito e automazioni a cura di <a href="https://heneti.it" target="_blank" rel="noopener">Heneti</a></p>
+  </div>
+</footer>
+
+<dialog class="menu" id="menu-mobile" aria-label="Menu di navigazione">
+  <div class="menu__testata">
+    <img src="/assets/img/logo-passeggiata-rosa.svg" alt="Passeggiata in Rosa" width="48" height="45">
+    <button class="menu__chiudi" type="button" aria-label="Chiudi il menu">&times;</button>
+  </div>
+  <nav aria-label="Sezioni del sito">
+    <ul class="menu__voci">
+      <li><a href="/#evento">Evento</a></li>
+      <li><a href="/#info">Info pratiche</a></li>
+      <li><a href="/storia.html">La nostra storia</a></li>
+      <li><a href="/sponsor.html">Sponsor</a></li>
+      <li><a href="/iscrizione.html">Pre-iscriviti</a></li>
+    </ul>
+  </nav>
+  <div class="menu__piede">
+    <a class="btn btn--primario btn--grande" href="/iscrizione.html">Pre-iscriviti</a>
+    <p>Online entro il 10 settembre &middot; 8 &euro; a persona</p>
+  </div>
+</dialog>
+
+<script src="/assets/js/sito.js" defer></script>
+<script src="/assets/js/menu.js" defer></script>
+<script src="/assets/js/api.js" defer></script>
+<script src="/assets/js/attesa.js" defer></script>
+<script src="/assets/js/modulo.js" defer></script>
+<script src="/assets/js/modifica.js" defer></script>
+</body>
+</html>

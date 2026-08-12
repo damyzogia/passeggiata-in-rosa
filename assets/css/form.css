@@ -515,3 +515,32 @@ fieldset[disabled] * { cursor: not-allowed; }
 
 .campo > .velo-attesa .velo-attesa__testo { font-size: var(--t-base); }
 
+
+/* -------------------------------------------------------------------------
+   ANNULLAMENTO
+   L'unica azione del sito che non si puo' disfare: il colore lo dice, e la
+   sezione sta staccata dal resto per non farci finire dentro per sbaglio.
+   ------------------------------------------------------------------------- */
+
+.passo--pericolo {
+  margin-top: var(--sp-7);
+  border-color: #f0c9c5;
+  background: #fffafa;
+}
+
+.passo--pericolo .passo__titolo { color: var(--errore); }
+
+.btn--pericolo {
+  background: var(--errore);
+  color: #fff;
+  border-color: var(--errore);
+}
+
+/* Bianco su #b3261e da' 6,5:1, ben oltre la soglia. */
+.btn--pericolo:hover {
+  background: #8f1d16;
+  border-color: #8f1d16;
+  color: #fff;
+}
+
+#annulla-1, #annulla-2, #annulla-errore { margin-top: var(--sp-4); }

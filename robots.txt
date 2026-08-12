@@ -8,10 +8,6 @@ Disallow: /styleguide.html
 Disallow: /sponsor/_sorgenti/
 
 # La conferma e' personale e raggiungibile solo con il proprio codice.
-# Pagine di prova del modulo: non pubbliche.
-Disallow: /iscrizione-test.html
-Disallow: /modifica-test.html
-
 Disallow: /conferma.html
 Disallow: /conferma-modifica.html
 
