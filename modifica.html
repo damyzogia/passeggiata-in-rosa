@@ -98,6 +98,64 @@
           </section>
         </form>
 
+      </section>
+
+
+      <!-- ============ MODIFICA ============ -->
+      <section id="scheda" hidden>
+        <div class="avviso avviso--ok" style="margin-bottom:var(--sp-5)">
+          <p class="avviso__titolo">Iscrizione trovata</p>
+          <p>Codice <strong id="codice-trovato"></strong>. Modifica quello che
+            serve e salva: il totale si aggiorna da solo.</p>
+        </div>
+
+        <form id="modulo-modifica" novalidate>
+
+          <section class="passo">
+            <h2 class="passo__titolo"><span class="passo__numero">1</span> Gruppo</h2>
+            <p class="passo__aiuto">Facoltativo, e vale per tutta l&rsquo;iscrizione.</p>
+            <div class="chips" id="chip-gruppi" role="radiogroup" aria-label="Scegli il gruppo"></div>
+            <div class="campo" id="campo-nuovo-gruppo" hidden style="margin-top:var(--sp-4)">
+              <label for="nuovo-gruppo">Nome del nuovo gruppo</label>
+              <input type="text" id="nuovo-gruppo" maxlength="60" autocomplete="off">
+            </div>
+          </section>
+
+          <section class="passo">
+            <h2 class="passo__titolo"><span class="passo__numero">2</span> Chi partecipa</h2>
+            <p class="passo__aiuto">
+              Puoi aggiungere o togliere persone. La prima è quella che ha
+              fatto l&rsquo;iscrizione.
+            </p>
+
+            <div id="elenco-persone"></div>
+
+            <div style="margin-top:var(--sp-4)">
+              <button class="btn btn--secondario" type="button" id="aggiungi">+ Aggiungi partecipante</button>
+            </div>
+
+            <div class="totale" aria-live="polite">
+              <span class="totale__voce" id="totale-voce">—</span>
+              <span class="totale__cifra" id="totale-cifra">—</span>
+            </div>
+          </section>
+
+          <div class="avviso avviso--errore" id="avviso-errore" hidden>
+            <p class="avviso__titolo">Non siamo riusciti a salvare le modifiche</p>
+            <p id="errore-testo"></p>
+            <div class="avviso__azioni">
+              <button class="btn btn--secondario btn--piccolo" type="button" id="riprova">Riprova</button>
+            </div>
+          </div>
+
+          <div class="invio">
+            <button class="btn btn--primario btn--grande" type="submit" id="salva">Salva le modifiche</button>
+            <p class="piccolo tenue">
+              Nessun pagamento online: la quota si versa al banco il giorno dell&rsquo;evento.
+            </p>
+          </div>
+        </form>
+
           <!-- Annullamento: due conferme prima di toccare il server, perche'
                questa e' l'unica azione del sito che non si puo' disfare. -->
           <section class="passo passo--pericolo" id="annullo">
@@ -157,63 +215,6 @@
             <a class="btn btn--fantasma" href="/">Torna alla home</a>
           </div>
         </div>
-      </section>
-
-
-      <!-- ============ MODIFICA ============ -->
-      <section id="scheda" hidden>
-        <div class="avviso avviso--ok" style="margin-bottom:var(--sp-5)">
-          <p class="avviso__titolo">Iscrizione trovata</p>
-          <p>Codice <strong id="codice-trovato"></strong>. Modifica quello che
-            serve e salva: il totale si aggiorna da solo.</p>
-        </div>
-
-        <form id="modulo-modifica" novalidate>
-
-          <section class="passo">
-            <h2 class="passo__titolo"><span class="passo__numero">1</span> Gruppo</h2>
-            <p class="passo__aiuto">Facoltativo, e vale per tutta l&rsquo;iscrizione.</p>
-            <div class="chips" id="chip-gruppi" role="radiogroup" aria-label="Scegli il gruppo"></div>
-            <div class="campo" id="campo-nuovo-gruppo" hidden style="margin-top:var(--sp-4)">
-              <label for="nuovo-gruppo">Nome del nuovo gruppo</label>
-              <input type="text" id="nuovo-gruppo" maxlength="60" autocomplete="off">
-            </div>
-          </section>
-
-          <section class="passo">
-            <h2 class="passo__titolo"><span class="passo__numero">2</span> Chi partecipa</h2>
-            <p class="passo__aiuto">
-              Puoi aggiungere o togliere persone. La prima è quella che ha
-              fatto l&rsquo;iscrizione.
-            </p>
-
-            <div id="elenco-persone"></div>
-
-            <div style="margin-top:var(--sp-4)">
-              <button class="btn btn--secondario" type="button" id="aggiungi">+ Aggiungi partecipante</button>
-            </div>
-
-            <div class="totale" aria-live="polite">
-              <span class="totale__voce" id="totale-voce">—</span>
-              <span class="totale__cifra" id="totale-cifra">—</span>
-            </div>
-          </section>
-
-          <div class="avviso avviso--errore" id="avviso-errore" hidden>
-            <p class="avviso__titolo">Non siamo riusciti a salvare le modifiche</p>
-            <p id="errore-testo"></p>
-            <div class="avviso__azioni">
-              <button class="btn btn--secondario btn--piccolo" type="button" id="riprova">Riprova</button>
-            </div>
-          </div>
-
-          <div class="invio">
-            <button class="btn btn--primario btn--grande" type="submit" id="salva">Salva le modifiche</button>
-            <p class="piccolo tenue">
-              Nessun pagamento online: la quota si versa al banco il giorno dell&rsquo;evento.
-            </p>
-          </div>
-        </form>
       </section>
 
     </div>
