@@ -10,7 +10,7 @@ Tutto è cominciato nel **2019**. Una delle amiche del gruppo aveva affrontato u
 
 Sono partite da zero, da neofite: autotassandosi per le prime magliette, disegnando insieme il logo, bussando a chi poteva dare una mano. La prima edizione ha risposto oltre ogni aspettativa, con **250 partecipanti**.
 
-Un sostegno decisivo, all'inizio, è arrivato dall'allora parroco **don Giuliano**, che ha creduto nel progetto fin dal primo giorno dandoci piena fiducia, e dal **Sindaco di Borgo Veneto**, che ci ha guidate tra le prime pratiche insegnandoci come muoverci.
+Un sostegno decisivo, all'inizio, è arrivato dall'allora parroco **don Giuliano**, che ha creduto nel progetto fin dal primo giorno dandoci piena fiducia, e dal **Sindaco di Borgo Veneto, Michele Sigolotto**, che ci ha guidate tra le prime pratiche insegnandoci come muoverci.
 
 ## Un crescendo, anno dopo anno
 Il Covid ci ha fermate forzatamente nel 2020 e nel 2021, ma la voglia di ricominciare non si è spenta. Siamo ripartite nel **2022**, e da lì è stato un crescendo: dai 250 della prima edizione a **quasi 550 iscritti** nell'ultima. La forza è sempre stata la stessa — le persone del territorio, che hanno creduto in noi e ci hanno sostenute.
