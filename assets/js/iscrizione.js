@@ -57,9 +57,30 @@
   /* ------------------------------------------------------------ gruppi */
   var gruppi = new Modulo.Gruppi(
     document.getElementById('chip-gruppi'),
-    document.getElementById('campo-nuovo-gruppo')
+    document.getElementById('campo-nuovo-gruppo'),
+    null,
+    /* Il "no" e' gia' la risposta alla domanda qui sopra: dentro il blocco
+       non serve ripeterlo, e nulla deve essere preselezionato. */
+    { conNessuno: false }
   );
   gruppi.riempi([], '');
+
+  /* La domanda binaria comanda tutto il blocco. Tornando su "No" la scelta
+     viene azzerata, altrimenti un nome scritto e poi ripensato partirebbe
+     comunque. */
+  var bloccoGruppo = document.getElementById('blocco-gruppo');
+
+  function aggiornaBloccoGruppo() {
+    var scelta = document.querySelector('input[name="ha-gruppo"]:checked');
+    var apri = !!scelta && scelta.value === 'si';
+    bloccoGruppo.hidden = !apri;
+    if (!apri) gruppi.azzera();
+  }
+
+  document.querySelectorAll('input[name="ha-gruppo"]').forEach(function (r) {
+    r.addEventListener('change', aggiornaBloccoGruppo);
+  });
+  aggiornaBloccoGruppo();
 
   Attesa.durante(
     document.getElementById('chip-gruppi'),

@@ -160,6 +160,13 @@ select {
 
 button { background: none; border: none; }
 
+/* L'attributo hidden deve nascondere DAVVERO. Lo stile del browser e' solo
+   `display: none`, quindi qualunque nostra regola che imposti display — per
+   esempio `.campo { display: grid }` — lo scavalca e l'elemento resta a
+   video pur essendo marcato nascosto. E' un errore silenzioso e insidioso:
+   il codice sembra corretto e l'interfaccia mostra cose che non dovrebbe. */
+[hidden] { display: none !important; }
+
 p,
 li,
 h1,

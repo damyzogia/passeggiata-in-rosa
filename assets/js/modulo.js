@@ -310,9 +310,13 @@ window.Modulo = (function () {
   };
 
   /* -------------------------------------------------------------- gruppi */
-  function Gruppi(contenitore, campoNuovo, alCambio) {
+  /* opzioni.conNessuno: se false, niente pillola "Nessun gruppo" e nessuna
+     preselezione. Serve dove la domanda "fai parte di un gruppo?" viene
+     posta prima, e quindi il "no" e' gia' stato espresso altrove. */
+  function Gruppi(contenitore, campoNuovo, alCambio, opzioni) {
     this.contenitore = contenitore;
     this.campoNuovo = campoNuovo;
+    this.opzioni = opzioni || {};
     var self = this;
 
     contenitore.addEventListener('change', function () {
@@ -352,12 +356,12 @@ window.Modulo = (function () {
     if (sceltaPrima !== null && sceltaPrima !== '__nuovo__') selezionata = sceltaPrima;
 
     var html = '';
-    html += this.chip('', 'Nessun gruppo', !selezionata);
+    if (this.opzioni.conNessuno !== false) html += this.chip('', 'Nessun gruppo', !selezionata);
     (squadre || []).forEach(function (s) {
       var nome = typeof s === 'string' ? s : (s.nome_squadra || s.nome || '');
       if (nome) html += this.chip(nome, nome, nome === selezionata);
     }, this);
-    html += this.chip('__nuovo__', 'Crea nuovo gruppo', false);
+    html += this.chip('__nuovo__', '+ Crea nuovo gruppo', false);
     this.contenitore.innerHTML = html;
 
     /* Un gruppo che arriva da una prenotazione ma non e' fra le squadre note
@@ -388,6 +392,22 @@ window.Modulo = (function () {
     );
   };
 
+  /* Riporta la scelta a zero: nessuna pillola accesa, campo del nuovo gruppo
+     svuotato e chiuso. Serve quando si torna su "No": quello che era stato
+     scritto non deve restare in agguato e partire lo stesso. */
+  Gruppi.prototype.azzera = function () {
+    this.contenitore.querySelectorAll('input[name="gruppo"]').forEach(function (i) {
+      i.checked = false;
+    });
+    var testo = this.campoNuovo.querySelector('input');
+    if (testo) testo.value = '';
+    this.campoNuovo.hidden = true;
+    segnaScelti(this.contenitore);
+  };
+
+  /* Se nessuna pillola e' accesa, o se "crea nuovo" e' scelto ma il nome e'
+     vuoto, si torna in silenzio a "nessun gruppo": meglio un'iscrizione
+     senza gruppo che un gruppo fantasma nel foglio. */
   Gruppi.prototype.leggi = function () {
     var scelto = this.contenitore.querySelector('input[name="gruppo"]:checked');
     if (!scelto) return '';

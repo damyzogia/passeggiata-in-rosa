@@ -101,18 +101,39 @@
         <!-- Tutto il resto resta chiuso finché l'email non è nuova e valida. -->
         <fieldset id="resto" disabled>
 
-          <!-- ============ 2. GRUPPO ============ -->
+          <!-- ============ 2. GRUPPO ============
+               Prima una domanda secca, poi semmai la scelta. Con le pillole
+               tutte allo stesso livello la sezione sembrava da compilare, e
+               chi veniva in famiglia si inventava un nome di gruppo. -->
           <section class="passo">
             <h2 class="passo__titolo"><span class="passo__numero">2</span> Gruppo</h2>
-            <p class="passo__aiuto">
-              Facoltativo, e vale per tutte le persone di questa iscrizione.
-            </p>
 
-            <div class="chips" id="chip-gruppi" role="radiogroup" aria-label="Scegli il gruppo"></div>
+            <fieldset class="campo gruppo-campi">
+              <legend>Fai parte di un gruppo o associazione?</legend>
+              <p class="campo__nota">
+                Es. azienda, bar, associazione, parrocchia. Se venite in
+                famiglia o con amici, non serve indicarlo.
+              </p>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="ha-gruppo" value="no" checked> No</label>
+                <label class="chip"><input type="radio" name="ha-gruppo" value="si"> Sì</label>
+              </div>
+            </fieldset>
 
-            <div class="campo" id="campo-nuovo-gruppo" hidden style="margin-top:var(--sp-4)">
-              <label for="nuovo-gruppo">Nome del nuovo gruppo</label>
-              <input type="text" id="nuovo-gruppo" maxlength="60" autocomplete="off">
+            <div id="blocco-gruppo" hidden>
+              <p class="passo__aiuto" style="margin-top:var(--sp-4)">
+                Scegli il gruppo o creane uno nuovo.
+              </p>
+
+              <div class="chips" id="chip-gruppi" role="radiogroup" aria-label="Scegli il gruppo"></div>
+
+              <div class="campo" id="campo-nuovo-gruppo" hidden style="margin-top:var(--sp-4)">
+                <label for="nuovo-gruppo">Nome del nuovo gruppo</label>
+                <input type="text" id="nuovo-gruppo" maxlength="60" autocomplete="off">
+                <p class="campo__nota">
+                  Chi si iscrive dopo potrà scegliere questo gruppo dall&rsquo;elenco.
+                </p>
+              </div>
             </div>
           </section>
 
