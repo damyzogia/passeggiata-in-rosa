@@ -1,8 +1,9 @@
 User-agent: *
 Allow: /
 
-# Pagina di lavoro, non e' contenuto pubblico.
+# Pagine di lavoro, non sono contenuto pubblico.
 Disallow: /styleguide.html
+Disallow: /cassa-staff.html
 
 # File sorgente (PDF originali, ritagli di prova): non vanno indicizzati.
 Disallow: /sponsor/_sorgenti/

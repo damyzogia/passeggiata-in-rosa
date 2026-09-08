@@ -26,6 +26,13 @@
 /assets/js/*
   Cache-Control: public, max-age=0, must-revalidate
 
+# --- Banco: pagina di servizio. Il meta robots nella pagina basta per i
+#     motori seri, ma l'header vale anche per chi il meta non lo legge (e per
+#     un eventuale link condiviso per sbaglio).
+/cassa-staff.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Cache-Control: no-store
+
 # --- Font: non cambiano mai. Cache lunga e immutabile.
 /assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable

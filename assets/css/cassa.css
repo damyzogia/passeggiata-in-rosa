@@ -1,0 +1,344 @@
+/* =========================================================================
+   cassa.css — pagina di servizio per il banco del giorno evento.
+
+   Non e' una pagina del sito: niente intestazione, niente navigazione,
+   niente da leggere. Chi la usa sta in piedi dietro un tavolo con la coda
+   davanti, quindi qui tutto e' piu' grande del normale e la mano non deve
+   mai lasciare la tastiera.
+
+   Riusa i mattoni di base.css e form.css (bottoni, campi, avvisi, rotella):
+   qui dentro c'e' solo cio' che al sito pubblico non serve.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   1. IMPIANTO
+   ------------------------------------------------------------------------- */
+
+.cassa {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--sfondo-alt);
+}
+
+/* La barra porta anche .su-scuro: fondo e colori del testo li mette gia'
+   quella, bottoni compresi. Qui resta solo la disposizione. */
+.cassa__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--margine-pagina);
+}
+
+.cassa__marchio {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  font-family: var(--font-titoli);
+  font-size: var(--t-lg);
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+  line-height: 1;
+}
+
+/* "Banco" e' l'etichetta che distingue questa pagina dal sito pubblico:
+   deve leggersi al volo, non deve gridare. */
+.cassa__ruolo {
+  font-family: var(--font-testo);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rosa-chiaro);
+}
+
+.cassa__corpo {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  padding: var(--sp-6) var(--margine-pagina) var(--sp-8);
+}
+
+.cassa__area { width: 100%; max-width: 46rem; }
+
+/* -------------------------------------------------------------------------
+   2. ACCESSO
+   Il PIN sta al centro dello schermo: finche' non e' entrato non c'e'
+   nient'altro da vedere, e non deve sembrare che manchi qualcosa.
+   ------------------------------------------------------------------------- */
+
+.cassa__accesso {
+  max-width: 26rem;
+  margin-top: clamp(var(--sp-6), 8vh, var(--sp-9));
+}
+
+.cassa__titolo {
+  font-size: var(--t-xl);
+  margin-bottom: var(--sp-2);
+}
+
+.cassa__occhiello {
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+  margin-bottom: var(--sp-6);
+}
+
+/* -------------------------------------------------------------------------
+   3. CAMPI GRANDI
+   Monitor fisso e tastiera vera: qui i 52px del sito pubblico sono pochi.
+   ------------------------------------------------------------------------- */
+
+.cassa .campo input[type='text'],
+.cassa .campo input[type='password'] {
+  width: 100%;
+  min-height: 68px;
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+  transition: border-color var(--transizione), box-shadow var(--transizione);
+}
+
+.cassa .campo input:hover { border-color: #d8ccd1; }
+
+.cassa .campo input:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.cassa .campo > label {
+  font-family: var(--font-titoli);
+  font-size: var(--t-lg);
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+}
+
+/* Il codice si legge a voce e si confronta con un foglio: spaziato e in
+   stampatello si sbaglia molto meno. */
+.cassa__codice-input {
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cassa__riga {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-3);
+  align-items: start;
+}
+
+.cassa .btn--banco {
+  min-height: 68px;
+  padding-inline: var(--sp-6);
+  font-size: var(--t-base);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------
+   4. SCHEDA IN SOLA LETTURA
+   ------------------------------------------------------------------------- */
+
+.scheda-p {
+  margin-top: var(--sp-6);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-lg);
+  box-shadow: var(--ombra-2);
+  overflow: hidden;
+}
+
+.scheda-p__testata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3) var(--sp-5);
+  padding: var(--sp-5);
+  border-bottom: 2px solid var(--bordo);
+}
+
+.scheda-p__codice {
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  font-size: var(--t-2xl);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: var(--rosa-scuro);
+}
+
+.scheda-p__capofila {
+  font-family: var(--font-titoli);
+  font-size: var(--t-lg);
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+  line-height: var(--lh-titolo);
+}
+
+.scheda-p__sezione { padding: var(--sp-5); }
+.scheda-p__sezione + .scheda-p__sezione { border-top: 2px solid var(--bordo); }
+
+.scheda-p__etichetta {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+  margin-bottom: var(--sp-3);
+}
+
+/* Dati del capofila: piu' colonne su monitor, una sola in verticale.
+   Ogni coppia etichetta/valore sta dentro il suo .scheda-p__voce, altrimenti
+   dt e dd finiscono in due celle diverse della griglia e il valore scivola
+   sotto l'etichetta sbagliata. */
+.scheda-p__dati {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--sp-4);
+  margin: 0;
+}
+
+.scheda-p__voce { min-width: 0; }
+
+.scheda-p__dati dt {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.scheda-p__dati dd {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--t-lg);
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------------------------------
+   5. ELENCO PARTECIPANTI
+   ------------------------------------------------------------------------- */
+
+.elenco-p {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.elenco-p__voce {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--sfondo-alt);
+  border: 1px solid var(--bordo);
+  border-radius: var(--r-md);
+}
+
+.elenco-p__numero {
+  flex: none;
+  width: 2rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--testo-tenue);
+}
+
+.elenco-p__nome { font-size: var(--t-lg); font-weight: 650; }
+.elenco-p__meta { color: var(--testo-tenue); font-size: var(--t-sm); }
+
+/* -------------------------------------------------------------------------
+   6. CONTI
+   ------------------------------------------------------------------------- */
+
+.conti {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--sp-4);
+  margin: 0;
+}
+
+.conti__voce {
+  padding: var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--rosa-tenue);
+  border: 2px solid var(--rosa);
+}
+
+.conti__voce--pagato { background: var(--sfondo-alt); border-color: var(--bordo); }
+
+.conti__etichetta {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rosa-scuro);
+}
+
+.conti__voce--pagato .conti__etichetta { color: var(--testo-tenue); }
+
+.conti__cifra {
+  font-family: var(--font-titoli);
+  font-size: var(--t-2xl);
+  font-variation-settings: 'opsz' 72, 'SOFT' 50;
+  line-height: 1.1;
+  color: var(--rosa-scuro);
+}
+
+.conti__voce--pagato .conti__cifra { color: var(--testo); }
+
+/* -------------------------------------------------------------------------
+   7. BADGE DI STATO
+   Sono l'unica cosa che deve saltare all'occhio prima del nome: se una
+   prenotazione e' gia' passata o e' annullata, chi sta al banco lo deve
+   vedere senza leggere.
+   ------------------------------------------------------------------------- */
+
+.stati { display: grid; gap: var(--sp-2); }
+.stati:empty { display: none; }
+.stati:not(:empty) { margin-bottom: var(--sp-4); }
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--r-md);
+  font-size: var(--t-lg);
+  font-weight: 700;
+  line-height: var(--lh-media);
+}
+
+.badge--registrato { background: var(--scuro); color: #fff; }
+.badge--annullata { background: var(--errore); color: #fff; }
+
+.badge__segno { font-size: 1.4em; line-height: 1; }
+
+/* -------------------------------------------------------------------------
+   8. MESSAGGI E AZIONI
+   ------------------------------------------------------------------------- */
+
+.cassa .avviso { font-size: var(--t-base); }
+.cassa__messaggio { margin-top: var(--sp-4); }
+
+.cassa__azioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
+  border-top: 2px solid var(--bordo);
+  background: var(--sfondo-alt);
+}
+
+/* Promemoria di cio' che questa pagina NON fa ancora: senza, al banco si
+   aspetta un bottone che non c'e'. */
+.cassa__nota-fase {
+  margin-top: var(--sp-4);
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+  text-align: center;
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Banco — Passeggiata in Rosa</title>
+
+<!-- Pagina di servizio: non e' contenuto pubblico, non va indicizzata e non
+     e' collegata da nessun menu. La sicurezza vera resta il token lato
+     server: questo evita solo che finisca nei risultati di ricerca. -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<meta name="theme-color" content="#6b1234">
+
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin-variable.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/form.css">
+<link rel="stylesheet" href="/assets/css/cassa.css">
+</head>
+<body>
+
+<div class="cassa">
+
+  <header class="cassa__barra su-scuro">
+    <p class="cassa__marchio">
+      Passeggiata in Rosa <span class="cassa__ruolo">Banco</span>
+    </p>
+    <!-- Compare solo a sessione aperta: prima non c'e' niente da cui uscire. -->
+    <button class="btn btn--fantasma btn--piccolo" type="button" id="esci" hidden>Esci</button>
+  </header>
+
+  <main class="cassa__corpo">
+
+    <!-- ====================== ACCESSO ======================
+         All'apertura si vede solo questo: nessun dato, nessuna ricerca. -->
+    <section class="cassa__area cassa__accesso" id="accesso" aria-labelledby="accesso-titolo">
+      <h1 class="cassa__titolo" id="accesso-titolo">Accesso al banco</h1>
+      <p class="cassa__occhiello">Serve il PIN dello staff.</p>
+
+      <form id="modulo-accesso" novalidate>
+        <div class="campo">
+          <label for="pin">PIN</label>
+          <input type="password" id="pin" inputmode="numeric" autocomplete="off"
+                 autocapitalize="off" spellcheck="false" required autofocus>
+        </div>
+
+        <div class="avviso avviso--errore cassa__messaggio" id="accesso-avviso" role="alert" hidden>
+          <p id="accesso-avviso-testo"></p>
+        </div>
+
+        <div class="invio">
+          <button class="btn btn--primario btn--banco" type="submit" id="entra">Entra</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ====================== RICERCA ====================== -->
+    <section class="cassa__area" id="ricerca" aria-labelledby="ricerca-titolo" hidden>
+      <h1 class="cassa__titolo" id="ricerca-titolo">Cerca una prenotazione</h1>
+      <p class="cassa__occhiello">Digita il codice, oppure inquadralo dal QR e premi Invio.</p>
+
+      <form id="modulo-ricerca" novalidate>
+        <div class="cassa__riga">
+          <div class="campo" style="margin-bottom:0">
+            <label for="codice" class="sr-only">Codice prenotazione</label>
+            <input type="text" id="codice" class="cassa__codice-input"
+                   placeholder="PR-XXXX" autocomplete="off" autocapitalize="characters"
+                   spellcheck="false" required>
+          </div>
+          <button class="btn btn--primario btn--banco" type="submit" id="cerca">Cerca</button>
+        </div>
+      </form>
+
+      <div class="avviso avviso--attenzione cassa__messaggio" id="ricerca-avviso" role="alert" hidden>
+        <p id="ricerca-avviso-testo"></p>
+      </div>
+
+      <!-- La scheda viene costruita dal JS solo con cio' che risponde il
+           server: qui non ci sono valori di partenza da mostrare. -->
+      <article class="scheda-p" id="scheda" hidden></article>
+
+      <p class="cassa__nota-fase">
+        Sola lettura. Check-in, pagamenti e kit arrivano in un passaggio successivo.
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/cassa.js"></script>
+</body>
+</html>
