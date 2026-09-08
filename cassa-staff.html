@@ -43,8 +43,13 @@
       <form id="modulo-accesso" novalidate>
         <div class="campo">
           <label for="pin">PIN</label>
-          <input type="password" id="pin" inputmode="numeric" autocomplete="off"
-                 autocapitalize="off" spellcheck="false" required autofocus>
+          <!-- inputmode="text": la passphrase e' alfanumerica, e col
+               tastierino numerico da telefono le lettere non si digitano.
+               autocapitalize="off" resta necessario: la maiuscola messa in
+               automatico sulla prima lettera cambierebbe una passphrase che
+               distingue maiuscole e minuscole. -->
+          <input type="password" id="pin" inputmode="text" autocomplete="off"
+                 autocapitalize="off" autocorrect="off" spellcheck="false" required autofocus>
         </div>
 
         <div class="avviso avviso--errore cassa__messaggio" id="accesso-avviso" role="alert" hidden>
