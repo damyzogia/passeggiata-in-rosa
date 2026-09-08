@@ -29,6 +29,13 @@
 # --- Banco: pagina di servizio. Il meta robots nella pagina basta per i
 #     motori seri, ma l'header vale anche per chi il meta non lo legge (e per
 #     un eventuale link condiviso per sbaglio).
+#     Il percorso servito e' /cassa-staff: Pages redirige li' la forma con
+#     .html, quindi una regola sulla sola forma con estensione non si applica
+#     mai. La forma con .html resta per il momento del redirect.
+/cassa-staff
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Cache-Control: no-store
+
 /cassa-staff.html
   X-Robots-Tag: noindex, nofollow, noarchive
   Cache-Control: no-store

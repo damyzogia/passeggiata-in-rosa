@@ -2,8 +2,11 @@ User-agent: *
 Allow: /
 
 # Pagine di lavoro, non sono contenuto pubblico.
+# Senza .html: Pages serve il percorso canonico /cassa-staff e redirige li'
+# la forma con estensione. Il confronto e' per prefisso, quindi questa riga
+# copre entrambe.
 Disallow: /styleguide.html
-Disallow: /cassa-staff.html
+Disallow: /cassa-staff
 
 # File sorgente (PDF originali, ritagli di prova): non vanno indicizzati.
 Disallow: /sponsor/_sorgenti/
