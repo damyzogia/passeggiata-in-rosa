@@ -251,6 +251,151 @@
 .elenco-p__nome { font-size: var(--t-lg); font-weight: 650; }
 .elenco-p__meta { color: var(--testo-tenue); font-size: var(--t-sm); }
 
+/* --- riga viva: si toglie, si rimette, si tariffa --------------------- */
+
+.persona-viva { align-items: center; flex-wrap: nowrap; }
+
+.persona-viva__corpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.persona-viva__nome-campo {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--t-base);
+  font-weight: 650;
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-sm);
+}
+
+.persona-viva__nome-campo:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+/* La X non e' distruttiva: la riga resta li', barrata. Percio' e' discreta
+   finche' non serve, e diventa un comando esplicito quando ha gia' agito. */
+.persona-viva__via {
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--sp-2);
+  border: 2px solid transparent;
+  border-radius: var(--r-sm);
+  font-size: var(--t-base);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--testo-tenue);
+  cursor: pointer;
+  transition: color var(--transizione), background var(--transizione),
+    border-color var(--transizione);
+}
+
+.persona-viva__via:hover {
+  background: #fdecea;
+  color: var(--errore);
+}
+
+.persona-viva__via:focus-visible {
+  outline: 3px solid var(--rosa-testo);
+  outline-offset: 2px;
+}
+
+.persona-viva__via--ripristina {
+  padding-inline: var(--sp-3);
+  border-color: var(--bordo);
+  background: #fff;
+  font-size: var(--t-sm);
+  color: var(--rosa-testo);
+}
+
+.persona-viva__via--ripristina:hover {
+  background: var(--rosa-velo);
+  border-color: var(--rosa);
+  color: var(--rosa-scuro);
+}
+
+/* Fuori dal conteggio: si legge ancora, ma si vede da lontano che non paga
+   e non parte. Barrata e sbiadita, non nascosta. */
+.persona-viva--fuori { background: #fff; border-style: dashed; }
+
+.persona-viva--fuori .persona-viva__corpo {
+  opacity: 0.5;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.persona-viva--fuori .tariffe { text-decoration: none; }
+
+/* --- tariffe per persona --------------------------------------------- */
+
+.tariffe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-left: auto;
+}
+
+.tariffe[hidden] { display: none; }
+
+.chip--tariffa {
+  padding: 0.35em 0.85em;
+  font-size: var(--t-sm);
+  font-weight: 650;
+}
+
+.tariffe__importo {
+  width: 6.5rem;
+  min-height: 40px;
+  padding: var(--sp-1) var(--sp-3);
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  font-size: var(--t-base);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--rosa);
+  border-radius: var(--r-sm);
+}
+
+.tariffe__importo:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.tariffe__importo[hidden] { display: none; }
+
+/* --- aggiungere persone al banco -------------------------------------- */
+
+.aggiungi-persona {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px dashed var(--bordo);
+}
+
+.aggiungi-persona__etichetta {
+  font-size: var(--t-sm);
+  font-weight: 650;
+  color: var(--testo-tenue);
+}
+
 /* -------------------------------------------------------------------------
    6. CONTI
    ------------------------------------------------------------------------- */
@@ -315,11 +460,113 @@
 
 .badge--registrato { background: var(--scuro); color: #fff; }
 .badge--annullata { background: var(--errore); color: #fff; }
+.badge--fatto { background: var(--successo); color: #fff; }
 
 .badge__segno { font-size: 1.4em; line-height: 1; }
 
 /* -------------------------------------------------------------------------
-   8. MESSAGGI E AZIONI
+   8. REGISTRAZIONE
+   L'unica parte della scheda che scrive. Importo e kit stanno affiancati
+   perche' si compilano insieme, in due gesti, senza scorrere.
+   ------------------------------------------------------------------------- */
+
+.registra__nota {
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--scuro);
+  background: var(--rosa-velo);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--scuro);
+}
+
+.registra__nota[hidden] { display: none; }
+
+.registra__riga {
+  display: grid;
+  grid-template-columns: minmax(12rem, 20rem) 1fr;
+  gap: var(--sp-4) var(--sp-5);
+  align-items: start;
+}
+
+@media (max-width: 560px) {
+  .registra__riga { grid-template-columns: 1fr; }
+}
+
+/* La cifra e' il dato piu' importante della pagina: grande, tabellare,
+   cosi' si rilegge a colpo d'occhio prima di battere Registra. */
+.cassa .cassa__importo {
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  font-size: var(--t-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+/* Bersaglio grande: al banco si tocca di fretta, spesso di sbieco. */
+.interruttore {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 68px;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--sfondo-alt);
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: border-color var(--transizione), background var(--transizione);
+}
+
+.interruttore:hover { border-color: var(--rosa); background: var(--rosa-velo); }
+
+.interruttore:has(input:checked) {
+  border-color: var(--rosa-testo);
+  background: var(--rosa-tenue);
+}
+
+.interruttore:has(input:focus-visible) {
+  outline: 3px solid var(--rosa-testo);
+  outline-offset: 2px;
+}
+
+.interruttore input {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  accent-color: var(--rosa-testo);
+  cursor: pointer;
+}
+
+.interruttore__testo {
+  font-size: var(--t-lg);
+  font-weight: 650;
+  line-height: var(--lh-media);
+}
+
+.registra__azioni { margin-top: var(--sp-5); }
+
+/* Registra e' primario e sta qui dentro; "Nuova ricerca" e' secondario e
+   sta nella fascia in fondo: distanti e diversi, non si scambiano. */
+.registra__azioni .btn { width: 100%; }
+
+@media (min-width: 560px) {
+  .registra__azioni .btn { width: auto; min-width: 16rem; }
+}
+
+.esito {
+  margin-top: var(--sp-5);
+  padding: var(--sp-4);
+  border: 2px solid var(--successo);
+  border-radius: var(--r-md);
+  background: #f2fbf6;
+}
+
+.esito[hidden] { display: none; }
+.esito .badge { margin-bottom: var(--sp-4); }
+.esito__dati { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+
+/* -------------------------------------------------------------------------
+   9. MESSAGGI E AZIONI
    ------------------------------------------------------------------------- */
 
 .cassa .avviso { font-size: var(--t-base); }
