@@ -71,7 +71,7 @@ Relazione: una **Squadra** raccoglie più **Prenotazioni**; una **Prenotazione**
 - **Percorso:** ~8 km per le vie di Borgo Veneto, sosta ristoro a Megliadino San Fidenzio
 - **Finalità:** ricavato interamente devoluto allo IOV – Istituto Oncologico Veneto di Padova (ricerca tumore al seno)
 - **Premi:** partecipante più anziano, più giovane, gruppo più numeroso
-- **Iscrizione online:** entro le 24:00 del 10 settembre 2026 · **In loco:** 13/09 dalle 8:00 alle 9:00
+- **Iscrizione online:** entro le 24:00 del 12 settembre 2026 · **In loco:** 13/09 dalle 8:00 alle 9:00
 - **Organizzatori:** Parrocchia di Santa Margherita d'Adige · NOI Associazione San Biagio APS
 - **Patrocini:** IOV Padova · Comune di Borgo Veneto · Provincia di Padova
 

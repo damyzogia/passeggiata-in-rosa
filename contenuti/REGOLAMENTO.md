@@ -18,7 +18,7 @@ La Passeggiata in Rosa è una camminata non competitiva aperta a tutti: donne, u
 L'evento è organizzato dalla Parrocchia di Santa Margherita d'Adige e da NOI Associazione San Biagio APS, con il patrocinio di IOV – Istituto Oncologico Veneto di Padova, Comune di Borgo Veneto e Provincia di Padova.
 
 ## 3. Modalità di iscrizione
-- **Online:** sul sito passeggiatainrosa.it, entro le ore 24:00 del 10 settembre 2026. Con un solo accesso è possibile iscrivere più persone. Al termine si riceve un'email di conferma con un QR code, da presentare al banco il giorno dell'evento per il ritiro del gadget e il versamento della quota.
+- **Online:** sul sito passeggiatainrosa.it, entro le ore 24:00 del 12 settembre 2026. Con un solo accesso è possibile iscrivere più persone. Al termine si riceve un'email di conferma con un QR code, da presentare al banco il giorno dell'evento per il ritiro del gadget e il versamento della quota.
 - **In loco:** il giorno dell'evento, 13 settembre 2026, dalle ore 8:00 alle ore 9:00, presso il punto iscrizioni in piazzale.
 - **Gruppi:** è ammessa e favorita la partecipazione in gruppi/squadre.
 

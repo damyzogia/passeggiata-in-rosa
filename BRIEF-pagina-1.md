@@ -15,7 +15,7 @@ Un sito statico su Cloudflare Pages con: (A) una landing pubblica accattivante, 
 1. **Hero:** logo, "6ª Passeggiata in Rosa", data e luogo, sottotitolo benefico (IOV), bottone **"Pre-iscriviti"** che porta al form.
 2. **L'evento:** cos'è (camminata non competitiva aperta a tutti) e la finalità benefica.
 3. **Info pratiche:** data, programma orari (8:00 / 8:30 / 9:00), ritrovo con indirizzo, percorso ~8 km + sosta Megliadino San Fidenzio, quota 8 € (gratis fino a 6 anni compiuti). Includi una **mappa** con pin sul ritrovo (Piazza G.B. Graziato, Borgo Veneto) e link "porta all'itinerario".
-4. **Come iscriversi:** online (entro 10/09) vs in loco (13/09 8:00–9:00).
+4. **Come iscriversi:** online (entro 12/09) vs in loco (13/09 8:00–9:00).
 5. **Regolamento:** contenuto da `contenuti/REGOLAMENTO.md` (accordion o pagina dedicata).
 6. **Sponsor:** sezione predisposta a griglia di loghi per livelli (main / normali / ristoro / associazioni). Per ora placeholder se i loghi non ci sono ancora.
 7. **Chi siamo:** placeholder breve (i testi arrivano dopo).
