@@ -378,6 +378,82 @@
 
 .tariffe__importo[hidden] { display: none; }
 
+/* --- riga con anagrafica (nuova iscrizione al banco) ------------------ */
+
+/* Qui ogni riga e' un piccolo modulo, non una voce di elenco: va a capo
+   apposta, cosi' i campi restano grandi invece di stringersi. */
+.persona-viva--dettagli { align-items: flex-start; }
+
+.persona-viva--dettagli .persona-viva__corpo {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-3);
+}
+
+.persona-viva--dettagli .persona-viva__nome-campo { flex: 1 1 auto; }
+
+.persona-viva--dettagli .tariffe { margin-left: 0; }
+
+.anagrafica {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+/* Giorno stretto, mese largo (i nomi sono lunghi), anno medio: restano in
+   fila su una riga sola invece di impilarsi. */
+.anagrafica__data {
+  display: grid;
+  grid-template-columns: 5rem 9rem 6.5rem;
+  gap: var(--sp-2);
+}
+
+.anagrafica__data select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--t-sm);
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-sm);
+}
+
+.anagrafica__data select:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.anagrafica__sesso { display: flex; gap: var(--sp-2); }
+
+.chip--sesso {
+  min-width: 3rem;
+  justify-content: center;
+  padding: 0.35em 0.9em;
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+
+/* Il rimprovero sta sulla riga sbagliata, non in cima al modulo. */
+.anagrafica__errore {
+  flex-basis: 100%;
+  font-size: var(--t-sm);
+  font-weight: 650;
+  color: var(--errore);
+}
+
+.anagrafica__errore[hidden] { display: none; }
+
+/* Riga da completare: si accende mentre si compila, non solo dopo Registra,
+   e al Registra restano accese tutte insieme. */
+.persona-viva--incompleta {
+  border-color: var(--errore);
+  background: #fdf5f4;
+}
+
 /* --- aggiungere persone al banco -------------------------------------- */
 
 .aggiungi-persona {
@@ -564,6 +640,122 @@
 .esito[hidden] { display: none; }
 .esito .badge { margin-bottom: var(--sp-4); }
 .esito__dati { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+
+/* Il codice appena generato: si legge a voce a chi sta davanti e si annota
+   su un foglio, quindi grande e spaziato piu' di tutto il resto. */
+.esito__codice {
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-4);
+  text-align: center;
+  background: #fff;
+  border: 2px dashed var(--successo);
+  border-radius: var(--r-md);
+}
+
+.esito__codice-etichetta {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.esito__codice-valore {
+  margin-top: var(--sp-1);
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  font-size: var(--t-3xl);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  color: var(--rosa-scuro);
+}
+
+.esito__azioni { margin-top: var(--sp-4); padding: 0; border: 0; background: none; }
+
+/* -------------------------------------------------------------------------
+   10. NUOVA ISCRIZIONE AL BANCO
+   ------------------------------------------------------------------------- */
+
+/* La scorciatoia sta sotto la ricerca, distinta ma non urlata: la strada
+   normale resta cercare un codice. */
+.cassa__scorciatoia {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-4);
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px dashed var(--bordo);
+}
+
+.cassa__scorciatoia__nota {
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
+.cassa__testata-sezione {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+.nuova__riferimento {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--sp-4);
+}
+
+.nuova__riferimento .campo { margin-bottom: 0; }
+
+/* I nomi dei gruppi sono lunghi ("Amiche del Mercoledi'", "CostantinCafe'
+   SIMONA"): le pillole prendono tutta la riga, non una colonna. */
+.nuova__gruppo { grid-column: 1 / -1; }
+.nuova__gruppo .campo { margin-top: var(--sp-4); max-width: 26rem; }
+
+/* Il gruppo e' un radiogroup, non un campo: non puo' avere una <label for>,
+   ma deve pesare come le etichette accanto. */
+.nuova__etichetta {
+  margin-bottom: var(--sp-2);
+  font-family: var(--font-testo);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--testo);
+}
+
+/* Al banco si preme di fretta: le pillole sono piu' alte di quelle del sito
+   pubblico, ma restano le stesse .chip. */
+.nuova__gruppo .chip {
+  min-height: 48px;
+  padding: 0.5em 1.1em;
+  font-size: var(--t-base);
+}
+
+.cassa .nuova__riferimento input {
+  width: 100%;
+  min-height: 56px;
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--t-base);
+  font-weight: 600;
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+}
+
+.cassa .nuova__riferimento input:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.cassa .nuova__riferimento label {
+  font-family: var(--font-testo);
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
 
 /* -------------------------------------------------------------------------
    9. MESSAGGI E AZIONI

@@ -32,6 +32,7 @@
 
   var CHIAVE_TOKEN = 'cassa_token';
   var CHIAVE_SCADENZA = 'cassa_scadenza';
+  var CHIAVE_QUOTA = 'cassa_quota';
 
   var accesso = document.getElementById('accesso');
   var pin = document.getElementById('pin');
@@ -73,7 +74,28 @@
     try {
       sessionStorage.removeItem(CHIAVE_TOKEN);
       sessionStorage.removeItem(CHIAVE_SCADENZA);
+      sessionStorage.removeItem(CHIAVE_QUOTA);
     } catch (e) { /* niente da rimuovere */ }
+  }
+
+  /* La quota la manda il backend dentro la prenotazione, ma una iscrizione
+     nuova al banco una prenotazione non ce l'ha. Quindi ce la si ricorda
+     dall'ultima ricerca (e dal login, se un giorno la mandera' anche li').
+
+     Se non e' mai arrivata, il suggerimento resta vuoto e l'importo lo
+     scrive l'operatore: continuiamo a non inventare un numero. */
+  function ricordaQuota(v) {
+    var n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'));
+    if (isNaN(n) || n <= 0) return;
+    try { sessionStorage.setItem(CHIAVE_QUOTA, String(n)); } catch (e) { /* pazienza */ }
+  }
+
+  function quotaRicordata() {
+    var grezza;
+    try { grezza = sessionStorage.getItem(CHIAVE_QUOTA); } catch (e) { return null; }
+    if (!grezza) return null;
+    var n = parseFloat(grezza);
+    return isNaN(n) ? null : n;
   }
 
   /* Vera solo quando la scadenza e' nota E gia' passata: se non sappiamo
@@ -99,6 +121,9 @@
   function mostraAccesso(messaggio) {
     dimenticaSessione();
     ricerca.hidden = true;
+    /* Anche il modulo di nuova iscrizione sparisce: alla schermata del PIN
+       non deve restare a schermo un nome gia' battuto da qualcun altro. */
+    if (sezioneNuova) sezioneNuova.hidden = true;
     esci.hidden = true;
     scheda.hidden = true;
     scheda.textContent = '';
@@ -119,6 +144,7 @@
   function mostraRicerca() {
     accesso.hidden = true;
     accessoAvviso.hidden = true;
+    if (sezioneNuova) sezioneNuova.hidden = true;
     ricerca.hidden = false;
     esci.hidden = false;
     codice.focus();
@@ -166,6 +192,10 @@
           throw { codice: 'RISPOSTA_INATTESA', messaggio: null };
         }
         salvaSessione(r.token, r.scadenza || r.scade_il || r.expires || '');
+        /* Se un giorno il login mandera' anche la quota, la si prende da
+           subito: cosi' la nuova iscrizione funziona senza dover prima
+           cercare una prenotazione qualsiasi. */
+        ricordaQuota(r.quota);
         pin.value = '';
         mostraRicerca();
       })
@@ -220,6 +250,10 @@
           codice.select();
           return;
         }
+        /* Ogni ricerca e' anche l'occasione di imparare la quota in corso,
+           che al form di nuova iscrizione serve e li' non arriverebbe. */
+        if (r.prenotazione) ricordaQuota(r.prenotazione.quota);
+
         /* Alla scheda va la risposta INTERA, non il solo sotto-oggetto
            prenotazione: nel contratto reale l'elenco e' una chiave sorella,
            non un campo interno. */
@@ -324,7 +358,13 @@
     var q = typeof p.quota === 'number'
       ? p.quota
       : parseFloat(String(p.quota).replace(',', '.'));
-    return isNaN(q) ? 0 : q;
+    if (!isNaN(q)) return q;
+
+    /* Ripiego su quella imparata al login: e' la stessa quota della stessa
+       Config, non un numero di comodo. Se manca pure quella si resta a zero,
+       che si vede. */
+    var q2 = quotaRicordata();
+    return q2 === null ? 0 : q2;
   }
 
   /* Importo pronto per essere riscritto a mano: due decimali e la virgola,
@@ -407,6 +447,69 @@
     return Math.round(somma * 100) / 100;
   }
 
+  /* Legge dalle tendine, se la riga le ha; altrimenti tiene il valore che
+     aveva gia' (le righe del check-in non si toccano). */
+  function dataDellaRiga(riga) {
+    if (riga.boxData && window.Modulo && typeof Modulo.leggiData === 'function') {
+      return Modulo.leggiData(riga.boxData);
+    }
+    return testo(riga.data_nascita);
+  }
+
+  /* Data e sesso sono facoltativi ma vanno in coppia: una data senza sesso
+     non serve alla classifica, e un sesso senza data nemmeno. Chi non
+     compila niente passa senza domande.
+
+     Il controllo vive sulla riga e si rifa' a ogni cambio dei suoi campi:
+     l'avviso compare mentre si compila, non dopo aver premuto Registra, e
+     sparisce da solo appena il secondo campo arriva. */
+  function verificaLegame(riga) {
+    if (!riga.erroreRiga) return true;
+
+    function spegni() {
+      riga.erroreRiga.hidden = true;
+      if (riga.nodo) riga.nodo.classList.remove('persona-viva--incompleta');
+      return true;
+    }
+
+    if (riga.escluso) return spegni();
+
+    var haData = !!dataDellaRiga(riga);
+    var haSesso = !!testo(riga.sesso);
+    if (haData === haSesso) return spegni();
+
+    riga.erroreRiga.textContent = haData
+      ? 'Manca il sesso: con la data di nascita serve anche quello.'
+      : 'Manca la data di nascita: con il sesso serve anche quella.';
+    riga.erroreRiga.hidden = false;
+    if (riga.nodo) riga.nodo.classList.add('persona-viva--incompleta');
+    return false;
+  }
+
+  /* Al Registra si guardano tutte le righe insieme: quelle incomplete
+     restano tutte accese, non una per volta. */
+  function controllaRighe(ctx) {
+    var primo = null;
+    var quante = 0;
+
+    ctx.righe.forEach(function (riga) {
+      if (!riga.erroreRiga) return;
+      if (verificaLegame(riga)) return;
+      quante++;
+      if (!primo) {
+        primo = {
+          riga: riga,
+          indice: ctx.righe.indexOf(riga) + 1,
+          manca: dataDellaRiga(riga) ? 'il sesso' : 'la data di nascita'
+        };
+      }
+    });
+
+    if (!primo) return null;
+    primo.quante = quante;
+    return primo;
+  }
+
   /* Cio' che parte davvero: solo le righe non escluse. */
   function partecipantiPerInvio(ctx) {
     return ctx.righe
@@ -415,7 +518,7 @@
         var q = {
           nome: testo(riga.nome),
           cognome: testo(riga.cognome),
-          data_nascita: testo(riga.data_nascita),
+          data_nascita: dataDellaRiga(riga),
           sesso: testo(riga.sesso),
           tariffa: riga.bambino ? 'gratis' : riga.tariffa,
           bambino: !!riga.bambino
@@ -505,7 +608,7 @@
     scheda.appendChild(sezDati);
 
     /* --- partecipanti --- */
-    scheda.appendChild(sezionePartecipanti(ctx, annullata));
+    scheda.appendChild(sezionePartecipanti(ctx, { annullata: annullata }));
 
     /* --- conti --- */
     var sezConti = el('div', 'scheda-p__sezione');
@@ -557,7 +660,14 @@
 
   /* ------------------------------------------------- lista partecipanti */
 
-  function sezionePartecipanti(ctx, annullata) {
+  /* opz: { annullata, dettagli }
+     "dettagli" accende cognome, data di nascita e sesso su ogni riga: al
+     check-in quei dati ci sono gia' e non si toccano, al banco invece si
+     raccolgono da zero. */
+  function sezionePartecipanti(ctx, opz) {
+    opz = opz || {};
+    var annullata = !!opz.annullata;
+
     var sez = el('div', 'scheda-p__sezione');
     sez.appendChild(el('p', 'scheda-p__etichetta', 'Partecipanti'));
 
@@ -588,7 +698,7 @@
     }
 
     ctx.righe.forEach(function (riga) {
-      ul.appendChild(costruisciRiga(ctx, riga, annullata, togliRiga, ctx.ricalcola));
+      ul.appendChild(costruisciRiga(ctx, riga, opz, togliRiga, ctx.ricalcola));
     });
     rinumera();
     aggiornaVuoto();
@@ -606,7 +716,11 @@
       b.addEventListener('click', function () {
         var riga = rigaNuova(bambino);
         ctx.righe.push(riga);
-        ul.appendChild(costruisciRiga(ctx, riga, false, togliRiga, ctx.ricalcola));
+        /* Il gancio va chiamato PRIMA di costruire la riga: chi eredita il
+           nome del referente deve averlo gia' addosso quando nasce il campo,
+           o il campo esce vuoto. */
+        if (opz.suRigaAggiunta) opz.suRigaAggiunta(riga, ctx.righe.length - 1);
+        ul.appendChild(costruisciRiga(ctx, riga, opz, togliRiga, ctx.ricalcola));
         rinumera();
         aggiornaVuoto();
         ctx.ricalcola();
@@ -622,8 +736,13 @@
     return sez;
   }
 
-  function costruisciRiga(ctx, riga, annullata, togliRiga, ricalcola) {
+  function costruisciRiga(ctx, riga, opz, togliRiga, ricalcola) {
+    opz = opz || {};
+    var annullata = !!opz.annullata;
+    var dettagli = !!opz.dettagli;
+
     var li = el('li', 'elenco-p__voce persona-viva');
+    if (dettagli) li.classList.add('persona-viva--dettagli');
     riga.nodo = li;
 
     riga.numero = el('span', 'elenco-p__numero', '');
@@ -642,9 +761,31 @@
         riga.bambino ? 'Nome del bambino aggiunto' : 'Nome della persona aggiunta');
       campoNome.autocomplete = 'off';
       campoNome.value = riga.nome;
-      campoNome.addEventListener('input', function () { riga.nome = campoNome.value; });
+      /* Scrivere a mano qui rompe l'eredita' dal referente: da quel momento
+         il nome e' dell'operatore e non lo tocca piu' nessuno. Vale solo per
+         cio' che si digita: assegnare .value da codice non scatena "input". */
+      campoNome.addEventListener('input', function () {
+        riga.nome = campoNome.value;
+        riga.ereditata = false;
+      });
       riga.campoNome = campoNome;
       corpo.appendChild(campoNome);
+
+      if (dettagli) {
+        var campoCognome = document.createElement('input');
+        campoCognome.type = 'text';
+        campoCognome.className = 'persona-viva__nome-campo';
+        campoCognome.placeholder = 'Cognome';
+        campoCognome.setAttribute('aria-label', 'Cognome, facoltativo');
+        campoCognome.autocomplete = 'off';
+        campoCognome.value = riga.cognome;
+        campoCognome.addEventListener('input', function () {
+          riga.cognome = campoCognome.value;
+          riga.ereditata = false;
+        });
+        riga.campoCognome = campoCognome;
+        corpo.appendChild(campoCognome);
+      }
     } else {
       var nome = (testo(riga.nome) + ' ' + testo(riga.cognome)).trim();
       corpo.appendChild(el('span', 'elenco-p__nome', nome || '—'));
@@ -655,6 +796,10 @@
       if (testo(riga.sesso)) meta.push(testo(riga.sesso));
       if (meta.length) corpo.appendChild(el('span', 'elenco-p__meta', meta.join(' · ')));
     }
+
+    /* Data di nascita e sesso: facoltativi, ma legati fra loro. La verifica
+       del legame sta in controllaRighe, al momento dell'invio. */
+    if (dettagli) corpo.appendChild(dettagliAnagrafici(riga));
 
     /* I bambini non scelgono tariffa: sono gratis e basta. */
     var tariffe = null;
@@ -705,6 +850,67 @@
     return li;
   }
 
+  /* Data di nascita a tre tendine e sesso. Le tendine sono quelle del modulo
+     pubblico, preparate da Modulo.preparaData: al banco si iscrive la stessa
+     gente che si iscrive da casa, e un calendario a comparsa su un portatile
+     condiviso e' peggio di tre elenchi. */
+  function dettagliAnagrafici(riga) {
+    var box = el('div', 'anagrafica');
+
+    /* Niente classe tre-tendine: quella del modulo pubblico stira ogni
+       tendina al 100% della colonna, e qui dentro le manderebbe a capo una
+       sotto l'altra. Stessa struttura, larghezze da banco. */
+    var data = el('div', 'anagrafica__data');
+    ['giorno', 'mese', 'anno'].forEach(function (quale) {
+      var s = document.createElement('select');
+      s.setAttribute('data-campo', quale);
+      s.setAttribute('aria-label', quale.charAt(0).toUpperCase() + quale.slice(1) + ' di nascita');
+      s.innerHTML = '<option value="">' + quale.charAt(0).toUpperCase() + quale.slice(1) + '</option>';
+      /* Il controllo scatta al cambio, non a ogni tasto: la data e' completa
+         solo quando ci sono tutte e tre le tendine, e prima di allora vale
+         come vuota. */
+      s.addEventListener('change', function () { verificaLegame(riga); });
+      data.appendChild(s);
+    });
+
+    if (window.Modulo && typeof Modulo.preparaData === 'function') {
+      Modulo.preparaData(data);
+    }
+    riga.boxData = data;
+    box.appendChild(data);
+
+    /* Sesso: due sole scelte perche' sono quelle che finiscono in classifica
+       (piu' anziano, piu' giovane), non un censimento. Si puo' non scegliere. */
+    var sessi = el('div', 'anagrafica__sesso');
+    var gruppo = 'sesso-' + riga.id;
+    [['F', 'F'], ['M', 'M']].forEach(function (s) {
+      var lab = el('label', 'chip chip--sesso');
+      var radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = gruppo;
+      radio.value = s[0];
+      radio.checked = riga.sesso === s[0];
+      radio.addEventListener('change', function () {
+        if (!radio.checked) return;
+        riga.sesso = s[0];
+        verificaLegame(riga);
+      });
+      lab.appendChild(radio);
+      lab.appendChild(el('span', null, s[1]));
+      sessi.appendChild(lab);
+    });
+    riga.boxSesso = sessi;
+    box.appendChild(sessi);
+
+    /* Il messaggio del legame data/sesso vive sulla riga che lo ha rotto,
+       non in cima al modulo: cosi' si vede subito quale sistemare. */
+    riga.erroreRiga = el('p', 'anagrafica__errore');
+    riga.erroreRiga.hidden = true;
+    box.appendChild(riga.erroreRiga);
+
+    return box;
+  }
+
   function selettoreTariffa(riga, ricalcola) {
     var box = el('div', 'tariffe');
     var gruppo = 'tariffa-' + riga.id;
@@ -753,6 +959,78 @@
 
   /* ------------------------------------------------------ registrazione */
 
+  /* Importo incassato e consegna del kit: identici al check-in e alla nuova
+     iscrizione, quindi stanno in un posto solo.
+     opz: { suffisso, giaFatta, valoreIniziale, kitIniziale } */
+  function controlliIncasso(ctx, opz) {
+    var riga = el('div', 'registra__riga');
+
+    var idImporto = 'incassato-' + opz.suffisso;
+    var campo = el('div', 'campo');
+    var etichetta = el('label', null, 'Incassato €');
+    etichetta.htmlFor = idImporto;
+    campo.appendChild(etichetta);
+
+    var incassato = document.createElement('input');
+    incassato.type = 'text';
+    incassato.id = idImporto;
+    incassato.className = 'cassa__importo';
+    /* decimal, non numeric: servono la virgola e il punto. */
+    incassato.setAttribute('inputmode', 'decimal');
+    incassato.autocomplete = 'off';
+    ctx.campoIncassato = incassato;
+
+    /* Su una gia' registrata il campo parte da cio' che risulta incassato e
+       ci resta: e' una cifra vera, non un suggerimento, e il ricalcolo
+       della lista non deve sovrascriverla. */
+    if (opz.valoreIniziale !== null && opz.valoreIniziale !== undefined) {
+      incassato.value = importoCampo(opz.valoreIniziale);
+      ctx.incassatoToccato = true;
+    }
+
+    campo.appendChild(incassato);
+
+    var NOTA_NUOVA = 'Segue il totale dovuto. Cambialo se incassi una cifra diversa.';
+    var NOTA_MANO = 'Scritto a mano: non cambia più da solo.';
+    var NOTA_FATTA = 'Già registrato. Cambialo solo se stai correggendo.';
+    /* Senza quota nota il totale non si puo' suggerire: meglio dirlo che
+       lasciare uno zero da interpretare. */
+    var NOTA_SENZA_QUOTA = 'Quota non disponibile: scrivi tu l’importo incassato.';
+
+    var testoIniziale = opz.giaFatta ? NOTA_FATTA
+      : (ctx.quota > 0 ? NOTA_NUOVA : NOTA_SENZA_QUOTA);
+    var notaCampo = el('p', 'campo__nota', testoIniziale);
+    campo.appendChild(notaCampo);
+
+    /* Il primo tocco a mano stacca il campo dal suggerimento, e la dicitura
+       lo dice: da qui in poi quella cifra e' dell'operatore, non nostra. */
+    incassato.addEventListener('input', function () {
+      ctx.incassatoToccato = true;
+      notaCampo.textContent = NOTA_MANO;
+    });
+
+    riga.appendChild(campo);
+
+    var kitEtichetta = el('label', 'interruttore');
+    var kit = document.createElement('input');
+    kit.type = 'checkbox';
+    kit.id = 'kit-' + opz.suffisso;
+    /* Il kit si consegna quasi sempre insieme al pagamento: parte spuntato,
+       e chi fa l'eccezione lo toglie. */
+    kit.checked = !!opz.kitIniziale;
+    kitEtichetta.appendChild(kit);
+    kitEtichetta.appendChild(el('span', 'interruttore__testo', 'Kit consegnato'));
+    riga.appendChild(kitEtichetta);
+
+    return {
+      nodo: riga,
+      incassato: incassato,
+      kit: kit,
+      notaCampo: notaCampo,
+      NOTA_FATTA: NOTA_FATTA
+    };
+  }
+
   function sezioneRegistra(ctx, cifraPagato) {
     var p = ctx.p;
     var giaFatta = vero(p.gia_checkin);
@@ -766,64 +1044,17 @@
     nota.hidden = !giaFatta;
     sez.appendChild(nota);
 
-    var riga = el('div', 'registra__riga');
-
-    /* --- importo --- */
-    var campo = el('div', 'campo');
-    var etichetta = el('label', null, 'Incassato €');
-    etichetta.htmlFor = 'incassato';
-    campo.appendChild(etichetta);
-
-    var incassato = document.createElement('input');
-    incassato.type = 'text';
-    incassato.id = 'incassato';
-    incassato.className = 'cassa__importo';
-    /* decimal, non numeric: servono la virgola e il punto. */
-    incassato.setAttribute('inputmode', 'decimal');
-    incassato.autocomplete = 'off';
-    ctx.campoIncassato = incassato;
-
-    /* Su una gia' registrata il campo parte da cio' che risulta incassato e
-       ci resta: e' una cifra vera, non un suggerimento, e il ricalcolo
-       della lista non deve sovrascriverla. */
-    if (giaFatta) {
-      incassato.value = importoCampo(p.totale_pagato);
-      ctx.incassatoToccato = true;
-    }
-
-    campo.appendChild(incassato);
-
-    var NOTA_NUOVA = 'Segue il totale dovuto. Cambialo se incassi una cifra diversa.';
-    var NOTA_MANO = 'Scritto a mano: non cambia più da solo.';
-    var NOTA_FATTA = 'Già registrato. Cambialo solo se stai correggendo.';
-    var notaCampo = el('p', 'campo__nota', giaFatta ? NOTA_FATTA : NOTA_NUOVA);
-    campo.appendChild(notaCampo);
-
-    /* Il primo tocco a mano stacca il campo dal suggerimento, e la dicitura
-       lo dice: da qui in poi quella cifra e' dell'operatore, non nostra. */
-    incassato.addEventListener('input', function () {
-      ctx.incassatoToccato = true;
-      notaCampo.textContent = NOTA_MANO;
+    var incasso = controlliIncasso(ctx, {
+      suffisso: 'checkin',
+      giaFatta: giaFatta,
+      valoreIniziale: giaFatta ? p.totale_pagato : null,
+      kitIniziale: giaFatta ? String(p.kit_consegnato).toUpperCase() === 'SI' : true
     });
-
-    riga.appendChild(campo);
-
-    /* --- kit --- */
-    var kitEtichetta = el('label', 'interruttore');
-    var kit = document.createElement('input');
-    kit.type = 'checkbox';
-    kit.id = 'kit';
-    /* Su una prenotazione nuova il kit si consegna quasi sempre insieme al
-       pagamento: parte spuntato, e chi fa l'eccezione lo toglie. Su una gia'
-       registrata vince cio' che risulta salvato. */
-    kit.checked = giaFatta
-      ? String(p.kit_consegnato).toUpperCase() === 'SI'
-      : true;
-    kitEtichetta.appendChild(kit);
-    kitEtichetta.appendChild(el('span', 'interruttore__testo', 'Kit consegnato'));
-    riga.appendChild(kitEtichetta);
-
-    sez.appendChild(riga);
+    var incassato = incasso.incassato;
+    var kit = incasso.kit;
+    var notaCampo = incasso.notaCampo;
+    var NOTA_FATTA = incasso.NOTA_FATTA;
+    sez.appendChild(incasso.nodo);
 
     var avviso = el('div', 'avviso avviso--errore cassa__messaggio');
     avviso.setAttribute('role', 'alert');
@@ -944,6 +1175,318 @@
 
     return sez;
   }
+
+  /* =================================================================== */
+  /* NUOVA ISCRIZIONE AL BANCO                                           */
+  /*                                                                     */
+  /* La corsia veloce: qui non si cerca niente, si crea una prenotazione */
+  /* da zero per chi si presenta senza pre-iscrizione. Riusa la stessa   */
+  /* lista viva del check-in, accesa in modalita' "dettagli" perche' qui */
+  /* nome, data e sesso vanno raccolti invece che letti.                 */
+  /* =================================================================== */
+
+  var sezioneNuova = document.getElementById('nuova');
+  var moduloNuova = document.getElementById('modulo-nuova');
+  var apriNuovaBtn = document.getElementById('apri-nuova');
+  var annullaNuovaBtn = document.getElementById('nuova-annulla');
+  var squadreCaricate = false;
+  var squadreNote = [];
+  /* Un'istanza sola per tutta la vita della pagina: Modulo.Gruppi attacca i
+     suoi ascoltatori al contenitore, e ricrearla a ogni apertura del modulo
+     li accumulerebbe. */
+  var gruppi = null;
+
+  function mostraNuova() {
+    ricerca.hidden = true;
+    sezioneNuova.hidden = false;
+    preparaNuova();
+    var primo = document.getElementById('rif-nome');
+    if (primo) primo.focus();
+  }
+
+  function tornaARicerca() {
+    sezioneNuova.hidden = true;
+    ricerca.hidden = false;
+    codice.focus();
+  }
+
+  /* I gruppi arrivano dopo, e i chip si rifanno quando arrivano. Se la
+     chiamata non riesce restano comunque "Nessun gruppo" e "Crea nuovo
+     gruppo": si puo' lavorare lo stesso. */
+  function caricaGruppi() {
+    if (squadreCaricate) return;
+    squadreCaricate = true;
+    API.chiama('getSquadre', {})
+      .then(function (r) {
+        squadreNote = r.squadre || [];
+        if (gruppi) gruppi.riempi(squadreNote, '');
+      })
+      .catch(function () { squadreCaricate = false; });
+  }
+
+  /* Il valore da mandare: '' per "Nessun gruppo", il nome scritto a mano se
+     si sta creando, altrimenti la squadra scelta. Lo decide Gruppi.leggi. */
+  function gruppoScelto() {
+    return gruppi ? gruppi.leggi() : '';
+  }
+
+  function preparaNuova() {
+    if (!moduloNuova) return;
+
+    var ctx = {
+      quota: quotaRicordata() || 0,
+      righe: [],
+      cifraDovuto: null,
+      campoIncassato: null,
+      incassatoToccato: false,
+      ricalcola: function () {}
+    };
+
+    ctx.ricalcola = function () {
+      var t = totaleSuggerito(ctx);
+      if (ctx.cifraDovuto) ctx.cifraDovuto.textContent = euro(t);
+      /* Senza quota nota non si suggerisce niente: il campo resta vuoto e lo
+         riempie l'operatore, invece di mostrare uno zero credibile. */
+      if (ctx.campoIncassato && !ctx.incassatoToccato) {
+        ctx.campoIncassato.value = ctx.quota > 0 ? importoCampo(t) : '';
+      }
+    };
+
+    /* --- il referente e la prima riga ---
+       Chi sta al banco dice il proprio nome una volta sola: la prima persona
+       della lista e' quasi sempre lui. La riga 1 lo eredita, e continua a
+       seguirlo finche' nessuno la corregge a mano; al primo tocco si stacca
+       e da li' in poi comanda l'operatore. */
+    var rifNome = document.getElementById('rif-nome');
+    var rifCognome = document.getElementById('rif-cognome');
+
+    function ereditaSuPrima(riga, indice) {
+      /* Solo la prima riga, e solo se e' un adulto: il referente non e' il
+         bambino che si sta aggiungendo. */
+      if (indice !== 0 || riga.bambino) return;
+      riga.nome = rifNome.value.trim();
+      riga.cognome = rifCognome.value.trim();
+      riga.ereditata = true;
+    }
+
+    function seguiRiferimento() {
+      var prima = ctx.righe[0];
+      if (!prima || !prima.ereditata) return;
+      prima.nome = rifNome.value.trim();
+      prima.cognome = rifCognome.value.trim();
+      if (prima.campoNome) prima.campoNome.value = prima.nome;
+      if (prima.campoCognome) prima.campoCognome.value = prima.cognome;
+    }
+
+    rifNome.addEventListener('input', seguiRiferimento);
+    rifCognome.addEventListener('input', seguiRiferimento);
+
+    /* --- gruppo a pillole --- */
+    if (!gruppi && window.Modulo && typeof Modulo.Gruppi === 'function') {
+      gruppi = new Modulo.Gruppi(
+        document.getElementById('chip-gruppi'),
+        document.getElementById('campo-nuovo-gruppo')
+      );
+    }
+    if (gruppi) {
+      /* azzera prima di riempire: senza, riempi() conserverebbe la scelta
+         della persona precedente, e la seconda iscrizione partirebbe col
+         gruppo della prima. */
+      gruppi.azzera();
+      gruppi.riempi(squadreNote, '');
+    }
+
+    /* --- persone --- */
+    var boxPersone = document.getElementById('nuova-persone');
+    boxPersone.textContent = '';
+    boxPersone.appendChild(sezionePartecipanti(ctx, {
+      dettagli: true,
+      suRigaAggiunta: ereditaSuPrima
+    }));
+
+    /* --- totale --- */
+    var boxConti = document.getElementById('nuova-conti');
+    boxConti.textContent = '';
+    var sezConti = el('div', 'scheda-p__sezione');
+    var conti = el('div', 'conti');
+    var dovuto = el('div', 'conti__voce');
+    dovuto.appendChild(el('p', 'conti__etichetta', 'Totale dovuto'));
+    ctx.cifraDovuto = el('p', 'conti__cifra', euro(0));
+    dovuto.appendChild(ctx.cifraDovuto);
+    conti.appendChild(dovuto);
+    sezConti.appendChild(conti);
+    boxConti.appendChild(sezConti);
+
+    /* --- incasso e invio --- */
+    var boxIncasso = document.getElementById('nuova-incasso');
+    boxIncasso.textContent = '';
+
+    var sez = el('div', 'scheda-p__sezione');
+    sez.appendChild(el('p', 'scheda-p__etichetta', 'Incasso'));
+
+    var incasso = controlliIncasso(ctx, {
+      suffisso: 'nuova',
+      giaFatta: false,
+      valoreIniziale: null,
+      kitIniziale: true
+    });
+    sez.appendChild(incasso.nodo);
+
+    var avviso = el('div', 'avviso avviso--errore cassa__messaggio');
+    avviso.setAttribute('role', 'alert');
+    var avvisoTesto = el('p', null, '');
+    avviso.appendChild(avvisoTesto);
+    avviso.hidden = true;
+    sez.appendChild(avviso);
+
+    var esito = el('div', 'esito');
+    esito.setAttribute('role', 'status');
+    esito.hidden = true;
+    sez.appendChild(esito);
+
+    var azioni = el('div', 'registra__azioni');
+    var bottone = el('button', 'btn btn--primario btn--banco', 'Registra iscrizione');
+    bottone.type = 'button';
+    azioni.appendChild(bottone);
+    sez.appendChild(azioni);
+
+    boxIncasso.appendChild(sez);
+
+    function avvisa(t) {
+      avvisoTesto.textContent = t;
+      avviso.hidden = false;
+    }
+
+    ctx.ricalcola();
+
+    bottone.addEventListener('click', function () {
+      if (inCorso) return;
+
+      var token = leggiToken();
+      if (!token || scaduta()) {
+        mostraAccesso('Sessione scaduta, rifai l’accesso.');
+        return;
+      }
+
+      var rifNome = document.getElementById('rif-nome');
+      var nomeRif = rifNome.value.trim();
+      if (!nomeRif) {
+        avvisa('Serve almeno il nome di riferimento.');
+        rifNome.focus();
+        return;
+      }
+
+      if (!ctx.righe.filter(function (q) { return !q.escluso; }).length) {
+        avvisa('Aggiungi almeno una persona con + Adulto o + Bambino.');
+        return;
+      }
+
+      var guasto = controllaRighe(ctx);
+      if (guasto) {
+        avvisa(guasto.quante > 1
+          ? 'Ci sono ' + guasto.quante + ' persone da completare: data di nascita e ' +
+            'sesso vanno insieme, oppure lasciali entrambi vuoti. Le trovi segnate qui sopra.'
+          : 'Persona ' + guasto.indice + ': manca ' + guasto.manca +
+            '. Data di nascita e sesso vanno insieme, oppure lasciali entrambi vuoti.');
+        if (guasto.riga.nodo) guasto.riga.nodo.scrollIntoView({ block: 'center' });
+        return;
+      }
+
+      var letto = leggiImporto(incasso.incassato.value);
+      if (letto.errore) {
+        avvisa('Importo non valido. Scrivi solo cifre, per esempio 8,00.');
+        incasso.incassato.focus();
+        incasso.incassato.select();
+        return;
+      }
+
+      var dati = {
+        token: token,
+        rif_nome: nomeRif,
+        rif_cognome: document.getElementById('rif-cognome').value.trim(),
+        squadra: gruppoScelto(),
+        telefono: document.getElementById('rif-telefono').value.trim(),
+        incassato: letto.vuoto ? '' : letto.valore,
+        kit: incasso.kit.checked ? 'SI' : 'NO',
+        partecipanti: partecipantiPerInvio(ctx)
+      };
+
+      avviso.hidden = true;
+      var idInvio = API.nuovoId();
+      occupato(bottone, true, 'Registro…', 'Registra iscrizione');
+
+      API.chiama('gestNuovaIscrizione', dati, { requestId: idInvio })
+        .then(function (risposta) { mostraEsitoNuova(esito, risposta); })
+        .catch(function (e) {
+          if (e.codice === 'NON_AUTORIZZATO') {
+            mostraAccesso('Sessione scaduta, rifai l’accesso.');
+            return;
+          }
+          /* NOME_MANCANTE e LISTA_VUOTA li abbiamo gia' fermati qui sopra;
+             se il server li rimanda ha ragione lui, e si mostra il suo
+             messaggio invece di riscriverlo. */
+          avvisa(messaggioDiRete(e));
+        })
+        .finally(function () {
+          occupato(bottone, false, 'Registro…', 'Registra iscrizione');
+        });
+    });
+  }
+
+  /* Il codice generato e' l'unica cosa che l'operatore deve poter leggere a
+     voce e annotare: grande, e preso dalla risposta, non costruito qui. */
+  function mostraEsitoNuova(esito, risposta) {
+    var codiceNuovo = testo(campoRisposta(risposta, 'codice'));
+    var pagatoConf = campoRisposta(risposta, 'totale_pagato');
+    if (pagatoConf === undefined) pagatoConf = campoRisposta(risposta, 'incassato');
+    var kitConf = campoRisposta(risposta, 'kit_consegnato');
+    if (kitConf === undefined) kitConf = campoRisposta(risposta, 'kit');
+
+    esito.textContent = '';
+
+    var testata = el('p', 'badge badge--fatto');
+    testata.appendChild(el('span', 'badge__segno', '✓'));
+    testata.appendChild(document.createTextNode('ISCRIZIONE REGISTRATA'));
+    esito.appendChild(testata);
+
+    var box = el('div', 'esito__codice');
+    box.appendChild(el('p', 'esito__codice-etichetta', 'Codice della prenotazione'));
+    box.appendChild(el('p', 'esito__codice-valore', codiceNuovo || '—'));
+    esito.appendChild(box);
+
+    var dati = el('dl', 'scheda-p__dati esito__dati');
+    dati.appendChild(voceDato('Incassato', euro(pagatoConf)));
+    dati.appendChild(voceDato('Kit', kitConf === undefined
+      ? '—'
+      : (String(kitConf).toUpperCase() === 'SI' ? 'Sì' : 'No')));
+    esito.appendChild(dati);
+
+    var azioni = el('div', 'cassa__azioni esito__azioni');
+    var altra = el('button', 'btn btn--primario', 'Nuova iscrizione');
+    altra.type = 'button';
+    altra.addEventListener('click', function () {
+      moduloNuova.reset();
+      preparaNuova();
+      document.getElementById('rif-nome').focus();
+    });
+    var indietro = el('button', 'btn btn--secondario', 'Torna alla ricerca');
+    indietro.type = 'button';
+    indietro.addEventListener('click', tornaARicerca);
+    azioni.appendChild(altra);
+    azioni.appendChild(indietro);
+    esito.appendChild(azioni);
+
+    esito.hidden = false;
+    esito.scrollIntoView({ block: 'center' });
+  }
+
+  if (apriNuovaBtn) {
+    apriNuovaBtn.addEventListener('click', function () {
+      caricaGruppi();
+      mostraNuova();
+    });
+  }
+  if (annullaNuovaBtn) annullaNuovaBtn.addEventListener('click', tornaARicerca);
 
   /* ---------------------------------------------------------- avvio */
 

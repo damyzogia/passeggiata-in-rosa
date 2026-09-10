@@ -79,6 +79,14 @@
         </div>
       </form>
 
+      <!-- Chi arriva senza pre-iscrizione: la corsia veloce del banco. -->
+      <p class="cassa__scorciatoia">
+        <button class="btn btn--secondario btn--banco" type="button" id="apri-nuova">
+          + Nuova iscrizione al banco
+        </button>
+        <span class="cassa__scorciatoia__nota">Per chi non si è pre-iscritto online.</span>
+      </p>
+
       <div class="avviso avviso--attenzione cassa__messaggio" id="ricerca-avviso" role="alert" hidden>
         <p id="ricerca-avviso-testo"></p>
       </div>
@@ -93,10 +101,79 @@
       </p>
     </section>
 
+    <!-- ============== NUOVA ISCRIZIONE AL BANCO ==============
+         Prende il posto della ricerca: al banco si fa una cosa per volta. -->
+    <section class="cassa__area" id="nuova" aria-labelledby="nuova-titolo" hidden>
+      <div class="cassa__testata-sezione">
+        <div>
+          <h1 class="cassa__titolo" id="nuova-titolo">Nuova iscrizione al banco</h1>
+          <p class="cassa__occhiello">Per chi non ha una pre-iscrizione online.</p>
+        </div>
+        <button class="btn btn--fantasma btn--piccolo" type="button" id="nuova-annulla">
+          Torna alla ricerca
+        </button>
+      </div>
+
+      <form id="modulo-nuova" novalidate>
+        <div class="scheda-p">
+
+          <div class="scheda-p__sezione">
+            <p class="scheda-p__etichetta">Riferimento</p>
+            <div class="nuova__riferimento">
+              <div class="campo">
+                <label for="rif-nome">Nome <span aria-hidden="true">*</span></label>
+                <input type="text" id="rif-nome" autocomplete="off" required>
+              </div>
+              <div class="campo">
+                <label for="rif-cognome">Cognome</label>
+                <input type="text" id="rif-cognome" autocomplete="off">
+              </div>
+              <div class="campo">
+                <label for="rif-telefono">Telefono</label>
+                <input type="tel" id="rif-telefono" inputmode="tel" autocomplete="off">
+              </div>
+              <!-- Gruppo a pillole, lo stesso componente del modulo pubblico
+                   (Modulo.Gruppi): i chip li costruisce il JS quando arrivano
+                   le squadre, e "Nessun gruppo" e' una scelta come le altre,
+                   quindi si torna indietro premendola. -->
+              <div class="nuova__gruppo">
+                <p class="nuova__etichetta" id="et-gruppo">Gruppo</p>
+                <div class="chips" id="chip-gruppi" role="radiogroup"
+                     aria-labelledby="et-gruppo"></div>
+
+                <div class="campo" id="campo-nuovo-gruppo" hidden>
+                  <label for="nuovo-gruppo">Nome del nuovo gruppo</label>
+                  <input type="text" id="nuovo-gruppo" maxlength="60" autocomplete="off">
+                  <p class="campo__nota">
+                    Chi si iscrive dopo potrà sceglierlo dall&rsquo;elenco.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Elenco persone e controlli di incasso: li costruisce il JS,
+               con gli stessi pezzi del check-in. -->
+          <div id="nuova-persone"></div>
+          <div id="nuova-conti"></div>
+          <div id="nuova-incasso"></div>
+
+        </div>
+      </form>
+
+      <p class="cassa__nota-fase">
+        Nome e cognome delle persone sono facoltativi. Data di nascita e sesso
+        anche, ma vanno insieme: se metti l&rsquo;una serve anche l&rsquo;altro.
+      </p>
+    </section>
+
   </main>
 </div>
 
 <script src="/assets/js/api.js"></script>
+<!-- Di modulo.js qui servono solo le tre tendine della data di nascita, le
+     stesse del modulo pubblico: stesso comportamento per le stesse persone. -->
+<script src="/assets/js/modulo.js"></script>
 <script src="/assets/js/cassa.js"></script>
 </body>
 </html>
