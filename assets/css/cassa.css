@@ -781,3 +781,425 @@
   color: var(--testo-tenue);
   text-align: center;
 }
+
+/* -------------------------------------------------------------------------
+   11. RIEPILOGO
+   Si guarda in due modi opposti: da vicino al banco, per sapere come sta
+   andando, e da lontano al microfono, per leggere i nomi dei premiati e i
+   gruppi piu' numerosi. Percio' le cifre e i quattro nomi sono i pezzi piu'
+   grandi della pagina, e tutto il resto sta un gradino sotto.
+   ------------------------------------------------------------------------- */
+
+/* Il riepilogo sta accanto alla nuova iscrizione ma non e' la stessa cosa:
+   spinto a fondo riga si distingue senza bisogno di un altro colore. */
+.cassa__scorciatoia__fine { margin-left: auto; }
+
+/* Il titolo con la riga lunga di evento/data/luogo deve restringersi, non
+   spingere "Torna alla ricerca" a capo: in cima a destra il ritorno si trova
+   sempre nello stesso punto, come nella nuova iscrizione. */
+.riep__intestazione { flex: 1 1 20rem; min-width: 0; }
+
+.riep__evento {
+  margin-bottom: 0;
+  font-size: var(--t-base);
+  color: var(--testo);
+}
+
+.riep__barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-4);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--bordo);
+}
+
+.riep__aggiornato {
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
+.riep__azioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.riep__attesa {
+  padding: var(--sp-8) var(--sp-4);
+  text-align: center;
+  font-size: var(--t-lg);
+  color: var(--testo-tenue);
+}
+
+/* --- cruscotto ------------------------------------------------------- */
+
+.riep__cruscotto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+}
+
+.riep__numerone {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-5) var(--sp-4);
+  text-align: center;
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-lg);
+  box-shadow: var(--ombra-1);
+}
+
+/* La cifra e' la cosa che si legge a tre metri: Fraunces stretta, niente
+   interlinea sprecata, e cifre a larghezza fissa perche' un numero che
+   cambia non deve far ballare la colonna. */
+.riep__numerone__cifra {
+  font-family: var(--font-titoli);
+  font-size: var(--t-3xl);
+  font-variation-settings: 'opsz' 96, 'SOFT' 40;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--scuro);
+}
+
+.riep__numerone--soldi .riep__numerone__cifra { color: var(--rosa-testo); }
+
+.riep__numerone__voce {
+  font-size: var(--t-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+/* L'atteso serve solo per il confronto con il reale: sta accanto, ma non
+   deve poter essere scambiato per l'incasso vero. */
+.riep__numerone__nota {
+  justify-self: center;
+  margin-top: var(--sp-1);
+  padding: 0.15em 0.7em;
+  font-size: var(--t-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--rosa-scuro);
+  background: var(--rosa-tenue);
+  border-radius: var(--r-pill);
+}
+
+/* --- sezioni --------------------------------------------------------- */
+
+.riep__sezione {
+  margin-top: var(--sp-5);
+  padding: var(--sp-5);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-lg);
+}
+
+.riep__sezione-titolo {
+  margin-bottom: var(--sp-4);
+  font-family: var(--font-titoli);
+  font-size: var(--t-lg);
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+  line-height: var(--lh-titolo);
+  color: var(--scuro);
+}
+
+.riep__nota {
+  margin-top: var(--sp-3);
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
+.riep__vuoto {
+  font-size: var(--t-base);
+  color: var(--testo-tenue);
+}
+
+.riep__sotto-titolo {
+  margin-top: var(--sp-5);
+  margin-bottom: var(--sp-2);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+/* --- premiazione ------------------------------------------------------
+   Il riquadro bordeaux e' l'unica cosa scura della pagina: al momento di
+   chiamare i nomi si trova a colpo d'occhio anche scorrendo di fretta. */
+
+.riep__premiazione {
+  background: var(--scuro);
+  border-color: var(--scuro);
+  box-shadow: var(--ombra-2);
+}
+
+.riep__premiazione .riep__sezione-titolo {
+  font-size: var(--t-xl);
+  color: #fff;
+}
+
+.riep__premiazione .riep__sezione-titolo::after {
+  content: '';
+  display: block;
+  width: 3.5rem;
+  height: 3px;
+  margin-top: var(--sp-2);
+  background: var(--rosa);
+  border-radius: var(--r-pill);
+}
+
+.riep__premi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--sp-4);
+}
+
+.riep__premio {
+  padding: var(--sp-4);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(248, 166, 200, 0.35);
+  border-radius: var(--r-md);
+}
+
+.riep__premio__voce {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rosa-chiaro);
+}
+
+/* F e M vanno distinti in un colpo d'occhio: la pillola li separa
+   dall'etichetta senza aggiungere una riga. */
+.riep__premio__sesso {
+  flex: none;
+  min-width: 1.6em;
+  padding: 0.1em 0.5em;
+  text-align: center;
+  color: var(--scuro);
+  background: var(--rosa-chiaro);
+  border-radius: var(--r-pill);
+}
+
+.riep__premio__nome {
+  margin-top: var(--sp-2);
+  font-family: var(--font-titoli);
+  font-size: var(--t-2xl);
+  font-variation-settings: 'opsz' 96, 'SOFT' 50;
+  font-weight: 600;
+  line-height: 1.1;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+
+.riep__premio__data {
+  margin-top: var(--sp-1);
+  font-size: var(--t-base);
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Nessun presentato con quel sesso: la casella resta al suo posto, spenta.
+   Toglierla farebbe sembrare che il premio non esista. */
+.riep__premio--vuoto { background: rgba(255, 255, 255, 0.04); }
+.riep__premio--vuoto .riep__premio__nome { color: rgba(255, 255, 255, 0.45); }
+.riep__premio--vuoto .riep__premio__data { font-style: italic; }
+
+/* --- podio dei gruppi ------------------------------------------------- */
+
+.riep__podio {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-3);
+}
+
+/* Le colonne sono tante quanti i posti davvero assegnati: con un gruppo
+   solo, tre colonne lascerebbero due buchi che sembrano dati mancanti. */
+@media (min-width: 40rem) {
+  .riep__podio--2 { grid-template-columns: repeat(2, 1fr); }
+  .riep__podio--3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+.riep__posto {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  text-align: center;
+  background: var(--sfondo-alt);
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-lg);
+}
+
+.riep__posto__rango {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--font-titoli);
+  font-size: var(--t-base);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--testo-tenue);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: 50%;
+}
+
+.riep__posto__nome {
+  font-family: var(--font-titoli);
+  font-size: var(--t-lg);
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+  line-height: var(--lh-titolo);
+  color: var(--testo);
+  overflow-wrap: anywhere;
+}
+
+.riep__posto__n {
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
+.riep__posto__n strong {
+  font-size: var(--t-lg);
+  font-variant-numeric: tabular-nums;
+  color: var(--rosa-scuro);
+}
+
+/* Il primo pesa di piu' di quanto pesi la sua posizione: chi guarda da
+   lontano vede prima il vincitore e poi la classifica. */
+.riep__posto--1 {
+  background: var(--rosa-tenue);
+  border-color: var(--rosa);
+}
+
+.riep__posto--1 .riep__posto__rango {
+  width: 2.8rem;
+  height: 2.8rem;
+  font-size: var(--t-lg);
+  color: #fff;
+  background: var(--rosa-testo);
+  border-color: var(--rosa-testo);
+}
+
+.riep__posto--1 .riep__posto__nome {
+  font-size: var(--t-xl);
+  color: var(--scuro);
+}
+
+.riep__posto--1 .riep__posto__n strong { font-size: var(--t-xl); }
+
+/* --- liste dei gruppi ------------------------------------------------- */
+
+.riep__gruppi-lista {
+  list-style: none;
+  margin: var(--sp-4) 0 0;
+  padding: 0;
+}
+
+.riep__gruppo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px dashed var(--bordo);
+}
+
+.riep__gruppo:last-child { border-bottom: 0; }
+
+.riep__gruppo__nome {
+  font-size: var(--t-base);
+  overflow-wrap: anywhere;
+}
+
+.riep__gruppo__n {
+  flex: none;
+  font-size: var(--t-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--rosa-scuro);
+}
+
+.riep__gruppi-lista--coda { margin-top: var(--sp-3); }
+
+.riep__gruppo--senza {
+  padding-inline: var(--sp-3);
+  background: var(--sfondo-alt);
+  border: 1px dashed var(--bordo);
+  border-radius: var(--r-md);
+}
+
+.riep__gruppo--senza .riep__gruppo__nome,
+.riep__gruppo--senza .riep__gruppo__n { color: var(--testo-tenue); }
+
+/* --- dettagli --------------------------------------------------------- */
+
+.riep__dati {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: var(--sp-4);
+  margin: 0;
+}
+
+.riep__dato { min-width: 0; }
+
+.riep__dati dt {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.riep__dati dd {
+  margin: var(--sp-1) 0 0;
+  font-family: var(--font-titoli);
+  font-size: var(--t-xl);
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+  font-weight: 600;
+  line-height: var(--lh-titolo);
+  font-variant-numeric: tabular-nums;
+  color: var(--scuro);
+  overflow-wrap: anywhere;
+}
+
+/* --- pre-iscritti: contesto ------------------------------------------
+   Stesso impianto dei presentati ma un gradino piu' in basso: fondo
+   spento, numeri piu' piccoli. Serve a confrontare, non a decidere. */
+
+.riep__contesto {
+  background: var(--sfondo-alt);
+  border-style: dashed;
+  border-width: 1px;
+}
+
+.riep__contesto .riep__sezione-titolo {
+  margin-bottom: var(--sp-2);
+  font-size: var(--t-base);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.riep__contesto .riep__nota { margin: 0 0 var(--sp-4); }
+
+.riep__dati--piccoli { gap: var(--sp-3) var(--sp-4); }
+
+.riep__dati--piccoli dd {
+  font-size: var(--t-lg);
+  font-weight: 650;
+  color: var(--testo);
+}

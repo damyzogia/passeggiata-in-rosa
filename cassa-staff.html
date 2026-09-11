@@ -79,13 +79,17 @@
         </div>
       </form>
 
-      <!-- Chi arriva senza pre-iscrizione: la corsia veloce del banco. -->
-      <p class="cassa__scorciatoia">
+      <!-- Le due strade che non partono da un codice: chi arriva senza
+           pre-iscrizione, e il conto di come sta andando la giornata. -->
+      <div class="cassa__scorciatoia">
         <button class="btn btn--secondario btn--banco" type="button" id="apri-nuova">
           + Nuova iscrizione al banco
         </button>
         <span class="cassa__scorciatoia__nota">Per chi non si è pre-iscritto online.</span>
-      </p>
+        <button class="btn btn--fantasma btn--banco cassa__scorciatoia__fine" type="button" id="apri-riepilogo">
+          Riepilogo
+        </button>
+      </div>
 
       <div class="avviso avviso--attenzione cassa__messaggio" id="ricerca-avviso" role="alert" hidden>
         <p id="ricerca-avviso-testo"></p>
@@ -164,6 +168,52 @@
       <p class="cassa__nota-fase">
         Nome e cognome delle persone sono facoltativi. Data di nascita e sesso
         anche, ma vanno insieme: se metti l&rsquo;una serve anche l&rsquo;altro.
+      </p>
+    </section>
+
+    <!-- ====================== RIEPILOGO ======================
+         Come sta andando la giornata, e i nomi da chiamare al microfono.
+         Solo lettura: qui non si scrive niente nel foglio. Il corpo lo
+         costruisce il JS con cio' che risponde gestRiepilogo, percio' in
+         pagina non c'e' nessun numero di partenza da mostrare. -->
+    <section class="cassa__area" id="riepilogo" aria-labelledby="riepilogo-titolo" hidden>
+      <div class="cassa__testata-sezione">
+        <div class="riep__intestazione">
+          <h1 class="cassa__titolo" id="riepilogo-titolo">Riepilogo</h1>
+          <p class="cassa__occhiello riep__evento" id="riepilogo-evento"></p>
+        </div>
+        <button class="btn btn--fantasma btn--piccolo" type="button" id="riepilogo-indietro">
+          Torna alla ricerca
+        </button>
+      </div>
+
+      <div class="riep__barra">
+        <p class="riep__aggiornato" id="riepilogo-aggiornato"></p>
+        <div class="riep__azioni">
+          <button class="btn btn--secondario btn--piccolo" type="button" id="riepilogo-aggiorna">
+            Aggiorna
+          </button>
+          <!-- Segnaposto dichiarati: l'esportazione arriva nello step
+               successivo. Meglio un bottone spento e spiegato che un bottone
+               che non c'e' e viene cercato al microfono. -->
+          <button class="btn btn--fantasma btn--piccolo" type="button" disabled>
+            Stampa / Salva PDF
+          </button>
+          <button class="btn btn--fantasma btn--piccolo" type="button" disabled>
+            Excel
+          </button>
+        </div>
+      </div>
+
+      <div class="avviso avviso--errore cassa__messaggio" id="riepilogo-avviso" role="alert" hidden>
+        <p id="riepilogo-avviso-testo"></p>
+      </div>
+
+      <div id="riepilogo-corpo" aria-live="polite"></div>
+
+      <p class="cassa__nota-fase">
+        Sola lettura: questa pagina non scrive niente nel foglio.
+        Stampa ed Excel arrivano più avanti.
       </p>
     </section>
 

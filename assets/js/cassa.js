@@ -124,6 +124,10 @@
     /* Anche il modulo di nuova iscrizione sparisce: alla schermata del PIN
        non deve restare a schermo un nome gia' battuto da qualcun altro. */
     if (sezioneNuova) sezioneNuova.hidden = true;
+    if (sezioneRiepilogo) sezioneRiepilogo.hidden = true;
+    /* Anche i conteggi della giornata se ne vanno con la sessione: erano il
+       riepilogo di chi era entrato prima. */
+    if (riepCorpo) riepCorpo.textContent = '';
     esci.hidden = true;
     scheda.hidden = true;
     scheda.textContent = '';
@@ -145,6 +149,7 @@
     accesso.hidden = true;
     accessoAvviso.hidden = true;
     if (sezioneNuova) sezioneNuova.hidden = true;
+    if (sezioneRiepilogo) sezioneRiepilogo.hidden = true;
     ricerca.hidden = false;
     esci.hidden = false;
     codice.focus();
@@ -1487,6 +1492,343 @@
     });
   }
   if (annullaNuovaBtn) annullaNuovaBtn.addEventListener('click', tornaARicerca);
+
+  /* =================================================================== */
+  /* RIEPILOGO                                                           */
+  /*                                                                     */
+  /* Due usi in uno: durante la giornata dice come sta andando (persone, */
+  /* incasso, kit), e alla fine serve i quattro nomi da chiamare al      */
+  /* microfono e i gruppi piu' numerosi. Da qui non si scrive niente:    */
+  /* si legge e basta.                                                   */
+  /*                                                                     */
+  /* Tutto quello che si vede arriva da gestRiepilogo. Nessun numero e'  */
+  /* ricalcolato qui: se il server non manda un campo, a video finisce   */
+  /* un trattino, non una stima. E prima di ogni chiamata il riquadro si */
+  /* svuota, cosi' se la richiesta va male non resta a schermo un        */
+  /* conteggio vecchio che sembra ancora buono.                          */
+  /* =================================================================== */
+
+  var sezioneRiepilogo = document.getElementById('riepilogo');
+  var apriRiepilogoBtn = document.getElementById('apri-riepilogo');
+  var riepIndietroBtn = document.getElementById('riepilogo-indietro');
+  var riepAggiornaBtn = document.getElementById('riepilogo-aggiorna');
+  var riepEvento = document.getElementById('riepilogo-evento');
+  var riepAggiornato = document.getElementById('riepilogo-aggiornato');
+  var riepAvviso = document.getElementById('riepilogo-avviso');
+  var riepAvvisoTesto = document.getElementById('riepilogo-avviso-testo');
+  var riepCorpo = document.getElementById('riepilogo-corpo');
+
+  var GIORNI = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+  var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno',
+              'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+
+  /* Da "2026-09-13" a "Domenica 13 settembre 2026". I nomi sono scritti qui
+     invece di chiederli a toLocaleDateString: la lingua della pagina e' una
+     sola e non deve dipendere da come e' configurato il PC del banco.
+     Il giorno della settimana si calcola in UTC, altrimenti il fuso puo'
+     spostare la data indietro di un giorno e far leggere "Sabato 12". */
+  function dataLunga(v) {
+    var s = testo(v);
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+    if (!m) return s;
+    var d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+    if (isNaN(d.getTime())) return s;
+    return GIORNI[d.getUTCDay()] + ' ' + Number(m[3]) + ' ' +
+           MESI[Number(m[2]) - 1] + ' ' + m[1];
+  }
+
+  /* Un conteggio. Se non e' un numero non diventa zero: uno zero inventato
+     al microfono si legge come un fatto. */
+  function conteggio(v) {
+    var n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'));
+    if (isNaN(n)) return '—';
+    return String(n);
+  }
+
+  /* Gli importi del cruscotto si leggono da lontano: i centesimi si
+     scrivono solo quando ci sono davvero. */
+  function euroCorto(v) {
+    var n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'));
+    if (isNaN(n)) return '—';
+    return (n % 1 === 0 ? String(n) : n.toFixed(2).replace('.', ',')) + ' €';
+  }
+
+  /* Il backend manda i premiati come "Anna Verdi (15-06-1970)": a video il
+     nome e la data vanno su due righe, perche' il nome si legge da lontano
+     e la data serve solo a chi controlla. Se la forma fosse un'altra, il
+     valore si stampa intero invece di essere tagliato a caso. */
+  function premiato(v) {
+    var s = testo(v);
+    if (!s || s === '-' || s === '—') return { nome: '—', data: '' };
+    var m = /^(.*?)\s*\(([^)]*)\)\s*$/.exec(s);
+    if (m && m[1]) return { nome: m[1], data: m[2] };
+    return { nome: s, data: '' };
+  }
+
+  /* "(nessun gruppo)" non e' un gruppo: e' il mucchio di chi non ne ha
+     scelto uno. Sul podio non ci va, ma il suo numero serve lo stesso. */
+  function senzaGruppo(nome) {
+    var s = testo(nome);
+    return !s || /^\(?\s*nessun gruppo\s*\)?$/i.test(s);
+  }
+
+  /* La lista arriva gia' ordinata per numerosita' decrescente: qui si
+     normalizza la forma, non si riordina. */
+  function coppieGruppi(lista) {
+    if (!lista || !lista.length) return [];
+    var fuori = [];
+    for (var i = 0; i < lista.length; i++) {
+      var riga = lista[i];
+      if (!riga) continue;
+      var nome = Array.isArray(riga) ? riga[0] : riga.nome;
+      var n = Array.isArray(riga) ? riga[1] : riga.n;
+      if (nome === undefined && n === undefined) continue;
+      fuori.push({ nome: testo(nome), n: n, senza: senzaGruppo(nome) });
+    }
+    return fuori;
+  }
+
+  /* ------------------------------------------------------------ mattoni */
+
+  function riepSezione(titolo, classe) {
+    var s = el('section', 'riep__sezione' + (classe ? ' ' + classe : ''));
+    if (titolo) s.appendChild(el('h2', 'riep__sezione-titolo', titolo));
+    return s;
+  }
+
+  /* Un numerone del cruscotto: la cifra prima, l'etichetta sotto, e una riga
+     piccola facoltativa per il confronto (l'atteso accanto al reale). */
+  function numerone(valore, etichetta, nota, modificatore) {
+    var c = el('div', 'riep__numerone' + (modificatore ? ' ' + modificatore : ''));
+    c.appendChild(el('p', 'riep__numerone__cifra', valore));
+    c.appendChild(el('p', 'riep__numerone__voce', etichetta));
+    if (nota) c.appendChild(el('p', 'riep__numerone__nota', nota));
+    return c;
+  }
+
+  /* Coppia etichetta/valore dei dettagli. dt e dd stanno dentro lo stesso
+     contenitore, come nella scheda: in griglia devono valere una cella sola. */
+  function datoPiccolo(etichetta, valore) {
+    var v = el('div', 'riep__dato');
+    v.appendChild(el('dt', null, etichetta));
+    v.appendChild(el('dd', null, valore));
+    return v;
+  }
+
+  function rigaGruppo(nome, n, classe) {
+    var r = el('li', 'riep__gruppo' + (classe ? ' ' + classe : ''));
+    r.appendChild(el('span', 'riep__gruppo__nome', nome || '—'));
+    r.appendChild(el('span', 'riep__gruppo__n', conteggio(n)));
+    return r;
+  }
+
+  function persone(n) {
+    return String(n) === '1' ? 'persona' : 'persone';
+  }
+
+  /* ------------------------------------------------------------- disegno */
+
+  function disegnaRiepilogo(r) {
+    riepCorpo.textContent = '';
+
+    var pres = r.presentati || {};
+    var pre = r.preiscritti || {};
+
+    /* --- intestazione: evento, data, luogo --- */
+    var pezzi = [];
+    if (testo(r.nome_evento)) pezzi.push(testo(r.nome_evento));
+    if (testo(r.data_evento)) pezzi.push(dataLunga(r.data_evento));
+    if (testo(r.luogo)) pezzi.push(testo(r.luogo));
+    riepEvento.textContent = pezzi.join(' · ');
+    riepAggiornato.textContent = testo(r.aggiornato)
+      ? 'Aggiornato alle ' + testo(r.aggiornato)
+      : 'Il server non ha indicato l’ora dei conteggi.';
+
+    /* --- cruscotto: i tre numeri che si guardano di continuo --- */
+    var cruscotto = el('div', 'riep__cruscotto');
+    cruscotto.appendChild(numerone(conteggio(pres.persone), 'Persone presentate'));
+    cruscotto.appendChild(numerone(
+      euroCorto(pres.incasso_reale),
+      'Incasso reale',
+      'atteso: ' + euroCorto(pres.incasso_atteso),
+      'riep__numerone--soldi'
+    ));
+    cruscotto.appendChild(numerone(conteggio(pres.kit_consegnati), 'Kit consegnati'));
+    riepCorpo.appendChild(cruscotto);
+
+    /* --- premiazione: la ragione per cui questa pagina viene aperta --- */
+    var premi = riepSezione('Premiazione', 'riep__premiazione');
+    var grigliaPremi = el('div', 'riep__premi');
+    [
+      ['Più anziana', 'F', pres.piu_anziana_f],
+      ['Più giovane', 'F', pres.piu_giovane_f],
+      ['Più anziano', 'M', pres.piu_anziano_m],
+      ['Più giovane', 'M', pres.piu_giovane_m]
+    ].forEach(function (p) {
+      var dati = premiato(p[2]);
+      var vuoto = dati.nome === '—';
+      var carta = el('div', 'riep__premio' + (vuoto ? ' riep__premio--vuoto' : ''));
+      var et = el('p', 'riep__premio__voce');
+      et.appendChild(document.createTextNode(p[0] + ' '));
+      et.appendChild(el('span', 'riep__premio__sesso', p[1]));
+      carta.appendChild(et);
+      carta.appendChild(el('p', 'riep__premio__nome', dati.nome));
+      carta.appendChild(el('p', 'riep__premio__data',
+        vuoto ? 'nessun presentato' : (dati.data || '')));
+      grigliaPremi.appendChild(carta);
+    });
+    premi.appendChild(grigliaPremi);
+    riepCorpo.appendChild(premi);
+
+    /* --- gruppi presentati: podio e coda --- */
+    var gruppiPres = coppieGruppi(pres.per_gruppo);
+    var premiabili = gruppiPres.filter(function (g) { return !g.senza; });
+    var mucchio = gruppiPres.filter(function (g) { return g.senza; });
+
+    var podio = riepSezione('Gruppi presentati', 'riep__gruppi');
+    if (!premiabili.length) {
+      podio.appendChild(el('p', 'riep__vuoto', 'Nessun gruppo fra i presentati.'));
+    } else {
+      /* Lista ordinata: l'ordine di lettura e' gia' la classifica, e la
+         grandezza decrescente fa il resto. Niente 2-1-3 da palco: su un
+         telefono in verticale quella disposizione si legge al contrario. */
+      var primi = premiabili.slice(0, 3);
+      var tre = el('ol', 'riep__podio riep__podio--' + primi.length);
+      primi.forEach(function (g, i) {
+        var posto = el('li', 'riep__posto riep__posto--' + (i + 1));
+        posto.appendChild(el('span', 'riep__posto__rango', (i + 1) + '°'));
+        posto.appendChild(el('span', 'riep__posto__nome', g.nome || '—'));
+        var quanti = el('span', 'riep__posto__n');
+        quanti.appendChild(el('strong', null, conteggio(g.n)));
+        quanti.appendChild(document.createTextNode(' ' + persone(g.n)));
+        posto.appendChild(quanti);
+        tre.appendChild(posto);
+      });
+      podio.appendChild(tre);
+
+      var resto = premiabili.slice(3);
+      if (resto.length) {
+        var lista = el('ul', 'riep__gruppi-lista');
+        resto.forEach(function (g) { lista.appendChild(rigaGruppo(g.nome, g.n)); });
+        podio.appendChild(lista);
+      }
+    }
+
+    /* Il mucchio senza gruppo resta visibile, ma in coda e dichiarato: da
+       solo sarebbe quasi sempre il numero piu' alto della lista, e sul podio
+       non ci va perche' non e' un gruppo. */
+    if (mucchio.length) {
+      var coda = el('ul', 'riep__gruppi-lista riep__gruppi-lista--coda');
+      mucchio.forEach(function (g) {
+        coda.appendChild(rigaGruppo('Senza gruppo', g.n, 'riep__gruppo--senza'));
+      });
+      podio.appendChild(coda);
+      podio.appendChild(el('p', 'riep__nota',
+        'Chi non ha scelto un gruppo non concorre al premio del gruppo più numeroso.'));
+    }
+    riepCorpo.appendChild(podio);
+
+    /* --- dettaglio dei presentati --- */
+    var dettaglio = riepSezione('Dettaglio presentati', 'riep__dettaglio');
+    var dati = el('dl', 'riep__dati');
+    dati.appendChild(datoPiccolo('Femmine', conteggio(pres.femmine)));
+    dati.appendChild(datoPiccolo('Maschi', conteggio(pres.maschi)));
+    dati.appendChild(datoPiccolo('Interi', conteggio(pres.interi)));
+    dati.appendChild(datoPiccolo('Ridotti', conteggio(pres.ridotti)));
+    dati.appendChild(datoPiccolo('Gratis adulti', conteggio(pres.gratis_adulti)));
+    dati.appendChild(datoPiccolo('Bambini gratis', conteggio(pres.bambini)));
+    dettaglio.appendChild(dati);
+    riepCorpo.appendChild(dettaglio);
+
+    /* --- pre-iscritti: contesto, non protagonista --- */
+    var contesto = riepSezione('Pre-iscritti online', 'riep__contesto');
+    contesto.appendChild(el('p', 'riep__nota',
+      'Quanti erano attesi. I numeri della giornata sono quelli sopra.'));
+
+    var datiPre = el('dl', 'riep__dati riep__dati--piccoli');
+    datiPre.appendChild(datoPiccolo('Prenotazioni attive', conteggio(pre.prenotazioni_attive)));
+    datiPre.appendChild(datoPiccolo('Partecipanti attivi', conteggio(pre.partecipanti_attivi)));
+    datiPre.appendChild(datoPiccolo('Paganti', conteggio(pre.paganti)));
+    datiPre.appendChild(datoPiccolo('Gratis', conteggio(pre.gratis)));
+    datiPre.appendChild(datoPiccolo('Femmine', conteggio(pre.femmine)));
+    datiPre.appendChild(datoPiccolo('Maschi', conteggio(pre.maschi)));
+    var anziano = premiato(pre.piu_anziano);
+    var giovane = premiato(pre.piu_giovane);
+    datiPre.appendChild(datoPiccolo('Più anziano',
+      anziano.nome + (anziano.data ? ' (' + anziano.data + ')' : '')));
+    datiPre.appendChild(datoPiccolo('Più giovane',
+      giovane.nome + (giovane.data ? ' (' + giovane.data + ')' : '')));
+    contesto.appendChild(datiPre);
+
+    var gruppiPre = coppieGruppi(pre.per_gruppo);
+    if (gruppiPre.length) {
+      contesto.appendChild(el('p', 'riep__sotto-titolo', 'Gruppi pre-iscritti'));
+      /* Anche qui il mucchio senza gruppo scende in fondo: in cima sarebbe
+         il numero piu' alto della lista senza essere un gruppo. */
+      var ordinati = gruppiPre.filter(function (g) { return !g.senza; })
+        .concat(gruppiPre.filter(function (g) { return g.senza; }));
+      var listaPre = el('ul', 'riep__gruppi-lista');
+      ordinati.forEach(function (g) {
+        listaPre.appendChild(rigaGruppo(
+          g.senza ? 'Senza gruppo' : g.nome,
+          g.n,
+          g.senza ? 'riep__gruppo--senza' : null
+        ));
+      });
+      contesto.appendChild(listaPre);
+    }
+    riepCorpo.appendChild(contesto);
+  }
+
+  /* ------------------------------------------------------------ chiamata */
+
+  function caricaRiepilogo() {
+    if (inCorso) return;
+
+    var token = leggiToken();
+    if (!token || scaduta()) {
+      mostraAccesso('Sessione scaduta, rifai l’accesso.');
+      return;
+    }
+
+    /* Si svuota PRIMA della chiamata: durante l'attesa non deve restare a
+       schermo il conteggio di prima, che sembrerebbe quello nuovo. */
+    riepAvviso.hidden = true;
+    riepCorpo.textContent = '';
+    riepEvento.textContent = '';
+    riepAggiornato.textContent = '';
+    riepCorpo.appendChild(el('p', 'riep__attesa', 'Sto leggendo i conteggi…'));
+    occupato(riepAggiornaBtn, true, 'Aggiorno…', 'Aggiorna');
+
+    API.chiama('gestRiepilogo', { token: token })
+      .then(function (r) {
+        disegnaRiepilogo(r);
+      })
+      .catch(function (e) {
+        if (e.codice === 'NON_AUTORIZZATO') {
+          mostraAccesso('Sessione scaduta, rifai l’accesso.');
+          return;
+        }
+        riepCorpo.textContent = '';
+        riepAvvisoTesto.textContent = messaggioDiRete(e) +
+          ' I conteggi non sono stati letti: premi Aggiorna per riprovare.';
+        riepAvviso.hidden = false;
+      })
+      .finally(function () {
+        occupato(riepAggiornaBtn, false, 'Aggiorno…', 'Aggiorna');
+      });
+  }
+
+  function mostraRiepilogo() {
+    ricerca.hidden = true;
+    if (sezioneNuova) sezioneNuova.hidden = true;
+    sezioneRiepilogo.hidden = false;
+    caricaRiepilogo();
+  }
+
+  if (apriRiepilogoBtn) apriRiepilogoBtn.addEventListener('click', mostraRiepilogo);
+  if (riepAggiornaBtn) riepAggiornaBtn.addEventListener('click', caricaRiepilogo);
+  if (riepIndietroBtn) riepIndietroBtn.addEventListener('click', mostraRicerca);
 
   /* ---------------------------------------------------------- avvio */
 
