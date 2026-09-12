@@ -25,6 +25,60 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Passeggiata in Rosa — Camminata benefica · 13 settembre 2026">
 
+<!-- Dati strutturati. Il primo dice a Google come si chiama il sito, cosi'
+     nei risultati compare "Passeggiata in Rosa" al posto del dominio nudo;
+     il secondo descrive l'evento. Stanno solo qui, sulla homepage: ripetuti
+     su ogni pagina direbbero a Google che ci sono sei eventi diversi.
+     I valori ricalcano quelli scritti nella pagina (ritrovo, orari, quota):
+     se cambiano li', vanno cambiati anche qui. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Passeggiata in Rosa",
+  "url": "https://passeggiatainrosa.it/"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "6ª Passeggiata in Rosa",
+  "description": "Camminata non competitiva di 8 km a Borgo Veneto (PD). Il ricavato è interamente devoluto allo IOV di Padova per la ricerca sul tumore al seno.",
+  "startDate": "2026-09-13T09:00:00+02:00",
+  "endDate": "2026-09-13T12:00:00+02:00",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": "Piazzale della Chiesa di Santa Margherita d'Adige",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Via Roma 32",
+      "addressLocality": "Borgo Veneto",
+      "postalCode": "35046",
+      "addressRegion": "PD",
+      "addressCountry": "IT"
+    }
+  },
+  "image": "https://passeggiatainrosa.it/assets/img/og-image.jpg",
+  "organizer": {
+    "@type": "Organization",
+    "name": "NOI Associazione San Biagio APS",
+    "url": "https://passeggiatainrosa.it/"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "8",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://passeggiatainrosa.it/iscrizione.html",
+    "validThrough": "2026-09-12T23:59:00+02:00"
+  }
+}
+</script>
+
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin-variable.woff2" crossorigin>
 <link rel="preload" as="image" fetchpriority="high"
       imagesrcset="/assets/foto/foto-hero-640.webp 640w, /assets/foto/foto-hero-1000.webp 1000w, /assets/foto/foto-hero-1400.webp 1400w, /assets/foto/foto-hero-2000.webp 2000w"
