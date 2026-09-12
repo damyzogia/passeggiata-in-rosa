@@ -120,6 +120,8 @@
 
   function mostraAccesso(messaggio) {
     dimenticaSessione();
+    /* Fuori dalla sessione non c'e' niente da tenere caldo. */
+    spegniRiscaldamento();
     /* Uscendo dalla ricerca la fotocamera non resta accesa: una anteprima
        viva sotto un'altra schermata e' solo una spia accesa in tasca. */
     fermaScanner();
@@ -213,6 +215,10 @@
         ricordaQuota(r.quota);
         pin.value = '';
         mostraRicerca();
+        /* Il server si sveglia adesso, mentre l’operatore guarda la
+           schermata di ricerca: cosi' la prima persona della coda non paga
+           l'attesa del risveglio di Apps Script. */
+        accendiRiscaldamento();
       })
       .catch(function (e) {
         var testo;
@@ -2406,12 +2412,80 @@
   if (stampaBtn) stampaBtn.addEventListener('click', stampaRiepilogo);
   if (excelBtn) excelBtn.addEventListener('click', scaricaExcel);
 
+  /* =================================================================== */
+  /* RISCALDAMENTO DEL BACKEND                                           */
+  /*                                                                     */
+  /* Apps Script, se non lo si chiama da un po', si riaddormenta: la     */
+  /* prima chiamata dopo la pausa puo' metterci diversi secondi. Al      */
+  /* banco quella pausa finisce sempre addosso alla persona sbagliata —  */
+  /* la prima della coda, con dietro venti persone che aspettano.        */
+  /*                                                                     */
+  /* Quindi appena si entra si fa una chiamata leggera, e poi una ogni   */
+  /* cinque minuti di silenzio. Sono chiamate che per chi guarda lo      */
+  /* schermo non esistono: non bloccano niente, non scrivono niente, e   */
+  /* se falliscono non lo dicono a nessuno. Un riscaldamento che si fa   */
+  /* notare ha gia' fallito: l'operatore si fiderebbe meno di un errore  */
+  /* vero, visto che ne vede uno ogni cinque minuti.                     */
+  /* =================================================================== */
+
+  var CALDO_OGNI = 5 * 60 * 1000;
+  var CONTROLLO_OGNI = 60 * 1000;
+  var timerCaldo = null;
+  var ultimoContatto = 0;
+
+  /* Le chiamate vere tengono sveglio il server da sole: sapere quando sono
+     successe evita di aggiungere traffico mentre si sta gia' lavorando.
+     L'involucro sta qui e non dentro api.js perche' riguarda questa pagina
+     soltanto: il sito pubblico non ha niente da scaldare. */
+  var chiamaDiretta = API.chiama;
+  API.chiama = function (azione, dati, opz) {
+    ultimoContatto = Date.now();
+    return chiamaDiretta.call(API, azione, dati, opz);
+  };
+
+  /* getSquadre e' la piu' leggera che abbiamo e non tocca niente: legge un
+     foglio di poche righe. Del risultato qui non importa nulla. */
+  function scaldaOra() {
+    API.chiama('getSquadre', {}).catch(function () {
+      /* Silenzio voluto. Se il riscaldamento non riesce non e' successo
+         niente che l'operatore debba sapere: a dire come sta la rete sara'
+         la prima operazione vera, che un errore ce l'ha gia'. */
+    });
+  }
+
+  function forseScalda() {
+    /* Sessione chiusa: non c'e' piu' nessuno da servire. */
+    if (!leggiToken() || scaduta()) return;
+    /* Pagina in secondo piano o schermo spento: si dorme insieme al banco. */
+    if (document.hidden) return;
+    /* Si e' parlato col server da poco: e' gia' caldo. */
+    if (Date.now() - ultimoContatto < CALDO_OGNI) return;
+    scaldaOra();
+  }
+
+  /* La prima scaldata la fa caricaGruppi: e' la stessa getSquadre, ma il suo
+     risultato serve davvero al modulo di nuova iscrizione. Cosi' la lista
+     dei gruppi e' gia' in casa quando l'operatore apre il form, invece di
+     caricarsi proprio mentre lui aspetta. */
+  function accendiRiscaldamento() {
+    caricaGruppi();
+    if (timerCaldo) return;
+    timerCaldo = setInterval(forseScalda, CONTROLLO_OGNI);
+  }
+
+  function spegniRiscaldamento() {
+    if (!timerCaldo) return;
+    clearInterval(timerCaldo);
+    timerCaldo = null;
+  }
+
   /* ---------------------------------------------------------- avvio */
 
   /* Un ricaricamento della pagina non deve rifare l'accesso se la scheda
      della sessione e' ancora aperta in questa finestra. */
   if (leggiToken() && !scaduta()) {
     mostraRicerca();
+    accendiRiscaldamento();
   } else {
     mostraAccesso();
   }
