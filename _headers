@@ -32,13 +32,19 @@
 #     Il percorso servito e' /cassa-staff: Pages redirige li' la forma con
 #     .html, quindi una regola sulla sola forma con estensione non si applica
 #     mai. La forma con .html resta per il momento del redirect.
+#     La fotocamera serve solo qui, per leggere il QR al banco: la regola
+#     generale sopra la spegne su tutto il sito, e senza questa riga lo
+#     scanner fallirebbe in produzione senza dire perche'. "self" la concede
+#     alla sola pagina, non a eventuali iframe.
 /cassa-staff
   X-Robots-Tag: noindex, nofollow, noarchive
   Cache-Control: no-store
+  Permissions-Policy: geolocation=(), microphone=(), camera=(self), payment=()
 
 /cassa-staff.html
   X-Robots-Tag: noindex, nofollow, noarchive
   Cache-Control: no-store
+  Permissions-Policy: geolocation=(), microphone=(), camera=(self), payment=()
 
 # --- Font: non cambiano mai. Cache lunga e immutabile.
 /assets/fonts/*

@@ -1203,3 +1203,272 @@
   font-weight: 650;
   color: var(--testo);
 }
+
+/* -------------------------------------------------------------------------
+   12. LE TRE STRADE DELLA RICERCA
+   In ordine di velocita', dall'alto: il QR (un gesto), il codice battuto,
+   il nome di chi il codice l'ha perso. La gerarchia e' tutta nella
+   dimensione: il bottone dello scanner e' il pezzo piu' grande della
+   schermata, il nome il piu' discreto.
+   ------------------------------------------------------------------------- */
+
+.cassa .btn--scanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  width: 100%;
+  min-height: 84px;
+  margin-bottom: var(--sp-5);
+  font-size: var(--t-lg);
+  font-weight: 700;
+  box-shadow: var(--ombra-rosa);
+}
+
+.btn__icona { font-size: 1.5em; line-height: 1; }
+
+/* --- riquadro della fotocamera ---------------------------------------- */
+
+.scanner {
+  margin-bottom: var(--sp-5);
+  overflow: hidden;
+  background: #1c1416;
+  border: 2px solid var(--scuro);
+  border-radius: var(--r-lg);
+}
+
+/* L'anteprima la costruisce la libreria: qui si fissa solo lo spazio, cosi'
+   la pagina non salta quando il video compare. */
+.scanner__vista {
+  display: grid;
+  place-items: center;
+  min-height: 260px;
+}
+
+.scanner__vista video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.scanner__barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--scuro);
+}
+
+.scanner__nota {
+  font-size: var(--t-sm);
+  color: var(--rosa-chiaro);
+}
+
+/* Il bottone Chiudi sta sul fondo scuro: deve leggersi li', non su bianco. */
+.scanner__barra .btn--fantasma {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.scanner__barra .btn--fantasma:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+}
+
+/* --- campo codice col prefisso stampato -------------------------------- */
+
+/* "PR-" non sta nel valore: e' un pezzo di stampa accanto al campo. Cosi' il
+   cursore non ci puo' finire dentro e da telefono nessuno deve andare a
+   cercare il trattino. Il riquadro disegnato e' questo, non l'input. */
+.codice-campo {
+  display: flex;
+  align-items: stretch;
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+  transition: border-color var(--transizione), box-shadow var(--transizione);
+}
+
+.codice-campo:hover { border-color: #d8ccd1; }
+
+.codice-campo:focus-within {
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.codice-campo__prefisso {
+  display: grid;
+  place-items: center;
+  padding-inline: var(--sp-4) 0;
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  /* Scuro come il testo vero, non grigio come un segnaposto: "PR-" e' gia'
+     scritto, non una cosa da scrivere. */
+  color: var(--testo);
+}
+
+/* Il bordo e l'ombra li mette il contenitore: all'input restano solo il
+   testo e lo spazio. */
+.cassa .codice-campo input[type='text'] {
+  flex: 1;
+  min-width: 0;
+  padding-left: var(--sp-1);
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.cassa .codice-campo input[type='text']:hover { border-color: transparent; }
+
+.cassa .codice-campo input[type='text']:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* --- ricerca per nome -------------------------------------------------- */
+
+.per-nome {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px dashed var(--bordo);
+}
+
+.per-nome__etichetta {
+  display: block;
+  margin-bottom: var(--sp-2);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--testo-tenue);
+}
+
+.cassa .per-nome__campo {
+  width: 100%;
+  min-height: 56px;
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--t-base);
+  font-weight: 600;
+  color: var(--testo);
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+}
+
+.cassa .per-nome__campo:focus {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.per-nome__stato {
+  margin-top: var(--sp-3);
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
+/* --- lista dei risultati ----------------------------------------------- */
+
+.risultati {
+  list-style: none;
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-2);
+}
+
+/* Ogni risultato e' un bottone vero: si preme col dito, si raggiunge col
+   tabulatore e si legge come cliccabile. */
+.risultato {
+  display: grid;
+  gap: var(--sp-1);
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+  border: 2px solid var(--bordo);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: border-color var(--transizione), background var(--transizione);
+}
+
+.risultato:hover {
+  background: var(--rosa-velo);
+  border-color: var(--rosa);
+}
+
+.risultato:focus-visible {
+  outline: none;
+  border-color: var(--rosa-testo);
+  box-shadow: 0 0 0 3px rgba(237, 110, 167, 0.28);
+}
+
+.risultato__testa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+/* Il nome e' quello che l'operatore confronta con la persona davanti: e' il
+   pezzo grande della riga. */
+.risultato__nome {
+  font-family: var(--font-titoli);
+  font-size: var(--t-lg);
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+  line-height: var(--lh-titolo);
+  overflow-wrap: anywhere;
+}
+
+.risultato__codice {
+  flex: none;
+  font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  font-size: var(--t-base);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--rosa-scuro);
+}
+
+.risultato__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
+.risultato__gruppo { overflow-wrap: anywhere; }
+.risultato__n { font-variant-numeric: tabular-nums; }
+
+/* Lo stato si vede prima di leggere: un solo segno per riga, quello che
+   cambia il da farsi. */
+.segno {
+  padding: 0.15em 0.7em;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  border-radius: var(--r-pill);
+}
+
+.segno--registrato { background: var(--successo); }
+.segno--annullata { background: var(--errore); }
+
+/* Una prenotazione annullata si apre lo stesso, ma in sola lettura: la riga
+   lo dice prima del tocco invece di far sperare in un check-in. */
+.risultato--annullata { background: var(--sfondo-alt); }
+.risultato--annullata .risultato__nome { text-decoration: line-through; }
+.risultato--annullata .risultato__codice { color: var(--testo-tenue); }
+
+.risultati__nota {
+  margin-top: var(--sp-3);
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}

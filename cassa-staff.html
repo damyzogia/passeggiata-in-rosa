@@ -62,22 +62,68 @@
       </form>
     </section>
 
-    <!-- ====================== RICERCA ====================== -->
+    <!-- ====================== RICERCA ======================
+         Tre modi di arrivare alla stessa scheda, in ordine di velocita':
+         il QR (un gesto solo), il codice battuto a mano, il nome di chi non
+         ricorda il codice. La scheda che si apre e' sempre la stessa. -->
     <section class="cassa__area" id="ricerca" aria-labelledby="ricerca-titolo" hidden>
       <h1 class="cassa__titolo" id="ricerca-titolo">Cerca una prenotazione</h1>
-      <p class="cassa__occhiello">Digita il codice, oppure inquadralo dal QR e premi Invio.</p>
+      <p class="cassa__occhiello">Inquadra il QR, oppure batti il codice o il nome.</p>
+
+      <!-- La via piu' veloce sta in cima ed e' la piu' grande: al banco si
+           guarda il primo bottone e si preme quello. -->
+      <button class="btn btn--primario btn--scanner" type="button" id="apri-scanner">
+        <span class="btn__icona" aria-hidden="true">📷</span>
+        Scansiona QR
+      </button>
+
+      <!-- La fotocamera si accende solo qui dentro, e solo dopo il tocco sul
+           bottone: Safari su iPhone non la concede senza un gesto, e una
+           camera lasciata accesa in tasca e' un problema di suo. -->
+      <div class="scanner" id="scanner" hidden>
+        <div class="scanner__vista" id="scanner-vista"></div>
+        <div class="scanner__barra">
+          <p class="scanner__nota" id="scanner-nota">Inquadra il QR della prenotazione.</p>
+          <button class="btn btn--fantasma btn--piccolo" type="button" id="chiudi-scanner">
+            Chiudi
+          </button>
+        </div>
+      </div>
+
+      <div class="avviso avviso--attenzione cassa__messaggio" id="scanner-avviso" role="alert" hidden>
+        <p id="scanner-avviso-testo"></p>
+      </div>
 
       <form id="modulo-ricerca" novalidate>
         <div class="cassa__riga">
+          <!-- "PR-" e' stampato accanto al campo, non dentro il valore: da
+               telefono nessuno deve andare a cercare il trattino, e il
+               cursore non puo' finire prima del prefisso. Se qualcuno
+               incolla il codice intero il JS toglie il doppione. -->
           <div class="campo" style="margin-bottom:0">
             <label for="codice" class="sr-only">Codice prenotazione</label>
-            <input type="text" id="codice" class="cassa__codice-input"
-                   placeholder="PR-XXXX" autocomplete="off" autocapitalize="characters"
-                   spellcheck="false" required>
+            <div class="codice-campo">
+              <span class="codice-campo__prefisso" aria-hidden="true">PR-</span>
+              <input type="text" id="codice" class="cassa__codice-input"
+                     placeholder="XXXX" autocomplete="off" autocapitalize="characters"
+                     spellcheck="false" maxlength="12">
+            </div>
           </div>
           <button class="btn btn--primario btn--banco" type="submit" id="cerca">Cerca</button>
         </div>
       </form>
+
+      <!-- Terza via: chi ha perso il codice ha sempre il proprio nome. -->
+      <div class="per-nome">
+        <label class="per-nome__etichetta" for="nome-q">oppure cerca per nome</label>
+        <input type="text" id="nome-q" class="per-nome__campo"
+               placeholder="Nome o cognome" autocomplete="off"
+               autocapitalize="words" spellcheck="false">
+        <p class="per-nome__stato" id="nome-stato" role="status" hidden></p>
+        <!-- I risultati li costruisce il JS con cio' che risponde il server:
+             qui non c'e' nessuna riga di esempio da lasciare in pagina. -->
+        <div id="nome-risultati"></div>
+      </div>
 
       <!-- Le due strade che non partono da un codice: chi arriva senza
            pre-iscrizione, e il conto di come sta andando la giornata. -->

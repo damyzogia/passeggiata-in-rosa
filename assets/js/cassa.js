@@ -120,6 +120,9 @@
 
   function mostraAccesso(messaggio) {
     dimenticaSessione();
+    /* Uscendo dalla ricerca la fotocamera non resta accesa: una anteprima
+       viva sotto un'altra schermata e' solo una spia accesa in tasca. */
+    fermaScanner();
     ricerca.hidden = true;
     /* Anche il modulo di nuova iscrizione sparisce: alla schermata del PIN
        non deve restare a schermo un nome gia' battuto da qualcun altro. */
@@ -132,7 +135,11 @@
     scheda.hidden = true;
     scheda.textContent = '';
     ricercaAvviso.hidden = true;
+    if (scannerAvviso) scannerAvviso.hidden = true;
     codice.value = '';
+    /* Anche il nome cercato da chi c’era prima: alla schermata del PIN non
+       deve restare a schermo l’elenco di qualcun altro. */
+    svuotaRisultatiNome();
     accesso.hidden = false;
     pin.value = '';
 
@@ -147,6 +154,9 @@
 
   function mostraRicerca() {
     accesso.hidden = true;
+    /* Lo scanner si scalda adesso: al momento del tocco resta da accendere
+       solo la fotocamera. Un CDN irraggiungibile qui non disturba nessuno. */
+    caricaLibreria().catch(function () { /* si ritenta al tocco */ });
     accessoAvviso.hidden = true;
     if (sezioneNuova) sezioneNuova.hidden = true;
     if (sezioneRiepilogo) sezioneRiepilogo.hidden = true;
@@ -227,11 +237,26 @@
 
   /* ------------------------------------------------------------ ricerca */
 
-  moduloRicerca.addEventListener('submit', function (ev) {
-    ev.preventDefault();
-    if (inCorso) return;
+  /* Il campo tiene solo la parte dopo "PR-", che sta stampata accanto. Se
+     qualcuno incolla il codice intero, o lo detta col prefisso, il doppione
+     si toglie qui. Il taglio scatta solo quando resta abbastanza testo,
+     altrimenti un codice che comincia davvero per PR verrebbe mutilato. */
+  function codiceDalCampo() {
+    var g = codice.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (g.length > 4 && g.slice(0, 2) === 'PR') g = g.slice(2);
+    return g ? 'PR-' + g : '';
+  }
 
-    var cod = codice.value.trim().toUpperCase();
+  function scriviCodiceNelCampo(cod) {
+    codice.value = testo(cod).toUpperCase().replace(/^PR-?/, '');
+  }
+
+  /* Il codice arriva da tre strade — battuto a mano, letto dal QR, scelto
+     fra i risultati per nome — ma la chiamata e la scheda restano una sola.
+     Reinventarne una seconda vorrebbe dire avere due check-in diversi che
+     col tempo divergono. */
+  function cercaCodice(cod) {
+    if (inCorso) return;
     if (!cod) { codice.focus(); return; }
 
     var token = leggiToken();
@@ -242,7 +267,7 @@
 
     /* La scheda di prima sparisce PRIMA della chiamata: se la ricerca va
        male, non deve restare a schermo un risultato che non c'entra piu'
-       col codice appena digitato. */
+       col codice appena cercato. */
     ricercaAvviso.hidden = true;
     scheda.hidden = true;
     scheda.textContent = '';
@@ -275,7 +300,36 @@
       .finally(function () {
         occupato(cerca, false, 'Cerco…', 'Cerca');
       });
+  }
+
+  moduloRicerca.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    cercaCodice(codiceDalCampo());
   });
+
+  /* Si riparte da capo: via la scheda, via i risultati per nome, e la
+     schermata torna in cima dove c'e' il bottone del QR, che e' quasi sempre
+     il gesto successivo. Il tasto "indietro" del browser qui non c'entra
+     niente: tutto si muove con i bottoni della pagina. */
+  function nuovaRicerca() {
+    scheda.hidden = true;
+    scheda.textContent = '';
+    ricercaAvviso.hidden = true;
+    /* Via anche l’avviso della fotocamera: e' la conseguenza di un tocco
+       andato male, non uno stato della pagina. Lasciandolo, su un PC del
+       banco senza webcam basterebbe un tocco per sbaglio e resterebbe li'
+       per tutta la mattina come un errore fisso. */
+    if (scannerAvviso) scannerAvviso.hidden = true;
+    codice.value = '';
+    svuotaRisultatiNome();
+    if (apriScannerBtn) apriScannerBtn.scrollIntoView({ block: 'start' });
+    /* Il fuoco sul campo solo dove c'e' una tastiera vera: da telefono la
+       tastiera virtuale coprirebbe proprio il bottone appena portato in
+       cima. */
+    if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+      codice.focus();
+    }
+  }
 
   function avvisaRicerca(testo) {
     ricercaAvvisoTesto.textContent = testo;
@@ -649,13 +703,7 @@
     var azioni = el('div', 'cassa__azioni');
     var nuova = el('button', 'btn btn--secondario', 'Nuova ricerca');
     nuova.type = 'button';
-    nuova.addEventListener('click', function () {
-      scheda.hidden = true;
-      scheda.textContent = '';
-      ricercaAvviso.hidden = true;
-      codice.value = '';
-      codice.focus();
-    });
+    nuova.addEventListener('click', nuovaRicerca);
     azioni.appendChild(nuova);
     scheda.appendChild(azioni);
 
@@ -1203,6 +1251,9 @@
 
   function mostraNuova() {
     ricerca.hidden = true;
+    /* Uscendo dalla ricerca la fotocamera non resta accesa: una anteprima
+       viva sotto un'altra schermata e' solo una spia accesa in tasca. */
+    fermaScanner();
     sezioneNuova.hidden = false;
     preparaNuova();
     var primo = document.getElementById('rif-nome');
@@ -1821,6 +1872,9 @@
 
   function mostraRiepilogo() {
     ricerca.hidden = true;
+    /* Uscendo dalla ricerca la fotocamera non resta accesa: una anteprima
+       viva sotto un'altra schermata e' solo una spia accesa in tasca. */
+    fermaScanner();
     if (sezioneNuova) sezioneNuova.hidden = true;
     sezioneRiepilogo.hidden = false;
     caricaRiepilogo();
@@ -1829,6 +1883,322 @@
   if (apriRiepilogoBtn) apriRiepilogoBtn.addEventListener('click', mostraRiepilogo);
   if (riepAggiornaBtn) riepAggiornaBtn.addEventListener('click', caricaRiepilogo);
   if (riepIndietroBtn) riepIndietroBtn.addEventListener('click', mostraRicerca);
+
+  /* =================================================================== */
+  /* RICERCA PER NOME                                                    */
+  /*                                                                     */
+  /* Chi ha perso il codice ha sempre il proprio nome. Si digita e la     */
+  /* lista si rifa' da sola, ma con una pausa: Apps Script e' lento e una */
+  /* chiamata per tasto lo intaserebbe senza rendere niente. Parte una    */
+  /* sola richiesta quando le dita si fermano, e le risposte arrivate     */
+  /* fuori ordine si buttano.                                            */
+  /*                                                                     */
+  /* Cliccare un risultato non apre una scheda nuova: rimette il codice   */
+  /* nel campo e passa per cercaCodice, la stessa strada del QR e del     */
+  /* codice battuto a mano.                                              */
+  /* =================================================================== */
+
+  var campoNome = document.getElementById('nome-q');
+  var statoNome = document.getElementById('nome-stato');
+  var boxRisultati = document.getElementById('nome-risultati');
+
+  var ATTESA_NOME = 350;
+  var MINIMO_NOME = 3;
+
+  var timerNome = null;
+  /* L'ultima domanda a cui c'e' gia' una risposta a schermo: ribatterla
+     identica non merita un'altra chiamata. */
+  var ultimaNome = '';
+  /* Numero di turno: se l'operatore continua a digitare, la risposta della
+     richiesta precedente arriva quando non serve piu' e va scartata,
+     altrimenti a schermo finisce l'elenco della parola di prima. */
+  var turnoNome = 0;
+
+  function diciNome(messaggio) {
+    statoNome.textContent = messaggio;
+    statoNome.hidden = false;
+  }
+
+  function svuotaRisultatiNome() {
+    if (timerNome) { clearTimeout(timerNome); timerNome = null; }
+    turnoNome++;
+    ultimaNome = '';
+    if (campoNome) campoNome.value = '';
+    if (boxRisultati) boxRisultati.textContent = '';
+    if (statoNome) statoNome.hidden = true;
+  }
+
+  function digitatoNome() {
+    var q = campoNome.value.trim();
+    if (timerNome) { clearTimeout(timerNome); timerNome = null; }
+
+    if (q.length < MINIMO_NOME) {
+      /* Qui il server non si chiama: la risposta la sappiamo gia'. Il turno
+         avanza lo stesso, cosi' una richiesta ancora in volo non riempie la
+         lista dopo che il campo e' stato cancellato. */
+      turnoNome++;
+      ultimaNome = '';
+      boxRisultati.textContent = '';
+      if (q.length) diciNome('Scrivi almeno 3 lettere.');
+      else statoNome.hidden = true;
+      return;
+    }
+
+    timerNome = setTimeout(function () {
+      timerNome = null;
+      cercaPerNome(q);
+    }, ATTESA_NOME);
+  }
+
+  /* Volutamente fuori da occupato()/inCorso: e' una lettura che accompagna
+     la digitazione, e bloccare il resto della schermata a ogni parola
+     renderebbe la pagina inservibile. A tenere a bada le chiamate ci
+     pensano la pausa e il numero di turno. */
+  function cercaPerNome(q) {
+    if (q === ultimaNome) return;
+
+    var token = leggiToken();
+    if (!token || scaduta()) {
+      mostraAccesso('Sessione scaduta, rifai l’accesso.');
+      return;
+    }
+
+    var mio = ++turnoNome;
+    ultimaNome = q;
+    diciNome('Cerco…');
+
+    API.chiama('gestCercaNome', { token: token, q: q })
+      .then(function (r) {
+        if (mio !== turnoNome) return;
+        disegnaRisultatiNome(r);
+      })
+      .catch(function (e) {
+        if (mio !== turnoNome) return;
+        if (e.codice === 'NON_AUTORIZZATO') {
+          mostraAccesso('Sessione scaduta, rifai l’accesso.');
+          return;
+        }
+        /* Un errore non e' una risposta: la stessa parola deve poter essere
+           ritentata, quindi non resta segnata come gia' cercata. */
+        ultimaNome = '';
+        boxRisultati.textContent = '';
+        diciNome(messaggioDiRete(e));
+      });
+  }
+
+  function disegnaRisultatiNome(r) {
+    boxRisultati.textContent = '';
+
+    if (r.troppo_corto) {
+      diciNome('Scrivi almeno 3 lettere.');
+      return;
+    }
+
+    var lista = Array.isArray(r.risultati) ? r.risultati : [];
+    if (!lista.length) {
+      diciNome('Nessuna prenotazione trovata.');
+      return;
+    }
+    statoNome.hidden = true;
+
+    var ul = el('ul', 'risultati');
+    lista.forEach(function (v) { ul.appendChild(rigaRisultato(v)); });
+    boxRisultati.appendChild(ul);
+
+    /* Il server ne manda al massimo otto: dirlo e' meglio che lasciar
+       credere che gli altri non esistano. */
+    if (r.troncato) {
+      boxRisultati.appendChild(el('p', 'risultati__nota',
+        'Ci sono altri risultati, aggiungi il cognome per restringere.'));
+    }
+  }
+
+  function rigaRisultato(v) {
+    var li = el('li', 'risultati__voce');
+    var annullata = vero(v.annullata);
+
+    var b = el('button', 'risultato' + (annullata ? ' risultato--annullata' : ''));
+    b.type = 'button';
+
+    var testa = el('span', 'risultato__testa');
+    testa.appendChild(el('span', 'risultato__nome', testo(v.riferimento) || '—'));
+    testa.appendChild(el('span', 'risultato__codice', testo(v.codice) || '—'));
+    b.appendChild(testa);
+
+    var meta = el('span', 'risultato__meta');
+    if (testo(v.gruppo)) meta.appendChild(el('span', 'risultato__gruppo', testo(v.gruppo)));
+    meta.appendChild(el('span', 'risultato__n',
+      conteggio(v.n_partecipanti) + ' ' + persone(v.n_partecipanti)));
+
+    /* Uno stato solo per riga, quello che conta: annullata batte tutto. */
+    if (annullata) {
+      meta.appendChild(el('span', 'segno segno--annullata', 'annullata'));
+    } else if (vero(v.presentata)) {
+      meta.appendChild(el('span', 'segno segno--registrato', 'già registrato'));
+    }
+    b.appendChild(meta);
+
+    /* Anche le annullate si aprono, ma la scheda per quelle e' in sola
+       lettura: niente tariffe, niente bottone Registra. Impedirne del tutto
+       l'apertura toglierebbe all'operatore l'unico modo di spiegare alla
+       persona davanti a lui che cosa e' successo. */
+    b.addEventListener('click', function () {
+      scriviCodiceNelCampo(v.codice);
+      cercaCodice(codiceDalCampo());
+    });
+
+    li.appendChild(b);
+    return li;
+  }
+
+  if (campoNome) campoNome.addEventListener('input', digitatoNome);
+
+  /* =================================================================== */
+  /* SCANNER QR                                                          */
+  /*                                                                     */
+  /* Il QR contiene il codice e basta (PR-XXXX, testo puro). Appena letto */
+  /* la fotocamera si spegne e si riparte dalla stessa cercaCodice delle  */
+  /* altre due strade.                                                   */
+  /*                                                                     */
+  /* La camera si accende solo al tocco del bottone: Safari su iPhone non */
+  /* la concede senza un gesto, e accenderla al caricamento sarebbe       */
+  /* comunque sbagliato su una pagina che sta aperta tutta la mattina.    */
+  /* =================================================================== */
+
+  var LIBRERIA_QR =
+    'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js';
+
+  var apriScannerBtn = document.getElementById('apri-scanner');
+  var chiudiScannerBtn = document.getElementById('chiudi-scanner');
+  var scanner = document.getElementById('scanner');
+  var scannerNota = document.getElementById('scanner-nota');
+  var scannerAvviso = document.getElementById('scanner-avviso');
+  var scannerAvvisoTesto = document.getElementById('scanner-avviso-testo');
+
+  var lettore = null;
+  var scansioneAttiva = false;
+  var promessaLibreria = null;
+
+  /* La libreria si scarica una volta sola, e si comincia appena la
+     schermata di ricerca compare: al momento del tocco e' gia' in cache e
+     resta da accendere solo la camera. Se il CDN non risponde non succede
+     niente finche' qualcuno non preme il bottone, e li' si vede il
+     messaggio. */
+  function caricaLibreria() {
+    if (window.Html5Qrcode) return Promise.resolve();
+    if (promessaLibreria) return promessaLibreria;
+
+    promessaLibreria = new Promise(function (ok, ko) {
+      var s = document.createElement('script');
+      s.src = LIBRERIA_QR;
+      s.async = true;
+      s.onload = function () {
+        if (window.Html5Qrcode) ok();
+        else { promessaLibreria = null; ko(new Error('LIBRERIA')); }
+      };
+      s.onerror = function () {
+        promessaLibreria = null;
+        ko(new Error('LIBRERIA'));
+      };
+      document.head.appendChild(s);
+    });
+    return promessaLibreria;
+  }
+
+  function avvisaScanner(e) {
+    var nome = (e && (e.name || e.message)) || '';
+    var messaggio = 'Fotocamera non disponibile, digita il codice qui sotto.';
+    if (/NotAllowed|Permission|Denied/i.test(nome)) {
+      messaggio = 'Permesso fotocamera negato. Digita il codice qui sotto, ' +
+                  'oppure consenti la fotocamera nelle impostazioni del browser.';
+    } else if (/LIBRERIA/.test(nome)) {
+      messaggio = 'Lo scanner non si è caricato (connessione?). ' +
+                  'Digita il codice qui sotto.';
+    }
+    scannerAvvisoTesto.textContent = messaggio;
+    scannerAvviso.hidden = false;
+  }
+
+  /* Spegnere davvero la camera conta: su iPhone un'anteprima lasciata viva
+     tiene la spia accesa e consuma batteria anche a riquadro nascosto. */
+  function fermaScanner() {
+    scansioneAttiva = false;
+    if (scanner) scanner.hidden = true;
+    if (!lettore) return;
+
+    var l = lettore;
+    lettore = null;
+    try {
+      var f = l.stop();
+      if (f && f.then) {
+        f.then(function () { try { l.clear(); } catch (e) { /* gia' pulito */ } },
+               function () { /* non era in funzione */ });
+      }
+    } catch (e) { /* mai partita: niente da spegnere */ }
+  }
+
+  function codiceLetto(letto) {
+    /* Il lettore continua a chiamare finche' il QR resta inquadrato: dopo il
+       primo colpo qui non si rientra. */
+    if (!scansioneAttiva) return;
+
+    var grezzo = testo(letto).toUpperCase().replace(/\s+/g, '');
+    /* Oggi il QR porta il solo codice. Se un domani ci finisse dentro un
+       indirizzo, si prende comunque il pezzo che somiglia a un codice invece
+       di mandare al server una riga che codice non e'. */
+    var m = /PR-?[A-Z0-9]+/.exec(grezzo);
+    if (m) grezzo = m[0];
+
+    fermaScanner();
+    /* Stessa normalizzazione del campo: il codice passa di li' e torna
+       indietro in forma canonica, senza una seconda regola da tenere
+       allineata. */
+    scriviCodiceNelCampo(grezzo);
+    cercaCodice(codiceDalCampo());
+  }
+
+  function apriScanner() {
+    if (scansioneAttiva) return;
+    scannerAvviso.hidden = true;
+
+    /* Senza getUserMedia (browser vecchio, o pagina non in HTTPS) non si
+       accende niente: si dice e si lascia lavorare il resto. */
+    if (!(navigator.mediaDevices &&
+          typeof navigator.mediaDevices.getUserMedia === 'function')) {
+      avvisaScanner(new Error('NoCamera'));
+      return;
+    }
+
+    scanner.hidden = false;
+    scansioneAttiva = true;
+    scannerNota.textContent = 'Accendo la fotocamera…';
+
+    caricaLibreria()
+      .then(function () {
+        if (!scansioneAttiva) return null;   /* chiuso mentre caricava */
+        lettore = new window.Html5Qrcode('scanner-vista');
+        return lettore.start(
+          /* La posteriore: il QR sta sul telefono di chi e' dall'altra parte
+             del banco, non sulla faccia dell'operatore. */
+          { facingMode: 'environment' },
+          { fps: 10, qrbox: { width: 240, height: 240 } },
+          codiceLetto,
+          function () { /* fotogramma senza QR: non e' un errore */ }
+        );
+      })
+      .then(function () {
+        if (scansioneAttiva) scannerNota.textContent = 'Inquadra il QR della prenotazione.';
+      })
+      .catch(function (e) {
+        fermaScanner();
+        avvisaScanner(e);
+      });
+  }
+
+  if (apriScannerBtn) apriScannerBtn.addEventListener('click', apriScanner);
+  if (chiudiScannerBtn) chiudiScannerBtn.addEventListener('click', fermaScanner);
+  /* Pagina chiusa o mandata in fondo: la camera non resta accesa. */
+  window.addEventListener('pagehide', fermaScanner);
 
   /* ---------------------------------------------------------- avvio */
 
