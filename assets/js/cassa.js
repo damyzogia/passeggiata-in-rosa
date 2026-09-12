@@ -1682,6 +1682,12 @@
   function disegnaRiepilogo(r) {
     riepCorpo.textContent = '';
 
+    /* Da qui in poi c’e' qualcosa da portarsi via: la stampa e l'Excel
+       lavorano su questa risposta, senza richiamare il server. */
+    ultimoRiepilogo = r;
+    preparaCarta(r);
+    esportabile(true);
+
     var pres = r.presentati || {};
     var pre = r.preiscritti || {};
 
@@ -1845,6 +1851,10 @@
     /* Si svuota PRIMA della chiamata: durante l'attesa non deve restare a
        schermo il conteggio di prima, che sembrerebbe quello nuovo. */
     riepAvviso.hidden = true;
+    /* I numeri di prima non valgono piu': finche' non arrivano i nuovi non
+       si stampa e non si esporta niente. */
+    ultimoRiepilogo = null;
+    esportabile(false);
     riepCorpo.textContent = '';
     riepEvento.textContent = '';
     riepAggiornato.textContent = '';
@@ -2199,6 +2209,202 @@
   if (chiudiScannerBtn) chiudiScannerBtn.addEventListener('click', fermaScanner);
   /* Pagina chiusa o mandata in fondo: la camera non resta accesa. */
   window.addEventListener('pagehide', fermaScanner);
+
+  /* =================================================================== */
+  /* ESPORTAZIONI DEL RIEPILOGO                                          */
+  /*                                                                     */
+  /* Due modi di portarsi via gli stessi numeri: un foglio da appendere  */
+  /* o da allegare a un verbale (stampa), e un file che l'associazione   */
+  /* puo' riaprire e rimaneggiare (Excel).                               */
+  /*                                                                     */
+  /* Nessuno dei due richiama il server: lavorano sull'ultima risposta   */
+  /* gia' ricevuta. Se quella non c'e' — pagina appena aperta, chiamata  */
+  /* fallita — i bottoni restano spenti, perche' non si esporta un       */
+  /* foglio vuoto ne' i numeri di dieci minuti fa spacciati per adesso.  */
+  /*                                                                     */
+  /* Nemmeno uno dei due stampa l'elenco nome per nome: al microfono e   */
+  /* in un allegato servono i totali, non l'anagrafica di 105 persone.   */
+  /* =================================================================== */
+
+  var stampaBtn = document.getElementById('riepilogo-stampa');
+  var excelBtn = document.getElementById('riepilogo-excel');
+  var stampaEvento = document.getElementById('stampa-evento');
+  var stampaQuando = document.getElementById('stampa-quando');
+  var stampaAggiornato = document.getElementById('stampa-aggiornato');
+
+  /* L'ultima risposta buona di gestRiepilogo, esattamente com'e' arrivata. */
+  var ultimoRiepilogo = null;
+
+  function esportabile(si) {
+    if (stampaBtn) stampaBtn.disabled = !si;
+    if (excelBtn) excelBtn.disabled = !si;
+  }
+
+  /* La carta intestata della stampa: gli stessi tre dati dell'occhiello a
+     schermo, ma su righe separate come si conviene a un documento. */
+  function preparaCarta(r) {
+    stampaEvento.textContent = testo(r.nome_evento) || 'Passeggiata in Rosa';
+    var quando = [];
+    if (testo(r.data_evento)) quando.push(dataLunga(r.data_evento));
+    if (testo(r.luogo)) quando.push(testo(r.luogo));
+    stampaQuando.textContent = quando.join(' · ');
+    stampaAggiornato.textContent = testo(r.aggiornato)
+      ? 'Riepilogo aggiornato alle ' + testo(r.aggiornato)
+      : '';
+  }
+
+  /* ------------------------------------------------------------- stampa */
+
+  /* Tutto il lavoro lo fa il foglio di stile: @media print rifa' la pagina
+     come documento e nasconde barra, bottoni e sezioni non stampabili. Qui
+     resta solo l'ordine di stampare. */
+  function stampaRiepilogo() {
+    if (!ultimoRiepilogo) return;
+    window.print();
+  }
+
+  /* -------------------------------------------------------------- excel */
+
+  var LIBRERIA_XLSX =
+    'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  var promessaXlsx = null;
+
+  /* Come per lo scanner: la libreria si scarica la prima volta che serve
+     davvero, non a ogni apertura della pagina. */
+  function caricaXlsx() {
+    if (window.XLSX) return Promise.resolve();
+    if (promessaXlsx) return promessaXlsx;
+
+    promessaXlsx = new Promise(function (ok, ko) {
+      var s = document.createElement('script');
+      s.src = LIBRERIA_XLSX;
+      s.async = true;
+      s.onload = function () {
+        if (window.XLSX) ok();
+        else { promessaXlsx = null; ko(new Error('LIBRERIA')); }
+      };
+      s.onerror = function () { promessaXlsx = null; ko(new Error('LIBRERIA')); };
+      document.head.appendChild(s);
+    });
+    return promessaXlsx;
+  }
+
+  /* Nel foglio di calcolo un numero deve restare un numero, o l'associazione
+     non ci puo' fare una somma. Se il campo non e' un numero la cella resta
+     vuota: meglio un buco che uno zero inventato. */
+  function numeroCella(v) {
+    var n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'));
+    return isNaN(n) ? null : n;
+  }
+
+  function righeGruppi(lista) {
+    var righe = [];
+    var g = coppieGruppi(lista);
+    /* Stesso ordine della pagina: prima i gruppi veri, il mucchio senza
+       gruppo in fondo e col suo nome per esteso. */
+    g.filter(function (x) { return !x.senza; })
+      .forEach(function (x) { righe.push([x.nome, numeroCella(x.n)]); });
+    g.filter(function (x) { return x.senza; })
+      .forEach(function (x) { righe.push(['Senza gruppo', numeroCella(x.n)]); });
+    return righe;
+  }
+
+  function foglioRiepilogo(r) {
+    var pres = r.presentati || {};
+    var pre = r.preiscritti || {};
+    var righe = [];
+
+    righe.push([testo(r.nome_evento) || 'Passeggiata in Rosa']);
+    righe.push([dataLunga(r.data_evento)]);
+    if (testo(r.luogo)) righe.push([testo(r.luogo)]);
+    if (testo(r.aggiornato)) righe.push(['Aggiornato alle ' + testo(r.aggiornato)]);
+    righe.push([]);
+
+    righe.push(['PRESENTATI']);
+    righe.push(['Persone presentate', numeroCella(pres.persone)]);
+    righe.push(['Incasso reale (€)', numeroCella(pres.incasso_reale)]);
+    righe.push(['Incasso atteso (€)', numeroCella(pres.incasso_atteso)]);
+    righe.push(['Kit consegnati', numeroCella(pres.kit_consegnati)]);
+    righe.push(['Femmine', numeroCella(pres.femmine)]);
+    righe.push(['Maschi', numeroCella(pres.maschi)]);
+    righe.push(['Interi', numeroCella(pres.interi)]);
+    righe.push(['Ridotti', numeroCella(pres.ridotti)]);
+    righe.push(['Gratis adulti', numeroCella(pres.gratis_adulti)]);
+    righe.push(['Bambini gratis', numeroCella(pres.bambini)]);
+    righe.push([]);
+
+    /* I premiati restano la stringa del server, nome e data insieme: in una
+       cella e' la forma piu' comoda da leggere e da incollare altrove. */
+    righe.push(['PREMIAZIONE']);
+    righe.push(['Più anziana (F)', testo(pres.piu_anziana_f) || '—']);
+    righe.push(['Più giovane (F)', testo(pres.piu_giovane_f) || '—']);
+    righe.push(['Più anziano (M)', testo(pres.piu_anziano_m) || '—']);
+    righe.push(['Più giovane (M)', testo(pres.piu_giovane_m) || '—']);
+    righe.push([]);
+
+    righe.push(['GRUPPI PRESENTATI']);
+    righe.push(['Gruppo', 'Persone']);
+    righe = righe.concat(righeGruppi(pres.per_gruppo));
+    righe.push([]);
+
+    righe.push(['PRE-ISCRITTI ONLINE']);
+    righe.push(['Prenotazioni attive', numeroCella(pre.prenotazioni_attive)]);
+    righe.push(['Partecipanti attivi', numeroCella(pre.partecipanti_attivi)]);
+    righe.push(['Paganti', numeroCella(pre.paganti)]);
+    righe.push(['Gratis', numeroCella(pre.gratis)]);
+    righe.push(['Femmine', numeroCella(pre.femmine)]);
+    righe.push(['Maschi', numeroCella(pre.maschi)]);
+    righe.push(['Più anziano', testo(pre.piu_anziano) || '—']);
+    righe.push(['Più giovane', testo(pre.piu_giovane) || '—']);
+    righe.push([]);
+    righe.push(['GRUPPI PRE-ISCRITTI']);
+    righe.push(['Gruppo', 'Persone']);
+    righe = righe.concat(righeGruppi(pre.per_gruppo));
+
+    return righe;
+  }
+
+  /* Il nome porta la data dell'evento: fra due anni, in una cartella con
+     dentro sei riepiloghi, e' l'unica cosa che li distingue. */
+  function nomeFile(r) {
+    var d = testo(r.data_evento);
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(d);
+    return 'riepilogo-passeggiata-in-rosa-' +
+      (m ? m[1] + '-' + m[2] + '-' + m[3] : 'senza-data') + '.xlsx';
+  }
+
+  function scaricaExcel() {
+    if (!ultimoRiepilogo || excelBtn.disabled) return;
+    var r = ultimoRiepilogo;
+
+    riepAvviso.hidden = true;
+    occupato(excelBtn, true, 'Preparo…', 'Excel');
+
+    caricaXlsx()
+      .then(function () {
+        var foglio = window.XLSX.utils.aoa_to_sheet(foglioRiepilogo(r));
+        /* Due colonne larghe abbastanza da leggere le etichette senza
+           allargarle a mano a ogni apertura. */
+        foglio['!cols'] = [{ wch: 28 }, { wch: 22 }];
+        var cartella = window.XLSX.utils.book_new();
+        window.XLSX.utils.book_append_sheet(cartella, foglio, 'Riepilogo');
+        window.XLSX.writeFile(cartella, nomeFile(r));
+      })
+      .catch(function () {
+        riepAvvisoTesto.textContent =
+          'Non sono riuscito a preparare il file Excel (connessione?). ' +
+          'La stampa funziona lo stesso.';
+        riepAvviso.hidden = false;
+      })
+      .finally(function () {
+        occupato(excelBtn, false, 'Preparo…', 'Excel');
+        /* occupato() riaccende il bottone solo se ci sono ancora dati. */
+        esportabile(!!ultimoRiepilogo);
+      });
+  }
+
+  if (stampaBtn) stampaBtn.addEventListener('click', stampaRiepilogo);
+  if (excelBtn) excelBtn.addEventListener('click', scaricaExcel);
 
   /* ---------------------------------------------------------- avvio */
 

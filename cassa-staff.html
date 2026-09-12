@@ -223,6 +223,18 @@
          costruisce il JS con cio' che risponde gestRiepilogo, percio' in
          pagina non c'e' nessun numero di partenza da mostrare. -->
     <section class="cassa__area" id="riepilogo" aria-labelledby="riepilogo-titolo" hidden>
+      <!-- Carta intestata: a schermo non si vede mai, esiste solo in stampa.
+           Il logo e' lo stesso dell'intestazione del sito pubblico. -->
+      <div class="riep__carta">
+        <img class="riep__carta__logo" src="/assets/img/logo-passeggiata-rosa.svg"
+             alt="Passeggiata in Rosa" width="92" height="85">
+        <div>
+          <p class="riep__carta__evento" id="stampa-evento"></p>
+          <p class="riep__carta__quando" id="stampa-quando"></p>
+          <p class="riep__carta__aggiornato" id="stampa-aggiornato"></p>
+        </div>
+      </div>
+
       <div class="cassa__testata-sezione">
         <div class="riep__intestazione">
           <h1 class="cassa__titolo" id="riepilogo-titolo">Riepilogo</h1>
@@ -239,13 +251,14 @@
           <button class="btn btn--secondario btn--piccolo" type="button" id="riepilogo-aggiorna">
             Aggiorna
           </button>
-          <!-- Segnaposto dichiarati: l'esportazione arriva nello step
-               successivo. Meglio un bottone spento e spiegato che un bottone
-               che non c'e' e viene cercato al microfono. -->
-          <button class="btn btn--fantasma btn--piccolo" type="button" disabled>
+          <!-- Spenti finche' il riepilogo non e' caricato: non si esporta
+               una pagina vuota. Li riaccende il JS quando i dati arrivano. -->
+          <button class="btn btn--fantasma btn--piccolo" type="button"
+                  id="riepilogo-stampa" disabled>
             Stampa / Salva PDF
           </button>
-          <button class="btn btn--fantasma btn--piccolo" type="button" disabled>
+          <button class="btn btn--fantasma btn--piccolo" type="button"
+                  id="riepilogo-excel" disabled>
             Excel
           </button>
         </div>
@@ -257,9 +270,12 @@
 
       <div id="riepilogo-corpo" aria-live="polite"></div>
 
+      <p class="riep__chiusura">
+        Passeggiata in Rosa &mdash; a favore di IOV Istituto Oncologico Veneto
+      </p>
+
       <p class="cassa__nota-fase">
         Sola lettura: questa pagina non scrive niente nel foglio.
-        Stampa ed Excel arrivano più avanti.
       </p>
     </section>
 

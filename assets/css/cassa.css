@@ -1472,3 +1472,204 @@
   font-size: var(--t-sm);
   color: var(--testo-tenue);
 }
+
+/* -------------------------------------------------------------------------
+   13. RIEPILOGO SU CARTA
+   La stessa pagina, ma come documento: carta intestata, nessun bottone, e
+   una gerarchia rifatta in punti tipografici invece che in vw, perche' in
+   stampa la larghezza della finestra non vuol dire piu' niente.
+
+   Deve stare in una o due A4, e i riquadri colorati devono restare colorati:
+   il bordeaux della premiazione e il rosa del primo gruppo sono il modo in
+   cui il foglio si legge a colpo d'occhio, non una decorazione.
+   ------------------------------------------------------------------------- */
+
+/* A schermo la carta intestata e la chiusura non esistono. */
+.riep__carta,
+.riep__chiusura { display: none; }
+
+@media print {
+
+  @page { size: A4; margin: 14mm 13mm; }
+
+  html, body {
+    background: #fff;
+    font-size: 10pt;
+    color: #000;
+  }
+
+  /* L'impianto a schermo (griglia centrata, altezza piena, fondo rosato) non
+     serve a niente sulla carta. */
+  .cassa { display: block; min-height: 0; background: #fff; }
+  .cassa__corpo { display: block; padding: 0; }
+  .cassa__area { width: auto; max-width: none; }
+
+  /* Via tutto cio' che si tocca o che riguarda le altre schermate. */
+  .cassa__barra,
+  .btn,
+  .riep__barra,
+  .riep__azioni,
+  .cassa__scorciatoia,
+  .cassa__nota-fase,
+  .avviso,
+  #accesso,
+  #ricerca,
+  #nuova { display: none !important; }
+
+  /* Il titolo "Riepilogo" e la riga evento a schermo li sostituisce la carta
+     intestata, che dice le stesse cose meglio. */
+  #riepilogo-titolo,
+  .riep__evento,
+  .cassa__testata-sezione { display: none; }
+
+  /* --- carta intestata --- */
+
+  .riep__carta {
+    display: flex;
+    align-items: center;
+    gap: 6mm;
+    padding-bottom: 3mm;
+    margin-bottom: 5mm;
+    border-bottom: 1.5pt solid var(--rosa);
+  }
+
+  .riep__carta__logo {
+    width: 24mm;
+    height: auto;
+  }
+
+  .riep__carta__evento {
+    font-family: var(--font-titoli);
+    font-size: 20pt;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--scuro);
+  }
+
+  .riep__carta__quando {
+    margin-top: 1mm;
+    font-size: 11pt;
+    color: #333;
+  }
+
+  .riep__carta__aggiornato {
+    margin-top: 1mm;
+    font-size: 9pt;
+    color: #555;
+  }
+
+  /* --- i colori devono sopravvivere alla stampante ---
+     Senza print-color-adjust il browser "risparmia" gli sfondi e il riquadro
+     della premiazione esce bianco con il testo bianco dentro: illeggibile. */
+  .riep__premiazione,
+  .riep__premio,
+  .riep__posto,
+  .riep__posto--1,
+  .riep__numerone,
+  .riep__numerone__nota,
+  .riep__gruppo--senza,
+  .riep__contesto,
+  .riep__carta {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* --- sezioni: nessuna deve spezzarsi a meta' fra due fogli --- */
+
+  .riep__sezione,
+  .riep__numerone,
+  .riep__premio,
+  .riep__posto,
+  .riep__cruscotto {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .riep__sezione {
+    margin-top: 5mm;
+    padding: 4mm;
+    border-width: 0.8pt;
+    border-radius: 3mm;
+    box-shadow: none;
+  }
+
+  .riep__sezione-titolo { font-size: 12pt; margin-bottom: 3mm; }
+
+  /* --- cruscotto --- */
+
+  .riep__cruscotto {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4mm;
+    margin-top: 0;
+  }
+
+  .riep__numerone {
+    padding: 3mm 2mm;
+    border-width: 0.8pt;
+    border-radius: 3mm;
+    box-shadow: none;
+  }
+
+  .riep__numerone__cifra { font-size: 24pt; }
+  .riep__numerone__voce { font-size: 8pt; }
+  .riep__numerone__nota { font-size: 8.5pt; }
+
+  /* --- premiazione: il pezzo che si legge dall'altra parte del tavolo --- */
+
+  .riep__premiazione { padding: 5mm; }
+  .riep__premiazione .riep__sezione-titolo { font-size: 14pt; }
+
+  .riep__premi { grid-template-columns: repeat(2, 1fr); gap: 3mm; }
+  .riep__premio { padding: 3mm; border-radius: 2mm; }
+  .riep__premio__voce { font-size: 8pt; }
+  .riep__premio__nome { font-size: 16pt; margin-top: 1mm; }
+  .riep__premio__data { font-size: 9.5pt; }
+
+  /* --- podio e gruppi --- */
+
+  .riep__podio { gap: 3mm; }
+  .riep__podio--2 { grid-template-columns: repeat(2, 1fr); }
+  .riep__podio--3 { grid-template-columns: repeat(3, 1fr); }
+
+  .riep__posto { padding: 3mm; border-width: 0.8pt; border-radius: 3mm; }
+  .riep__posto__rango { width: 8mm; height: 8mm; font-size: 9pt; border-width: 1pt; }
+  .riep__posto--1 .riep__posto__rango { width: 9mm; height: 9mm; font-size: 11pt; }
+  .riep__posto__nome { font-size: 11pt; }
+  .riep__posto--1 .riep__posto__nome { font-size: 13pt; }
+  .riep__posto__n { font-size: 9pt; }
+  .riep__posto__n strong { font-size: 11pt; }
+  .riep__posto--1 .riep__posto__n strong { font-size: 13pt; }
+
+  .riep__gruppi-lista { margin-top: 3mm; }
+  .riep__gruppo { padding: 1mm 0; }
+  .riep__gruppo__nome { font-size: 9.5pt; }
+  .riep__gruppo__n { font-size: 10.5pt; }
+  .riep__gruppo--senza { padding-inline: 2mm; }
+
+  .riep__nota, .riep__vuoto { font-size: 8.5pt; }
+  .riep__sotto-titolo { font-size: 8pt; margin-top: 3mm; }
+
+  /* --- dettagli e pre-iscritti --- */
+
+  .riep__dati { grid-template-columns: repeat(6, 1fr); gap: 3mm; }
+  .riep__dati dt { font-size: 7.5pt; }
+  .riep__dati dd { font-size: 13pt; }
+
+  .riep__dati--piccoli { grid-template-columns: repeat(4, 1fr); }
+  .riep__dati--piccoli dd { font-size: 10.5pt; }
+
+  .riep__contesto { border-width: 0.8pt; }
+  .riep__contesto .riep__sezione-titolo { font-size: 9pt; }
+
+  /* --- chiusura del documento --- */
+
+  .riep__chiusura {
+    display: block;
+    margin-top: 6mm;
+    padding-top: 3mm;
+    border-top: 0.8pt solid var(--bordo);
+    font-size: 9pt;
+    text-align: center;
+    color: var(--scuro);
+  }
+}
