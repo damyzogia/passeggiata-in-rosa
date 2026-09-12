@@ -66,7 +66,7 @@ Relazione: una **Squadra** raccoglie più **Prenotazioni**; una **Prenotazione**
 ## Dati evento (fatti — usare questi)
 - **Nome:** 6ª Passeggiata in Rosa
 - **Data:** domenica 13 settembre 2026
-- **Ritrovo:** Piazzale della Chiesa di Santa Margherita d'Adige — Piazza Giovanni Battista Graziato / Via Roma 15, Borgo Veneto (PD)
+- **Ritrovo:** Piazzale della Chiesa di Santa Margherita d'Adige — Via Roma 32, 35046 Borgo Veneto (PD), loc. Santa Margherita d'Adige
 - **Programma:** 8:00 apertura iscrizioni e consegna gadget · 8:30 riscaldamento (Greta Nicoletti PT) · 9:00 partenza
 - **Percorso:** ~8 km per le vie di Borgo Veneto, sosta ristoro a Megliadino San Fidenzio
 - **Finalità:** ricavato interamente devoluto allo IOV – Istituto Oncologico Veneto di Padova (ricerca tumore al seno)
