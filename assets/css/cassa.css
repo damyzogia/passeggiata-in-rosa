@@ -1022,6 +1022,9 @@
   padding: 0;
   display: grid;
   gap: var(--sp-3);
+  /* Ogni card alta quanto il suo contenuto: aprendone una, le altre due non
+     devono allungarsi a vuoto per starle dietro. */
+  align-items: start;
 }
 
 /* Le colonne sono tante quanti i posti davvero assegnati: con un gruppo
@@ -1032,16 +1035,43 @@
 }
 
 .riep__posto {
-  display: grid;
   align-content: start;
-  justify-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-4);
   text-align: center;
   background: var(--sfondo-alt);
   border: 2px solid var(--bordo);
   border-radius: var(--r-lg);
+  overflow: hidden;
 }
+
+/* Tutta la card e' il bottone: sul telefono si preme col pollice senza
+   dover mirare il nome. Lo sfondo e il bordo restano della card. */
+.riep__posto__testa {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-4);
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.riep__posto__testa:hover { background: rgba(237, 110, 167, 0.10); }
+
+.riep__posto__testa:focus-visible {
+  outline: 2px solid var(--rosa-testo);
+  outline-offset: -4px;
+}
+
+/* Gruppo senza nomi: niente da aprire, e si vede che non c'e'. */
+.riep__posto__testa--ferma,
+.riep__gruppo__testa--ferma { cursor: default; opacity: 1; }
+.riep__posto__testa--ferma:hover,
+.riep__gruppo__testa--ferma:hover { background: none; }
 
 .riep__posto__rango {
   display: grid;
@@ -1109,13 +1139,31 @@
   padding: 0;
 }
 
-.riep__gruppo {
+.riep__gruppo { border-bottom: 1px dashed var(--bordo); }
+
+.riep__gruppo__testa {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--sp-3);
+  width: 100%;
+  /* Alto abbastanza da prendersi col dito senza sbagliare riga. */
+  min-height: 44px;
   padding: var(--sp-2) 0;
-  border-bottom: 1px dashed var(--bordo);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.riep__gruppo__testa:hover .riep__gruppo__nome { color: var(--rosa-scuro); }
+
+.riep__gruppo__testa:focus-visible {
+  outline: 2px solid var(--rosa-testo);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
 }
 
 .riep__gruppo:last-child { border-bottom: 0; }
@@ -1133,14 +1181,67 @@
   color: var(--rosa-scuro);
 }
 
+/* La freccia dice due cose in un segno solo: che la riga si apre, e se in
+   questo momento e' aperta. Disegnata coi bordi, senza icone da caricare. */
+.riep__freccia {
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  margin-left: var(--sp-1);
+  border-right: 2px solid var(--testo-tenue);
+  border-bottom: 2px solid var(--testo-tenue);
+  transform: rotate(45deg) translate(-0.1em, -0.1em);
+  transition: transform var(--transizione);
+}
+
+[aria-expanded='true'] .riep__freccia {
+  transform: rotate(-135deg) translate(-0.1em, -0.1em);
+  border-color: var(--rosa-testo);
+}
+
+/* Nel podio la freccia sta sotto il conteggio, al centro come il resto. */
+.riep__posto__testa .riep__freccia { margin: var(--sp-1) 0 0; }
+
+/* L'elenco dei nomi: sobrio di proposito. Sotto c'e' il gruppo che conta,
+   e i nomi si leggono a voce uno per uno, non si confrontano. */
+.riep__nomi {
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  display: grid;
+  gap: var(--sp-1);
+  background: #fff;
+  border-top: 1px dashed var(--bordo);
+}
+
+.riep__nome {
+  font-size: var(--t-base);
+  line-height: var(--lh-media);
+  overflow-wrap: anywhere;
+}
+
+/* Nel podio l'elenco resta dentro la card, centrato come lei. */
+.riep__posto .riep__nomi {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+/* In lista i nomi rientrano, cosi' si vede a chi appartengono. */
+.riep__gruppo .riep__nomi {
+  padding-left: var(--sp-4);
+  background: var(--sfondo-alt);
+  border-radius: 0 0 var(--r-md) var(--r-md);
+}
+
 .riep__gruppi-lista--coda { margin-top: var(--sp-3); }
 
 .riep__gruppo--senza {
-  padding-inline: var(--sp-3);
   background: var(--sfondo-alt);
   border: 1px dashed var(--bordo);
   border-radius: var(--r-md);
 }
+
+.riep__gruppo--senza .riep__gruppo__testa { padding-inline: var(--sp-3); }
 
 .riep__gruppo--senza .riep__gruppo__nome,
 .riep__gruppo--senza .riep__gruppo__n { color: var(--testo-tenue); }
@@ -1639,6 +1740,14 @@
   .riep__posto__n { font-size: 9pt; }
   .riep__posto__n strong { font-size: 11pt; }
   .riep__posto--1 .riep__posto__n strong { font-size: 13pt; }
+
+  /* Il foglio resta un riepilogo di numeri: l'elenco nome per nome non ci
+     finisce nemmeno se qualcuno aveva lasciato un gruppo aperto a schermo. */
+  .riep__nomi,
+  .riep__freccia { display: none !important; }
+
+  .riep__posto__testa,
+  .riep__gruppo__testa { padding: 0; }
 
   .riep__gruppi-lista { margin-top: 3mm; }
   .riep__gruppo { padding: 1mm 0; }

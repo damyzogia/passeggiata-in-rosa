@@ -1639,8 +1639,18 @@
       if (!riga) continue;
       var nome = Array.isArray(riga) ? riga[0] : riga.nome;
       var n = Array.isArray(riga) ? riga[1] : riga.n;
+      /* Terzo posto della terna: i nomi di quel gruppo. Arrivano gia' con la
+         risposta, quindi aprire una riga non costa una chiamata. Se non
+         arrivassero, la riga resta quella di prima e non si apre: meglio
+         niente che un elenco vuoto che sembra un guasto. */
+      var nomi = Array.isArray(riga) ? riga[2] : riga.nomi;
       if (nome === undefined && n === undefined) continue;
-      fuori.push({ nome: testo(nome), n: n, senza: senzaGruppo(nome) });
+      fuori.push({
+        nome: testo(nome),
+        n: n,
+        senza: senzaGruppo(nome),
+        nomi: Array.isArray(nomi) ? nomi : []
+      });
     }
     return fuori;
   }
@@ -1672,10 +1682,49 @@
     return v;
   }
 
-  function rigaGruppo(nome, n, classe) {
+  /* L'elenco dei nomi di un gruppo. Solo i nomi, come li manda il server:
+     al microfono servono quelli, non date o importi. */
+  function elencoNomi(nomi) {
+    var ul = el('ul', 'riep__nomi');
+    ul.hidden = true;
+    nomi.forEach(function (v) {
+      ul.appendChild(el('li', 'riep__nome', testo(v) || '—'));
+    });
+    return ul;
+  }
+
+  /* Rende apribile una riga: il bottone porta la freccia e comanda
+     l'elenco, che sta li' sotto gia' costruito. Niente animazioni di
+     altezza: al banco conta che compaia subito. */
+  function rendiApribile(bottone, elenco) {
+    bottone.type = 'button';
+    bottone.setAttribute('aria-expanded', 'false');
+    bottone.appendChild(el('span', 'riep__freccia'));
+    bottone.lastChild.setAttribute('aria-hidden', 'true');
+    bottone.addEventListener('click', function () {
+      var aperto = bottone.getAttribute('aria-expanded') === 'true';
+      bottone.setAttribute('aria-expanded', aperto ? 'false' : 'true');
+      elenco.hidden = aperto;
+    });
+  }
+
+  function rigaGruppo(nome, n, nomi, classe) {
     var r = el('li', 'riep__gruppo' + (classe ? ' ' + classe : ''));
-    r.appendChild(el('span', 'riep__gruppo__nome', nome || '—'));
-    r.appendChild(el('span', 'riep__gruppo__n', conteggio(n)));
+    var testa = el('button', 'riep__gruppo__testa');
+    testa.appendChild(el('span', 'riep__gruppo__nome', nome || '—'));
+    testa.appendChild(el('span', 'riep__gruppo__n', conteggio(n)));
+    r.appendChild(testa);
+
+    /* Senza nomi non c'e' niente da aprire: la riga resta una riga. */
+    if (!nomi || !nomi.length) {
+      testa.disabled = true;
+      testa.classList.add('riep__gruppo__testa--ferma');
+      return r;
+    }
+
+    var elenco = elencoNomi(nomi);
+    rendiApribile(testa, elenco);
+    r.appendChild(elenco);
     return r;
   }
 
@@ -1759,12 +1808,25 @@
       var tre = el('ol', 'riep__podio riep__podio--' + primi.length);
       primi.forEach(function (g, i) {
         var posto = el('li', 'riep__posto riep__posto--' + (i + 1));
-        posto.appendChild(el('span', 'riep__posto__rango', (i + 1) + '°'));
-        posto.appendChild(el('span', 'riep__posto__nome', g.nome || '—'));
+        /* Tutta la card e' il bottone: sul telefono si prende col pollice
+           senza mirare. */
+        var testa = el('button', 'riep__posto__testa');
+        testa.appendChild(el('span', 'riep__posto__rango', (i + 1) + '°'));
+        testa.appendChild(el('span', 'riep__posto__nome', g.nome || '—'));
         var quanti = el('span', 'riep__posto__n');
         quanti.appendChild(el('strong', null, conteggio(g.n)));
         quanti.appendChild(document.createTextNode(' ' + persone(g.n)));
-        posto.appendChild(quanti);
+        testa.appendChild(quanti);
+        posto.appendChild(testa);
+
+        if (g.nomi && g.nomi.length) {
+          var elenco = elencoNomi(g.nomi);
+          rendiApribile(testa, elenco);
+          posto.appendChild(elenco);
+        } else {
+          testa.disabled = true;
+          testa.classList.add('riep__posto__testa--ferma');
+        }
         tre.appendChild(posto);
       });
       podio.appendChild(tre);
@@ -1772,7 +1834,9 @@
       var resto = premiabili.slice(3);
       if (resto.length) {
         var lista = el('ul', 'riep__gruppi-lista');
-        resto.forEach(function (g) { lista.appendChild(rigaGruppo(g.nome, g.n)); });
+        resto.forEach(function (g) {
+          lista.appendChild(rigaGruppo(g.nome, g.n, g.nomi));
+        });
         podio.appendChild(lista);
       }
     }
@@ -1783,7 +1847,7 @@
     if (mucchio.length) {
       var coda = el('ul', 'riep__gruppi-lista riep__gruppi-lista--coda');
       mucchio.forEach(function (g) {
-        coda.appendChild(rigaGruppo('Senza gruppo', g.n, 'riep__gruppo--senza'));
+        coda.appendChild(rigaGruppo('Senza gruppo', g.n, g.nomi, 'riep__gruppo--senza'));
       });
       podio.appendChild(coda);
       podio.appendChild(el('p', 'riep__nota',
@@ -1835,6 +1899,7 @@
         listaPre.appendChild(rigaGruppo(
           g.senza ? 'Senza gruppo' : g.nome,
           g.n,
+          g.nomi,
           g.senza ? 'riep__gruppo--senza' : null
         ));
       });
