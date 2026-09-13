@@ -544,3 +544,46 @@ fieldset[disabled] * { cursor: not-allowed; }
 }
 
 #annulla-1, #annulla-2, #annulla-errore { margin-top: var(--sp-4); }
+
+/* -------------------------------------------------------------------------
+   ISCRIZIONI CHIUSE
+   La pagina parte "chiusa" gia' nel markup e uno script in testa toglie la
+   classe .iscrizioni-chiuse dall'elemento html finche' la scadenza non e'
+   passata. Al contrario (nascondere l'avviso e mostrare il modulo via JS)
+   chi arriva a iscrizioni chiuse vedrebbe il modulo comparire e sparire, e
+   senza JS - dove il modulo non funzionerebbe comunque, le persone sono
+   clonate da modulo.js - resterebbe un modulo muto invece dell'avviso.
+
+   A iscrizioni aperte nascondiamo con :not(), non ridando un display al
+   ramo "chiuse": gli avvisi sono grid e un display:block li appiattirebbe.
+   ------------------------------------------------------------------------- */
+
+html:not(.iscrizioni-chiuse) .se-chiuse { display: none !important; }
+.iscrizioni-chiuse .se-aperte { display: none !important; }
+
+/* L'avviso che prende il posto del modulo: e' la cosa piu' importante della
+   pagina, quindi pesa piu' di un avviso qualunque. */
+.avviso--chiusura {
+  margin-bottom: var(--sp-6);
+  padding: var(--sp-5);
+  border-left-width: 6px;
+  font-size: var(--t-base);
+  box-shadow: var(--ombra-1);
+}
+
+.avviso--chiusura .avviso__titolo {
+  font-family: var(--font-titoli);
+  font-size: var(--t-xl);
+  line-height: var(--lh-titolo);
+  color: var(--rosa-testo);
+}
+
+.avviso--chiusura .avviso__coda {
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--rosa-tenue);
+  font-size: var(--t-sm);
+  color: var(--testo-tenue);
+}
+
+.avviso--chiusura .avviso__coda a { color: var(--rosa-testo); }

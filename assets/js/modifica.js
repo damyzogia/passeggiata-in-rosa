@@ -33,6 +33,14 @@
   var idSalvataggio = null;
   var inCorso = false;
 
+  /* A iscrizioni chiuse il backend rifiuta aggiornaPrenotazione ma accetta
+     ancora l'annullamento. Il CSS ha gia' nascosto il modulo di modifica
+     (classe sull'elemento html, messa dal markup e tolta dallo script in
+     testa alla pagina finche' la scadenza non e' passata): qui ci limitiamo
+     a non far partire il salvataggio e a non caricare i gruppi, che non
+     servono piu' a nessuno. */
+  var chiuse = document.documentElement.classList.contains('iscrizioni-chiuse');
+
   Modulo.preparaData(accNascita);
 
   var persone = new Modulo.Partecipanti(
@@ -116,8 +124,12 @@
     prenotazione.email = prenotazione.email || email;
     prenotazione.data_nascita = prenotazione.data_nascita || data;
 
-    document.getElementById('codice-trovato').textContent = prenotazione.codice || '—';
-    document.getElementById('annulla-codice').textContent = prenotazione.codice || '—';
+    var codice = prenotazione.codice || '—';
+    document.getElementById('codice-trovato').textContent = codice;
+    document.getElementById('annulla-codice').textContent = codice;
+    /* Lo stesso codice nella versione "a iscrizioni chiuse" dell'avviso. */
+    var codiceChiuse = document.getElementById('codice-trovato-chiuse');
+    if (codiceChiuse) codiceChiuse.textContent = codice;
 
     var elenco = prenotazione.partecipanti || [];
     if (!elenco.length) elenco = [{}];
@@ -125,13 +137,17 @@
 
     var squadra = prenotazione.squadra || '';
     gruppi.riempi([], squadra);
-    Attesa.durante(
-      document.getElementById('chip-gruppi'),
-      API.chiama('getSquadre', {}),
-      'Carico i gruppi…'
-    )
-      .then(function (r) { gruppi.riempi(r.squadre || [], squadra); })
-      .catch(function () { /* si resta con le sole voci di base */ });
+    /* A iscrizioni chiuse il modulo non si vede: risparmiamo alla persona
+       una chiamata lenta per riempire chip che nessuno tocchera'. */
+    if (!chiuse) {
+      Attesa.durante(
+        document.getElementById('chip-gruppi'),
+        API.chiama('getSquadre', {}),
+        'Carico i gruppi…'
+      )
+        .then(function (r) { gruppi.riempi(r.squadre || [], squadra); })
+        .catch(function () { /* si resta con le sole voci di base */ });
+    }
 
     accesso.hidden = true;
     scheda.hidden = false;
@@ -144,7 +160,9 @@
 
   moduloModifica.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    if (inCorso || !prenotazione) return;
+    /* "chiuse": il server direbbe comunque di no, e il modulo qui non e'
+       nemmeno visibile. Meglio non partire che mostrare un errore. */
+    if (inCorso || !prenotazione || chiuse) return;
 
     Modulo.pulisciErrori(moduloModifica);
     avvisoErrore.hidden = true;

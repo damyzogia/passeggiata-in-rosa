@@ -1,9 +1,25 @@
 <!DOCTYPE html>
-<html lang="it">
+<!-- La pagina parte "a iscrizioni chiuse": lo script qui sotto riapre la
+     modifica solo se la scadenza non e' ancora passata. L'annullamento
+     invece resta sempre disponibile. -->
+<html lang="it" class="iscrizioni-chiuse">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Passeggiata in Rosa — Modifica o annulla la tua iscrizione</title>
+
+<!-- Stesso istante di iscrizione.html: 24:00 del 12 settembre 2026. Dopo, il
+     backend rifiuta aggiornaPrenotazione ma accetta ancora l'annullamento,
+     quindi qui sparisce solo il modulo di modifica. Se cambia una data,
+     vanno cambiate tutte e due le pagine. -->
+<script>
+  (function () {
+    var CHIUSURA = Date.parse('2026-09-13T00:00:00+02:00');
+    if (Date.now() < CHIUSURA) {
+      document.documentElement.classList.remove('iscrizioni-chiuse');
+    }
+  })();
+</script>
 <meta name="description" content="Recupera la tua pre-iscrizione alla Passeggiata in Rosa: puoi aggiungere o togliere partecipanti, cambiare il gruppo, oppure annullare del tutto la prenotazione.">
 
 <link rel="canonical" href="https://passeggiatainrosa.it/modifica">
@@ -53,15 +69,35 @@
 
       <p class="briciole"><a href="/">Home</a> › Modifica iscrizione</p>
 
-      <p class="occhiello">Modifica</p>
-      <h1>Modifica o annulla la tua iscrizione</h1>
+      <p class="occhiello se-aperte">Modifica</p>
+      <p class="occhiello se-chiuse">Annullamento</p>
+      <h1 class="se-aperte">Modifica o annulla la tua iscrizione</h1>
+      <h1 class="se-chiuse">Annulla la tua iscrizione</h1>
+
+      <!-- Oggi la modifica e' bloccata lato server (aggiornaPrenotazione
+           rifiuta a iscrizioni chiuse): meglio dirlo subito che lasciare
+           qualcuno compilare un modulo destinato a un errore. -->
+      <div class="avviso avviso--attenzione avviso--chiusura se-chiuse" role="status">
+        <p class="avviso__titolo">Oggi puoi solo annullare</p>
+        <p>
+          Le modifiche online sono chiuse. Se devi cambiare i partecipanti o
+          aggiungere qualcuno, fallo al banco in piazzale, dalle 8:00 alle
+          9:00. Qui puoi ancora annullare la prenotazione, se non riesci a
+          venire.
+        </p>
+      </div>
 
       <!-- ============ ACCESSO ============ -->
       <section id="accesso">
-        <p class="sommario" style="margin-bottom:var(--sp-6)">
+        <p class="sommario se-aperte" style="margin-bottom:var(--sp-6)">
           Da qui puoi cambiare i partecipanti e il gruppo, oppure annullare
           del tutto la prenotazione. Per ritrovarla servono l&rsquo;email con cui
           l&rsquo;hai fatta e la tua data di nascita.
+        </p>
+        <p class="sommario se-chiuse" style="margin-bottom:var(--sp-6)">
+          Da qui puoi annullare la prenotazione, se non riesci a venire. Per
+          ritrovarla servono l&rsquo;email con cui l&rsquo;hai fatta e la tua data di
+          nascita.
         </p>
 
         <form id="modulo-accesso" novalidate>
@@ -86,9 +122,16 @@
             <div class="avviso avviso--errore" id="acc-avviso" hidden>
               <p class="avviso__titolo" id="acc-avviso-titolo">Non abbiamo trovato l&rsquo;iscrizione</p>
               <p id="acc-avviso-testo"></p>
-              <div class="avviso__azioni">
+              <!-- A iscrizioni chiuse non ha senso mandare a un modulo che
+                   non c'e' piu': chi non trova l'iscrizione si presenta al
+                   banco. -->
+              <div class="avviso__azioni se-aperte">
                 <a class="btn btn--secondario btn--piccolo" href="/iscrizione.html">Fai una nuova iscrizione</a>
               </div>
+              <p class="piccolo se-chiuse">
+                Se non la ritrovi, nessun problema: presentati al banco in
+                piazzale e ti iscriviamo sul momento.
+              </p>
             </div>
 
             <div class="invio">
@@ -106,15 +149,18 @@
       <section id="scheda" hidden>
         <div class="avviso avviso--ok" style="margin-bottom:var(--sp-5)">
           <p class="avviso__titolo">Iscrizione trovata</p>
-          <p>Codice <strong id="codice-trovato"></strong>. Modifica quello che
+          <p class="se-aperte">Codice <strong id="codice-trovato"></strong>. Modifica quello che
             serve e salva: il totale si aggiorna da solo.</p>
+          <p class="se-chiuse">Codice <strong id="codice-trovato-chiuse"></strong>. Oggi non si
+            può più modificarla online: qui sotto puoi annullarla, se non
+            riesci a venire.</p>
         </div>
 
-        <p class="piccolo" style="margin-bottom:var(--sp-5)">
+        <p class="piccolo se-aperte" style="margin-bottom:var(--sp-5)">
           <a href="#annullo">Vuoi annullare la prenotazione?</a>
         </p>
 
-        <form id="modulo-modifica" novalidate>
+        <form id="modulo-modifica" class="se-aperte" novalidate>
 
           <section class="passo">
             <h2 class="passo__titolo"><span class="passo__numero">1</span> Gruppo</h2>
@@ -212,11 +258,18 @@
             La prenotazione <strong id="annullata-codice"></strong> è stata annullata.
             Il codice non è più valido.
           </p>
-          <p class="piccolo tenue">
+          <p class="piccolo tenue se-aperte">
             Se cambi idea sei sempre in tempo fino al 12 settembre.
           </p>
-          <div class="avviso__azioni" style="justify-content:center">
+          <p class="piccolo tenue se-chiuse">
+            Se cambi idea, ti aspettiamo comunque al banco in piazzale:
+            le iscrizioni sul posto sono aperte dalle 8:00 alle 9:00.
+          </p>
+          <div class="avviso__azioni se-aperte" style="justify-content:center">
             <a class="btn btn--primario" href="/iscrizione.html">Iscriviti di nuovo</a>
+            <a class="btn btn--fantasma" href="/">Torna alla home</a>
+          </div>
+          <div class="avviso__azioni se-chiuse" style="justify-content:center">
             <a class="btn btn--fantasma" href="/">Torna alla home</a>
           </div>
         </div>

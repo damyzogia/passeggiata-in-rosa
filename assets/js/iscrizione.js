@@ -15,6 +15,16 @@
   var modulo = document.getElementById('modulo');
   if (!modulo) return;
 
+  /* Pre-iscrizioni chiuse: il CSS ha gia' nascosto il modulo e mostrato
+     l'avviso (la classe la mette il markup, la toglie lo script in testa
+     alla pagina finche' la scadenza non e' passata). Qui lo togliamo anche
+     dal documento, cosi' nessuna scorciatoia da tastiera o compilazione
+     automatica puo' far partire un invio che il server rifiuterebbe. */
+  if (document.documentElement.classList.contains('iscrizioni-chiuse')) {
+    modulo.remove();
+    return;
+  }
+
   var campoEmail = document.getElementById('email');
   var campoTelefono = document.getElementById('telefono');
   var resto = document.getElementById('resto');

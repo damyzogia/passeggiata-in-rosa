@@ -1,9 +1,29 @@
 <!DOCTYPE html>
-<html lang="it">
+<!-- La pagina parte "a iscrizioni chiuse": lo script qui sotto riapre solo se
+     la scadenza non e' ancora passata. Vedi il commento nello script. -->
+<html lang="it" class="iscrizioni-chiuse">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Passeggiata in Rosa — Pre-iscrizione</title>
+
+<!-- Chiusura delle pre-iscrizioni online: 24:00 del 12 settembre 2026, cioe'
+     la mezzanotte con cui comincia il giorno dell'evento (+02:00 = ora legale
+     italiana). Lo stesso istante e' scritto in modifica.html: se cambia una
+     data, vanno cambiate tutte e due.
+
+     Perche' in linea e in testa alla pagina, e perche' TOGLIE la classe
+     invece di metterla: gira prima del disegno, quindi a iscrizioni chiuse
+     nessuno vede il modulo comparire e sparire; e se lo script non gira, il
+     ripiego e' l'avviso - non un modulo che il server rifiuterebbe. -->
+<script>
+  (function () {
+    var CHIUSURA = Date.parse('2026-09-13T00:00:00+02:00');
+    if (Date.now() < CHIUSURA) {
+      document.documentElement.classList.remove('iscrizioni-chiuse');
+    }
+  })();
+</script>
 <meta name="description" content="Pre-iscriviti alla 6ª Passeggiata in Rosa di Borgo Veneto. Con un'unica iscrizione puoi registrare più persone. Quota 8 €, gratis fino a 6 anni compiuti.">
 
 <link rel="canonical" href="https://passeggiatainrosa.it/iscrizione">
@@ -56,17 +76,42 @@
 
       <p class="briciole"><a href="/">Home</a> › Pre-iscrizione</p>
 
-      <p class="occhiello">Pre-iscrizione</p>
-      <h1>Iscriviti alla 6<sup>a</sup> Passeggiata in Rosa</h1>
-      <p class="sommario" style="margin-bottom:var(--sp-3)">
+      <p class="occhiello se-aperte">Pre-iscrizione</p>
+      <p class="occhiello se-chiuse">Iscrizioni sul posto</p>
+      <h1 class="se-aperte">Iscriviti alla 6<sup>a</sup> Passeggiata in Rosa</h1>
+      <h1 class="se-chiuse">Ci vediamo al banco</h1>
+
+      <!-- Prende il posto del modulo quando le pre-iscrizioni online sono
+           chiuse. role="status" e non "alert": e' una notizia, non un
+           allarme, e non deve interrompere chi sta leggendo. -->
+      <div class="avviso avviso--attenzione avviso--chiusura se-chiuse" role="status">
+        <p class="avviso__titolo">Le pre-iscrizioni online sono chiuse</p>
+        <p>
+          Oggi, giorno dell&rsquo;evento, puoi iscriverti direttamente al banco
+          in piazzale, dalle 8:00 alle 9:00. Ti aspettiamo!
+        </p>
+        <p class="avviso__coda">
+          Hai già un&rsquo;iscrizione e non puoi venire?
+          <a href="/modifica.html">Puoi annullarla qui</a>.
+        </p>
+      </div>
+
+      <p class="sommario se-aperte" style="margin-bottom:var(--sp-3)">
         Domenica 13 settembre 2026 · 8 € a persona, gratis fino a 6 anni
         compiuti. Il pagamento avviene al banco il giorno dell&rsquo;evento.
       </p>
-      <p class="piccolo tenue" style="margin-bottom:var(--sp-6)">
+      <p class="sommario se-chiuse" style="margin-bottom:var(--sp-3)">
+        Ritrovo in Piazzale della Chiesa, Via Roma 32 a Santa Margherita
+        d&rsquo;Adige · 8 € a persona, gratis fino a 6 anni compiuti.
+        Partenza alle 9:00.
+      </p>
+      <!-- A iscrizioni chiuse la modifica e' bloccata lato server: qui
+           resta solo l'annullamento, ed e' nell'avviso qui sopra. -->
+      <p class="piccolo tenue se-aperte" style="margin-bottom:var(--sp-6)">
         Hai già un&rsquo;iscrizione? <a href="/modifica.html">Modificala</a>.
       </p>
 
-      <form id="modulo" novalidate>
+      <form id="modulo" class="se-aperte" novalidate>
 
         <!-- ============ 1. EMAIL ============ -->
         <section class="passo">
